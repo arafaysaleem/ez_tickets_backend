@@ -20,3 +20,5 @@ exports.structureResponse = (body,error,message) => {
         "body": body
     }
 }
+
+exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
