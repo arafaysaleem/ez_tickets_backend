@@ -71,8 +71,9 @@ class MovieController {
 
         const message = !affectedRows ? 'Movie not found' :
             affectedRows && changedRows ? 'Movie updated successfully' : 'Movie update failed';
-
+            
         const response = structureResponse(info, 0,message);
+
         res.send(response);
     };
 

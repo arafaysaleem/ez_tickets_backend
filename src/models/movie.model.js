@@ -49,7 +49,7 @@ class MovieModel {
         const sql = `UPDATE ${this.tableName} SET ${columnSet} WHERE movie_id = ?`;
 
         const result = await query(sql, [...values, id]);
-
+        
         return result;
     }
 
