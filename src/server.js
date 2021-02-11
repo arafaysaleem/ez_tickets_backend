@@ -8,6 +8,7 @@ const errorMiddleware = require('./middleware/error.middleware');
 const authRouter = require('./routes/auth.routes');
 const userRouter = require('./routes/user.routes');
 const movieRouter = require('./routes/movie.routes');
+const roleRouter = require('./routes/role.routes');
 
 const app = express();
 dotenv.config();
@@ -22,6 +23,7 @@ const port = Number(process.env.PORT || 3331);
 app.use(`/api/v1/auth`, authRouter);
 app.use(`/api/v1/users`, userRouter);
 app.use(`/api/v1/movies`, movieRouter);
+app.use(`/api/v1/roles`, roleRouter);
 
 // 404 error
 app.all('*', (req, res, next) => {
