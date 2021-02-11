@@ -1,6 +1,6 @@
 const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
-const Role = require('../utils/userRoles.utils');
+const UserRole = require('../utils/userRoles.utils');
 class UserModel {
     tableName = 'users';
 
@@ -29,7 +29,7 @@ class UserModel {
         return result[0];
     }
 
-    create = async ({ full_name, email, password, role = Role.ApiUser, contact, address }) => {
+    create = async ({ full_name, email, password, role = UserRole.ApiUser, contact, address }) => {
         const sql = `INSERT INTO ${this.tableName}
         (full_name, email, password, role, contact, address) VALUES (?,?,?,?,?,?)`;
 
@@ -45,7 +45,7 @@ class UserModel {
     update = async (params, id) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `UPDATE user SET ${columnSet} WHERE user_id = ?`;
+        const sql = `UPDATE ${this.tableName} SET ${columnSet} WHERE user_id = ?`;
 
         const result = await query(sql, [...values, id]);
 

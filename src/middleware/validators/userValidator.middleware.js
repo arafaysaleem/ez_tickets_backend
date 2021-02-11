@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const Role = require('../../utils/userRoles.utils');
+const UserRole = require('../../utils/userRoles.utils');
 
 
 exports.createUserSchema = [
@@ -24,8 +24,8 @@ exports.createUserSchema = [
         .normalizeEmail(),
     body('role')
         .optional()
-        .isIn([Role.Admin, Role.SuperUser, Role.ApiUser])
-        .withMessage('Invalid Role type'),
+        .isIn([UserRole.Admin, UserRole.SuperUser, UserRole.ApiUser])
+        .withMessage('Invalid UserRole type'),
     body('password')
         .exists()
         .withMessage('Password is required')
@@ -55,8 +55,8 @@ exports.updateUserSchema = [
         .normalizeEmail(),
     body('role')
         .optional()
-        .isIn([Role.Admin, Role.SuperUser, Role.ApiUser])
-        .withMessage('Invalid Role type'),
+        .isIn([UserRole.Admin, UserRole.SuperUser, UserRole.ApiUser])
+        .withMessage('Invalid UserRole type'),
     body('password')
         .optional()
         .notEmpty(),

@@ -31,7 +31,7 @@ const auth = (...roles) => {
             // if the user role don't have the permission to do this action.
             // the user will get this error
             if (!ownerAuthorized && roles.length && !roles.includes(user.role)) {
-                throw new HttpException(401, 'Unauthorized');
+                throw new HttpException(401, 'Unauthorized user');
             }
 
             // if the user has permissions

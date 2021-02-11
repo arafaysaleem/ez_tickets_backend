@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/auth.controller');
 const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middleware');
 
+const authController = require('../controllers/auth.controller');
 const { createUserSchema, validateLogin } = require('../middleware/validators/userValidator.middleware');
 
 router.post('/register', createUserSchema, awaitHandlerFactory(authController.registerUser)); // localhost:3000/api/v1/auth/register
