@@ -1,7 +1,7 @@
 const { body } = require('express-validator');
 const MovieType = require('../../utils/movieTypes.utils');
+const RoleType = require('../../utils/roleTypes.utils');
 const { yearRegex } = require('../../utils/common.utils');
-
 
 exports.createMovieSchema = [
     body('title')
@@ -32,8 +32,29 @@ exports.createMovieSchema = [
     body('movie_type')
         .exists()
         .withMessage('Movie type is required')
-        .isIn([MovieType.ComingSoon,MovieType.NowShowing])
-        .withMessage('Invalid movie type'),    
+        .isIn([...Object.values(MovieType)])
+        .withMessage('Invalid movie type'),
+    body('roles')
+        .exists()
+        .withMessage('Movie roles is required')
+        .bail()
+        .isArray()
+        .withMessage('Roles must be an array like [{role_id : 1, role_type: \'cast\'},{...}]')
+        .bail()
+        .notEmpty()
+        .withMessage('Roles can\'t be empty'),
+    body('roles.*.role_id')
+        .exists()
+        .withMessage('RoleId is required for each role')
+        .bail()
+        .isInt()
+        .withMessage('Invalid RoleId found'),
+    body('roles.*.role_type')
+        .exists()
+        .withMessage('RoleType is required for each role')
+        .bail()
+        .isIn([...Object.values(RoleType)])
+        .withMessage('Invalid RoleType'),
 ];
 
 exports.updateMovieSchema = [
@@ -59,7 +80,7 @@ exports.updateMovieSchema = [
         .withMessage('Must be a valid url'),
     body('movie_type')
         .optional()
-        .isIn([MovieType.ComingSoon,MovieType.NowShowing])
+        .isIn([...Object.values(MovieType)])
         .withMessage('Invalid movie type'),
     body()
         .custom(value => {

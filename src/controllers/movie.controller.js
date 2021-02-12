@@ -1,4 +1,5 @@
 const MovieModel = require('../models/movie.model');
+const MovieRoleModel = require('../models/movieRole.model');
 const MovieType = require('../utils/movieTypes.utils');
 const HttpException = require('../utils/HttpException.utils');
 const { validationResult } = require('express-validator');
@@ -6,25 +7,50 @@ const { structureResponse } = require('../utils/common.utils');
 
 class MovieController {
     getAllMovies = async (req, res, next) => {
-        let movieList = await MovieModel.findAll();
-        if (!movieList.length) {
+        let movieDuplicates = await MovieModel.findAll();
+        if (!movieDuplicates.length) {
             throw new HttpException(404, 'Movies not found');
         }
+
+        let movieList = {};
+
+        for (const movie of movieDuplicates) {
+            const {mr_id, role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
+            const movie_id = movie.movie_id;
+            if(!movieList[movie_id]) {
+                movieList[movie_id] = movieDetails;
+                movieList[movie_id].roles = []
+            }
+            movieList[movie_id].roles.push({ mr_id, role_id, full_name, age, picture_url, role_type });
+        }    
+
+        movieList = Object.values(movieList);
 
         const response = structureResponse(movieList, 0,"Success");
         res.send(response);
     };
 
     getMovieById = async (req, res, next) => {
-        const movie = await MovieModel.findOne({ movie_id: req.params.id });
-        if (!movie) {
+        const movieDuplicates = await MovieModel.findOne({ movie_id: req.params.id });
+        if (!movieDuplicates.length) {
             throw new HttpException(404, 'Movie not found');
         }
 
-        const response = structureResponse(movie, 0,"Success");
+        let movieBody = {};
+
+        const roles = movieDuplicates.map((movie)=>{
+            const {mr_id, role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
+            if(!movieBody.length) movieBody = movieDetails;
+            return { mr_id, role_id, full_name, age, picture_url, role_type };
+        })
+
+        movieBody.roles = roles;
+
+        const response = structureResponse(movieBody, 0,"Success");
         res.send(response);
     };
 
+    //map these too
     getComingSoonMovies = async (req, res, net) => {
         let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});
         if (!comingSoonList.length) {
@@ -45,13 +71,38 @@ class MovieController {
         res.send(response);
     }
 
+    /*Roles are is form of a map like this
+        [
+            {
+                role_id: 1,
+                role_type: 'director'
+            },
+            {
+                role_id: 2,
+                role_type: 'cast'
+            },
+        ]
+    */
     createMovie = async (req, res, next) => {
         this.checkValidation(req);
-
-        const result = await MovieModel.create(req.body);
+        //todo: Run queries in transactions
+        const {roles , ...movieBody} = req.body;
+        const result = await MovieModel.create(movieBody);
 
         if (!result) {
             throw new HttpException(500, 'Movie failed to be created');
+        }
+
+        for (const role of roles) {
+            const movieRole = {
+                movie_id: result.movie_id, 
+                role_id: role.role_id,
+                role_type: role.role_type
+            };
+            const success = await MovieRoleModel.create(movieRole);
+            if (!success) {
+                throw new HttpException(500, 'Movie role failed to be created');
+            }
         }
 
         const response = structureResponse(result, 0,'Movie was created!');
