@@ -48,16 +48,17 @@ class AuthController {
             expiresIn: '24h'
         });
 
-        
-        if(req.body.message){ //if registered first time
+        let message="";
+        let body="";
+        if(!!req.body.message){ //if registered first 
             const { user_id, ...userWithoutId } = user;
-            const message = "Registered"; //set msg to registered
-            const body = { user_id, token};
+            message = "Registered"; //set msg to registered
+            body = { user_id, token};
         }
         else{
             const { password, ...userWithoutPassword } = user;
-            const message = "Authenticated";
-            const body = { ...userWithoutPassword, token};
+            message = "Authenticated";
+            body = { ...userWithoutPassword, token};
         }
         const response = structureResponse(body,0, message);
         res.send(response);
