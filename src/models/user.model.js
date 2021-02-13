@@ -1,11 +1,12 @@
 const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
 const UserRole = require('../utils/userRoles.utils');
+const { tables } = require('../utils/tableNames.utils');
+
 class UserModel {
-    tableName = 'users';
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${this.tableName}`;
+        let sql = `SELECT * FROM ${tables.Users}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -20,7 +21,7 @@ class UserModel {
     findOne = async (params) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `SELECT * FROM ${this.tableName}
+        const sql = `SELECT * FROM ${tables.Users}
         WHERE ${columnSet}`;
 
         const result = await query(sql, [...values]);
@@ -30,7 +31,7 @@ class UserModel {
     }
 
     create = async ({ full_name, email, password, role = UserRole.ApiUser, contact, address }) => {
-        const sql = `INSERT INTO ${this.tableName}
+        const sql = `INSERT INTO ${tables.Users}
         (full_name, email, password, role, contact, address) VALUES (?,?,?,?,?,?)`;
 
         const result = await query(sql, [full_name, email, password, role, contact, address]);
@@ -45,7 +46,7 @@ class UserModel {
     update = async (params, id) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `UPDATE ${this.tableName} SET ${columnSet} WHERE user_id = ?`;
+        const sql = `UPDATE ${tables.Users} SET ${columnSet} WHERE user_id = ?`;
 
         const result = await query(sql, [...values, id]);
 
@@ -53,7 +54,7 @@ class UserModel {
     }
 
     delete = async (id) => {
-        const sql = `DELETE FROM ${this.tableName}
+        const sql = `DELETE FROM ${tables.Users}
         WHERE user_id = ?`;
         const result = await query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;

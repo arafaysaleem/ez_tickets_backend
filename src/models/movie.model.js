@@ -1,10 +1,8 @@
 const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
-const movieRoleController = require('../controllers/movieRoles.controller');
 
 class MovieModel {
-    tableName = 'movies';
 
     findAll = async (params = {}) => {
         let sql = `SELECT * FROM ${tables.Movies}

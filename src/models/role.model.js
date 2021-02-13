@@ -1,11 +1,10 @@
 const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
-
+const { tables } = require('../utils/tableNames.utils');
 class RoleModel {
-    tableName = 'roles';
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${this.tableName}`;
+        let sql = `SELECT * FROM ${tables.Roles}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -20,7 +19,7 @@ class RoleModel {
     findOne = async (params) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `SELECT * FROM ${this.tableName}
+        const sql = `SELECT * FROM ${tables.Roles}
         WHERE ${columnSet}`;
 
         const result = await query(sql, [...values]);
@@ -30,7 +29,7 @@ class RoleModel {
     }
 
     create = async ({ full_name, age, picture_url }) => {
-        const sql = `INSERT INTO ${this.tableName}
+        const sql = `INSERT INTO ${tables.Roles}
         (full_name, age, picture_url) 
         VALUES (?,?,?)`;
 
@@ -46,7 +45,7 @@ class RoleModel {
     update = async (params, id) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `UPDATE ${this.tableName} SET ${columnSet} WHERE role_id = ?`;
+        const sql = `UPDATE ${tables.Roles} SET ${columnSet} WHERE role_id = ?`;
 
         const result = await query(sql, [...values, id]);
 
@@ -54,7 +53,7 @@ class RoleModel {
     }
 
     delete = async (id) => {
-        const sql = `DELETE FROM ${this.tableName}
+        const sql = `DELETE FROM ${tables.Roles}
         WHERE role_id = ?`;
         const result = await query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
