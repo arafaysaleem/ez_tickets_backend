@@ -23,7 +23,7 @@ class AuthController {
         }
         
         req.body.password = pass;
-        req.body.message = "Registered";
+        req.body.message = true;
 
         this.userLogin(req,res,next);
     };
@@ -48,9 +48,17 @@ class AuthController {
             expiresIn: '24h'
         });
 
-        const { password, ...userWithoutPassword } = user;
-        const message = req.body.message ? req.body.message : "Authenticated";
-        const body = { ...userWithoutPassword, token};
+        
+        if(req.body.message){ //if registered first time
+            const { user_id, ...userWithoutId } = user;
+            const message = "Registered"; //set msg to registered
+            const body = { user_id, token};
+        }
+        else{
+            const { password, ...userWithoutPassword } = user;
+            const message = "Authenticated";
+            const body = { ...userWithoutPassword, token};
+        }
         const response = structureResponse(body,0, message);
         res.send(response);
     };
