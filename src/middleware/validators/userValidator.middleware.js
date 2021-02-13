@@ -3,11 +3,6 @@ const UserRole = require('../../utils/userRoles.utils');
 
 
 exports.createUserSchema = [
-    // body('username')
-    //     .exists()
-    //     .withMessage('username is required')
-    //     .isLength({ min: 3 })
-    //     .withMessage('Must be at least 3 chars long'),
     body('full_name')
         .exists()
         .withMessage('Your full name is required')
@@ -24,7 +19,7 @@ exports.createUserSchema = [
         .normalizeEmail(),
     body('role')
         .optional()
-        .isIn([UserRole.Admin, UserRole.SuperUser, UserRole.ApiUser])
+        .isIn([...Object.values(UserRole)])
         .withMessage('Invalid UserRole type'),
     body('password')
         .exists()
@@ -33,15 +28,11 @@ exports.createUserSchema = [
     body('contact')
         .exists()
         .withMessage('Contact is required')
-        .isNumeric()
-        .withMessage('Must be a valid contact number')
+        .isMobilePhone('en-PK',{strictMode: true})
+        .withMessage('Must be a valid Pakistan mobile number along with country code'),
 ];
 
 exports.updateUserSchema = [
-    // body('username')
-    //     .optional()
-    //     .isLength({ min: 3 })
-    //     .withMessage('Must be at least 3 chars long'),
     body('full_name')
         .optional()
         .isLength({ min: 3 })
@@ -55,15 +46,15 @@ exports.updateUserSchema = [
         .normalizeEmail(),
     body('role')
         .optional()
-        .isIn([UserRole.Admin, UserRole.SuperUser, UserRole.ApiUser])
+        .isIn([...Object.values(UserRole)])
         .withMessage('Invalid UserRole type'),
     body('password')
         .optional()
         .notEmpty(),
     body('contact')
         .optional()
-        .isNumeric()
-        .withMessage('Must be a valid contact number'),
+        .isMobilePhone('en-PK',{strictMode: true})
+        .withMessage('Must be a valid Pakistan mobile number along with country code'),
     body()
         .custom(value => {
             return !!Object.keys(value).length;
