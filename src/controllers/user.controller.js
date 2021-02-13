@@ -3,10 +3,10 @@ const HttpException = require('../utils/HttpException.utils');
 const { validationResult } = require('express-validator');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
+//todo: Move change password support to auth controller
 class UserController {
     getAllUsers = async (req, res, next) => {
         let userList = await UserModel.findAll();
