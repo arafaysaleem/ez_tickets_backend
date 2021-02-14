@@ -1,4 +1,8 @@
-const HttpException = require('../utils/HttpException.utils');
+const { 
+    TokenMissingException,
+    TokenVerificationException,
+    UnauthorizedException
+} = require('../utils/exceptions/api.exception');
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -11,7 +15,7 @@ const auth = (...roles) => {
             const bearer = 'Bearer ';
 
             if (!authHeader || !authHeader.startsWith(bearer)) {
-                throw new HttpException(401, 'Access denied. No credentials sent!');
+                throw new TokenMissingException();
             }
 
             const token = authHeader.replace(bearer, '');
@@ -22,7 +26,7 @@ const auth = (...roles) => {
             const user = await UserModel.findOne({ user_id: decoded.user_id });
 
             if (!user) {
-                throw new HttpException(401, 'Authentication failed!');
+                throw new TokenVerificationException();
             }
 
             // check if the current user is the owner user
@@ -31,7 +35,7 @@ const auth = (...roles) => {
             // if the user role don't have the permission to do this action.
             // the user will get this error
             if (!ownerAuthorized && roles.length && !roles.includes(user.role)) {
-                throw new HttpException(401, 'Unauthorized user');
+                throw new UnauthorizedException();
             }
 
             // if the user has permissions

@@ -1,15 +1,20 @@
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
 const MovieType = require('../utils/movieTypes.utils');
-const HttpException = require('../utils/HttpException.utils');
-const { validationResult } = require('express-validator');
+const {checkValidation}= require('../middleware/validation.middleware');
+const { 
+    NotFoundException,
+    CreateFailedException,
+    UpdateFailedException,
+    UnexpectedException
+} = require('../utils/exceptions/database.exception');
 const { structureResponse } = require('../utils/common.utils');
 
 class MovieController {
     getAllMovies = async (req, res, next) => {
         let movieDuplicates = await MovieModel.findAll();
         if (!movieDuplicates.length) {
-            throw new HttpException(404, 'Movies not found');
+            throw new NotFoundException('Movies not found');
         }
 
         let movieList = {};
@@ -26,14 +31,14 @@ class MovieController {
 
         movieList = Object.values(movieList);
 
-        const response = structureResponse(movieList, 0,"Success");
+        const response = structureResponse(movieList, 1, "Success");
         res.send(response);
     };
 
     getMovieById = async (req, res, next) => {
         const movieDuplicates = await MovieModel.findOne({ movie_id: req.params.id });
         if (!movieDuplicates.length) {
-            throw new HttpException(404, 'Movie not found');
+            throw new NotFoundException('Movie not found');
         }
 
         let movieBody = {};
@@ -46,7 +51,7 @@ class MovieController {
 
         movieBody.roles = roles;
 
-        const response = structureResponse(movieBody, 0,"Success");
+        const response = structureResponse(movieBody, 1, "Success");
         res.send(response);
     };
 
@@ -54,20 +59,20 @@ class MovieController {
     getComingSoonMovies = async (req, res, net) => {
         let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});
         if (!comingSoonList.length) {
-            throw new HttpException(404, 'Movies not found');
+            throw new NotFoundException('Movies not found');
         }
 
-        const response = structureResponse(comingSoonList, 0,"Success");
+        const response = structureResponse(comingSoonList, 1, "Success");
         res.send(response);
     }
 
     getNowShowingMovies = async (req, res, net) => {
         let nowShowingList = await MovieModel.findAll({movie_type: MovieType.NowShowing});
         if (!nowShowingList.length) {
-            throw new HttpException(404, 'Movies not found');
+            throw new NotFoundException('Movies not found');
         }
 
-        const response = structureResponse(nowShowingList, 0,"Success");
+        const response = structureResponse(nowShowingList, 1, "Success");
         res.send(response);
     }
 
@@ -84,13 +89,13 @@ class MovieController {
         ]
     */
     createMovie = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
         //todo: Run queries in transactions
         const {roles , ...movieBody} = req.body;
         const result = await MovieModel.create(movieBody);
 
         if (!result) {
-            throw new HttpException(500, 'Movie failed to be created');
+            throw new CreateFailedException('Movie failed to be created');
         }
 
         for (const role of roles) {
@@ -101,29 +106,29 @@ class MovieController {
             };
             const success = await MovieRoleModel.create(movieRole);
             if (!success) {
-                throw new HttpException(500, 'Movie role failed to be created');
+                throw new CreateFailedException('Movie role failed to be created');
             }
         }
 
-        const response = structureResponse(result, 0,'Movie was created!');
+        const response = structureResponse(result, 1,'Movie was created!');
         res.status(201).send(response);
     };
 
     updateMovie = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         const result = await MovieModel.update(req.body, req.params.id);
 
         if (!result) {
-            throw new HttpException(404, 'Something went wrong');
+            throw new UnexpectedException();
         }
 
         const { affectedRows, changedRows, info } = result;
 
-        const message = !affectedRows ? 'Movie not found' :
-            affectedRows && changedRows ? 'Movie updated successfully' : 'Movie update failed';
+        if(!affectedRows) throw new NotFoundException('Movie not found');
+        else if(affectedRows && !changedRows) throw new UpdateFailedException('Movie update failed');
             
-        const response = structureResponse(info, 0,message);
+        const response = structureResponse(info, 1,'Movie updated successfully');
 
         res.send(response);
     };
@@ -131,19 +136,12 @@ class MovieController {
     deleteMovie = async (req, res, next) => {
         const result = await MovieModel.delete(req.params.id);
         if (!result) {
-            throw new HttpException(404, 'Movie not found');
+            throw new NotFoundException('Movie not found');
         }
 
-        const response = structureResponse({}, 0,'Movie has been deleted');
+        const response = structureResponse({}, 1,'Movie has been deleted');
         res.send(response);
     };
-
-    checkValidation = (req) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            throw new HttpException(400, 'Validation failed', errors);
-        }
-    }
 }
 
 module.exports = new MovieController;

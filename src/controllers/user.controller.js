@@ -1,6 +1,11 @@
 const UserModel = require('../models/user.model');
-const HttpException = require('../utils/HttpException.utils');
-const { validationResult } = require('express-validator');
+const {checkValidation}= require('../middleware/validation.middleware');
+const { 
+    NotFoundException,
+    CreateFailedException,
+    UpdateFailedException,
+    UnexpectedException
+} = require('../utils/exceptions/database.exception');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
@@ -11,7 +16,7 @@ class UserController {
     getAllUsers = async (req, res, next) => {
         let userList = await UserModel.findAll();
         if (!userList.length) {
-            throw new HttpException(404, 'Users not found');
+            throw new NotFoundException('Users not found');
         }
 
         userList = userList.map(user => {
@@ -19,73 +24,66 @@ class UserController {
             return userWithoutPassword;
         });
 
-        const response = structureResponse(userList, 0,"Success");
+        const response = structureResponse(userList, 1, "Success");
         res.send(response);
     };
 
     getUserById = async (req, res, next) => {
         const user = await UserModel.findOne({ user_id: req.params.id });
         if (!user) {
-            throw new HttpException(404, 'User not found');
+            throw new NotFoundException('User not found');
         }
 
         const { password, ...userWithoutPassword } = user;
 
-        const response = structureResponse(userWithoutPassword, 0,"Success");
+        const response = structureResponse(userWithoutPassword, 1, "Success");
         res.send(response);
     };
 
     createUser = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         await this.hashPassword(req);
 
         const result = await UserModel.create(req.body);
 
         if (!result) {
-            throw new HttpException(500, 'User failed to be created');
+            throw new CreateFailedException('User failed to be created');
         }
 
-        const response = structureResponse(result, 0,'User was created!');
+        const response = structureResponse(result, 1,'User was created!');
         res.status(201).send(response);
     };
 
     updateUser = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         await this.hashPassword(req);
 
         const result = await UserModel.update(req.body, req.params.id);
 
         if (!result) {
-            throw new HttpException(404, 'Something went wrong');
+            throw new UnexpectedException('Something went wrong');
         }
 
         const { affectedRows, changedRows, info } = result;
 
-        const message = !affectedRows ? 'User not found' :
-            affectedRows && changedRows ? 'User updated successfully' : 'User update failed';
-
-        const response = structureResponse(info, 0,message);
+        if(!affectedRows) throw new NotFoundException('User not found');
+        else if(affectedRows && !changedRows) throw new UpdateFailedException('User update failed');
+        
+        const response = structureResponse(info, 1,'User updated successfully');
         res.send(response);
     };
 
     deleteUser = async (req, res, next) => {
         const result = await UserModel.delete(req.params.id);
         if (!result) {
-            throw new HttpException(404, 'User not found');
+            throw new NotFoundException('User not found');
         }
 
-        const response = structureResponse({}, 0,'User has been deleted');
+        const response = structureResponse({}, 1,'User has been deleted');
         res.send(response);
     };
-
-    checkValidation = (req) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            throw new HttpException(400, 'Validation failed', errors);
-        }
-    }
 
     // hash password if it exists
     hashPassword = async (req) => {

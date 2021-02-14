@@ -1,7 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const HttpException = require('./utils/HttpException.utils');
+const {InvalidEndpointException} = require('./utils/exceptions/api.exception');
 const errorMiddleware = require('./middleware/error.middleware');
 
 /* Routes */
@@ -27,7 +27,7 @@ app.use(`/api/v1/roles`, roleRouter);
 
 // 404 error
 app.all('*', (req, res, next) => {
-    const err = new HttpException(404, 'Endpoint Not Found');
+    const err = new InvalidEndpointException();
     next(err);
 });
 

@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const mysql2 = require('mysql2');
+const { DuplicateEntryException } = require('../utils/exceptions/database.exception');
 
 class DBConnection{
     constructor(){
@@ -45,7 +46,11 @@ class DBConnection{
             this.db.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err)=>{
             const mysqlErrorList = Object.keys(HttpStatusCodes);
-            err.status = mysqlErrorList.includes(err.code) ? HttpStatusCodes[err.code] : err.status;
+            if(mysqlErrorList.includes(err.code)) {
+                err.status = HttpStatusCodes[err.code];
+                if(err.status === 409) throw new DuplicateEntryException(err.message);
+            }
+            
             throw err;
         });
     }

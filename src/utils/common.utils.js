@@ -14,9 +14,9 @@ exports.multipleColumnSet = (object) => {
     }
 }
 
-exports.structureResponse = (body,error,message) => {
+exports.structureResponse = (body,success,message) => {
     return {
-        "headers": {error, message},
+        "headers": {success, message},
         "body": body
     }
 }

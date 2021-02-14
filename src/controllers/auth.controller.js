@@ -1,7 +1,10 @@
 const UserModel = require('../models/user.model');
-const HttpException = require('../utils/HttpException.utils');
+const {checkValidation}= require('../middleware/validation.middleware');
+const { 
+    RegistrationFailedException,
+    InvalidCredentialsException
+} = require('../utils/exceptions/api.exception');
 const { structureResponse } = require('../utils/common.utils');
-const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
@@ -10,7 +13,7 @@ dotenv.config();
 class AuthController {
 
     registerUser = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
         
         const pass = req.body.password;
 
@@ -19,7 +22,7 @@ class AuthController {
         const result = await UserModel.create(req.body);
 
         if (!result) {
-            throw new HttpException(500, 'User failed to be registered');
+            throw new RegistrationFailedException();
         }
         
         req.body.password = pass;
@@ -29,17 +32,17 @@ class AuthController {
     };
 
     userLogin = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
         const { email, password: pass } = req.body;
         const user = await UserModel.findOne({ email });
         if (!user) {
-            throw new HttpException(401, 'Email address not found');
+            throw new InvalidCredentialsException('Email not registered');
         }
 
         const isMatch = await bcrypt.compare(pass, user.password);
 
         if (!isMatch) {
-            throw new HttpException(401, 'Incorrect password');
+            throw new InvalidCredentialsException('Incorrect password');
         }
 
         // user matched!
@@ -60,16 +63,9 @@ class AuthController {
             message = "Authenticated";
             body = { ...userWithoutPassword, token};
         }
-        const response = structureResponse(body,0, message);
+        const response = structureResponse(body, 1, message);
         res.send(response);
     };
-
-    checkValidation = (req) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            throw new HttpException(400, 'Validation failed', errors);
-        }
-    }
 
     // hash password if it exists
     hashPassword = async (req) => {

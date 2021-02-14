@@ -1,76 +1,76 @@
 const RoleModel = require('../models/role.model');
-const HttpException = require('../utils/HttpException.utils');
-const { validationResult } = require('express-validator');
+const {checkValidation}= require('../middleware/validation.middleware');
+const { 
+    NotFoundException,
+    CreateFailedException,
+    UpdateFailedException,
+    UnexpectedException
+} = require('../utils/exceptions/database.exception');
 const { structureResponse } = require('../utils/common.utils');
 
 class RoleController {
     getAllRoles = async (req, res, next) => {
         let roleList = await RoleModel.findAll();
         if (!roleList.length) {
-            throw new HttpException(404, 'Roles not found');
+            throw new NotFoundException('Roles not found');
         }
 
-        const response = structureResponse(roleList, 0,"Success");
+        const response = structureResponse(roleList, 1, "Success");
         res.send(response);
     };
 
     getRoleById = async (req, res, next) => {
         const role = await RoleModel.findOne({ role_id: req.params.id });
         if (!role) {
-            throw new HttpException(404, 'Role not found');
+            throw new NotFoundException('Role not found');
         }
 
-        const response = structureResponse(role, 0,"Success");
+        const response = structureResponse(role, 1, "Success");
         res.send(response);
     };
 
     createRole = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         const result = await RoleModel.create(req.body);
 
         if (!result) {
-            throw new HttpException(500, 'Role failed to be created');
+            throw new CreateFailedException('Role failed to be created');
         }
 
-        const response = structureResponse(result, 0,'Role was created!');
+        const response = structureResponse(result, 1,'Role was created!');
         res.status(201).send(response);
     };
 
     updateRole = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         const result = await RoleModel.update(req.body, req.params.id);
 
         if (!result) {
-            throw new HttpException(404, 'Something went wrong');
+            throw new UnexpectedException('Something went wrong');
         }
 
         const { affectedRows, changedRows, info } = result;
 
-        const message = !affectedRows ? 'Role not found' :
-            affectedRows && changedRows ? 'Role updated successfully' : 'Role update failed';
+        if(!affectedRows) throw new NotFoundException('Role not found');
+        else if(affectedRows && !changedRows) throw new UpdateFailedException('Role update failed');
+        
+        const message = 'Role updated successfully';
 
-        const response = structureResponse(info, 0,message);
+        const response = structureResponse(info, 1,message);
         res.send(response);
     };
 
     deleteRole = async (req, res, next) => {
         const result = await RoleModel.delete(req.params.id);
         if (!result) {
-            throw new HttpException(404, 'Role not found');
+            throw new NotFoundException('Role not found');
         }
 
-        const response = structureResponse({}, 0,'Role has been deleted');
+        const response = structureResponse({}, 1,'Role has been deleted');
         res.send(response);
     };
-
-    checkValidation = (req) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            throw new HttpException(400, 'Validation failed', errors);
-        }
-    }
 }
 
 module.exports = new RoleController;
