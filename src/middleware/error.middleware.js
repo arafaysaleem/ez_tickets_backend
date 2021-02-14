@@ -1,17 +1,21 @@
-function errorMiddleware(error, req, res, next) {
-    let { status = 500, message, data } = error;
+const { InternalServerException } = require('../utils/exceptions/api.exception')
+const { DuplicateEntryException } = require('../utils/exceptions/database.exception')
 
-    console.log(`[Error] ${error}`);
+function errorMiddleware(err, req, res, next) {
 
-    // If status code is 500 - change the message to Internal server error
-    message = status === 500 || !message ? 'Internal server error' : message;
-    if(message.includes('Duplicate entry') && message.includes('email')) {
-        message = "Email already exists";
+    if(err.status === 500 || !err.message) {
+        err = new InternalServerException('Internal server error');
     }
+    
+    let { message, code, error, status, data} = err;
+
+    console.log(`[Error] ${err}`);
 
     headers = {
-        error: "1",
-        // status,
+        success: "0",
+        error,
+        code,
+        status,
         message,
         ...(data) && data
     }
@@ -22,7 +26,7 @@ function errorMiddleware(error, req, res, next) {
 module.exports = errorMiddleware;
 /*
 {
-    type: 'error',
+    type: 'err',
     status: 404,
     message: 'Not Found'
     data: {...} // optional

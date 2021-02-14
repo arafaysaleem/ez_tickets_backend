@@ -1,6 +1,10 @@
 const MovieRoleModel = require('../models/movieRole.model');
-const HttpException = require('../utils/HttpException.utils');
-const { validationResult } = require('express-validator');
+const {checkValidation}= require('../middleware/validation.middleware');
+const { 
+    NotFoundException,
+    UpdateFailedException,
+    UnexpectedException
+} = require('../utils/exceptions/database.exception');
 const { structureResponse } = require('../utils/common.utils');
 
 class MovieRoleController {
@@ -8,17 +12,17 @@ class MovieRoleController {
     getAllMovieRoles = async (req, res, next) => {
         let movieRoleList = await MovieRoleModel.findAll();
         if (!movieRoleList.length) {
-            throw new HttpException(404, 'Movie Roles not found');
+            throw new NotFoundException('Movie Roles not found');
         }
 
-        const response = structureResponse(movieRoleList, 0,"Success");
+        const response = structureResponse(movieRoleList, 1, "Success");
         res.send(response);
     };
 
     getMoviesByRoleId = async (req, res, next) => {
         let moviesList = await MovieRoleModel.findMovieDetails({ role_id: req.params.id });
         if (!moviesList.length) {
-            throw new HttpException(404, 'No movies for this role');
+            throw new NotFoundException('No movies for this role');
         }
 
         moviesList = moviesList.map((movieBody)=>{
@@ -26,14 +30,14 @@ class MovieRoleController {
             return movie;
         });
 
-        const response = structureResponse(moviesList, 0,"Success");
+        const response = structureResponse(moviesList, 1, "Success");
         res.send(response);
     };
 
     getRolesByMovieId = async (req, res, next) => {
         let roleList = await MovieRoleModel.findRoleDetails({ movie_id: req.params.id });
         if (!roleList.length) {
-            throw new HttpException(404, 'No roles for this movie');
+            throw new NotFoundException('No roles for this movie');
         }
 
         // roleList = roleList.map((roleBody)=>{
@@ -41,25 +45,25 @@ class MovieRoleController {
         //     return role;
         // });
 
-        const response = structureResponse(roleList, 0,"Success");
+        const response = structureResponse(roleList, 1, "Success");
         res.send(response);
     };
 
     updateMovieRole = async (req, res, next) => {
-        this.checkValidation(req);
+        checkValidation(req);
 
         const result = await MovieRoleModel.update(req.body, req.params.id);
 
         if (!result) {
-            throw new HttpException(404, 'Something went wrong');
+            throw new UnexpectedException('Something went wrong');
         }
 
         const { affectedRows, changedRows, info } = result;
 
-        const message = !affectedRows ? 'Movie Role not found' :
-            affectedRows && changedRows ? 'Movie Role updated successfully' : 'Movie Role update failed';
+        if(!affectedRows) throw new NotFoundException('Movie Role not found');
+        else if(affectedRows && !changedRows) throw new UpdateFailedException('Movie Role update failed');
             
-        const response = structureResponse(info, 0,message);
+        const response = structureResponse(info, 1,'Movie Role updated successfully');
 
         res.send(response);
     };
@@ -67,19 +71,12 @@ class MovieRoleController {
     deleteMovieRole = async (req, res, next) => {
         const result = await MovieRoleModel.delete(req.params.id);
         if (!result) {
-            throw new HttpException(404, 'Movie Role not found');
+            throw new NotFoundException('Movie Role not found');
         }
 
-        const response = structureResponse({}, 0,'Movie Role has been deleted');
+        const response = structureResponse({}, 1,'Movie Role has been deleted');
         res.send(response);
     };
-
-    checkValidation = (req) => {
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            throw new HttpException(400, 'Validation failed', errors);
-        }
-    }
 }
 
 module.exports = new MovieRoleController;
