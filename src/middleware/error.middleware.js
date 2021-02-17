@@ -1,21 +1,21 @@
-const { InternalServerException } = require('../utils/exceptions/api.exception')
-const { DuplicateEntryException } = require('../utils/exceptions/database.exception')
+const { InternalServerException, TokenVerificationException } = require('../utils/exceptions/api.exception')
 
 function errorMiddleware(err, req, res, next) {
-
     if(err.status === 500 || !err.message) {
-        err = new InternalServerException('Internal server error');
+        if(!err.isOperational) err = new InternalServerException('Internal server error');
     }
+    else if(err.name == "JsonWebTokenError") err = new TokenVerificationException();
     
     let { message, code, error, status, data} = err;
 
-    console.log(`[Error] ${err}`);
+    console.log(`[Exception] ${error}, [Code] ${code}`);
+    console.log(`[Error] ${message}`);
 
     headers = {
         success: "0",
         error,
         code,
-        status,
+        //status,
         message,
         ...(data) && data
     }

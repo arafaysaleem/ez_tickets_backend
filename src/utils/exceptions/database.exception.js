@@ -1,10 +1,11 @@
 const { ErrorResponse } = require("../errorResponses.utils");
 
 class DatabaseException extends Error {
-    constructor(code, message, data, status=404) {
+    constructor(code, message, data, isOperational=false, status=404) {
         super(message);
         this.message = "Database Error: " + message;
         this.name = "Database Error";
+        this.isOperational = isOperational;
       	this.code = code;
         this.error = this.constructor.name;
         this.status = status;
@@ -14,25 +15,25 @@ class DatabaseException extends Error {
 
 class NotFoundException extends DatabaseException {
     constructor(message,data){
-    	super(ErrorResponse.NotFoundException, message, data);
+    	super(ErrorResponse.NotFoundException, message, data, true);
     }
 }
 
 class DuplicateEntryException extends DatabaseException {
     constructor(message,data){
-    	super(ErrorResponse.DuplicateEntryException, message, data, 409);
+    	super(ErrorResponse.DuplicateEntryException, message, data, true, 409);
     }
 }
 
 class UpdateFailedException extends DatabaseException {
     constructor(message,data){
-    	super(ErrorResponse.UpdateFailedException, message, data, 500);
+    	super(ErrorResponse.UpdateFailedException, message, data, true, 500);
     }
 }
 
 class CreateFailedException extends DatabaseException {
     constructor(message,data){
-    	super(ErrorResponse.CreateFailedException, message, data, 500);
+    	super(ErrorResponse.CreateFailedException, message, data, true, 500);
     }
 }
 

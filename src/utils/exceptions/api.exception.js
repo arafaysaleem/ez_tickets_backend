@@ -19,13 +19,13 @@ class InternalServerException extends ApiException {
 }
 
 class UnauthorizedException extends ApiException {
-    constructor(message='Unauthorized user',data){
+    constructor(message='User unauthorized for action',data){
     	super(ErrorResponse.UnauthorizedException, message, data);
     }
 }
 
 class TokenMissingException extends ApiException {
-    constructor(message = "Access denied. No credentials sent",data){
+    constructor(message = "Access denied. No token credentials sent",data){
     	super(ErrorResponse.TokenMissingException, message, data);
     }
 }

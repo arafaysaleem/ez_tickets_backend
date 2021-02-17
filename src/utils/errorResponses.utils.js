@@ -11,4 +11,5 @@ module.exports.ErrorResponse = {
     InvalidCredentialsException: 9,
     RegistrationFailedException: 10,
     InvalidEndpointException: 11,
+    TokenVerificationException: 12,
 }
