@@ -9,45 +9,15 @@ const { structureResponse } = require('../utils/common.utils');
 
 class MovieRoleController {
 
-    getAllMovieRoles = async (req, res, next) => {
-        let movieRoleList = await MovieRoleModel.findAll();
-        if (!movieRoleList.length) {
-            throw new NotFoundException('Movie Roles not found');
-        }
+    // getAllMovieRoles = async (req, res, next) => {
+    //     let movieRoleList = await MovieRoleModel.findAll();
+    //     if (!movieRoleList.length) {
+    //         throw new NotFoundException('Movie Roles not found');
+    //     }
 
-        const response = structureResponse(movieRoleList, 1, "Success");
-        res.send(response);
-    };
-
-    getMoviesByRoleId = async (req, res, next) => {
-        let moviesList = await MovieRoleModel.findMovieDetails({ role_id: req.params.id });
-        if (!moviesList.length) {
-            throw new NotFoundException('No movies for this role');
-        }
-
-        moviesList = moviesList.map((movieBody)=>{
-            const {role_id, ...movie} = movieBody;
-            return movie;
-        });
-
-        const response = structureResponse(moviesList, 1, "Success");
-        res.send(response);
-    };
-
-    getRolesByMovieId = async (req, res, next) => {
-        let roleList = await MovieRoleModel.findRoleDetails({ movie_id: req.params.id });
-        if (!roleList.length) {
-            throw new NotFoundException('No roles for this movie');
-        }
-
-        // roleList = roleList.map((roleBody)=>{
-        //     const {movie_id, ...role} = roleBody;
-        //     return role;
-        // });
-
-        const response = structureResponse(roleList, 1, "Success");
-        res.send(response);
-    };
+    //     const response = structureResponse(movieRoleList, 1, "Success");
+    //     res.send(response);
+    // };
 
     updateMovieRole = async (req, res, next) => {
         checkValidation(req);

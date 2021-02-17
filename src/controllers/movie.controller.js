@@ -55,6 +55,21 @@ class MovieController {
         res.send(response);
     };
 
+    getMovieRoles = async (req, res, next) => {
+        const movieDuplicates = await MovieModel.findOne({ movie_id: req.params.id, ...req.body });
+        if (!movieDuplicates.length) {
+            throw new NotFoundException('Movie not found');
+        }
+
+        const roles = movieDuplicates.map((movie)=>{
+            const {role_id,full_name,age,picture_url,role_type} = movie;
+            return { role_id, full_name, age, picture_url, role_type };
+        })
+
+        const response = structureResponse(roles, 1, "Success");
+        res.send(response);
+    };
+
     //map these too
     getComingSoonMovies = async (req, res, net) => {
         let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});

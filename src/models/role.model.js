@@ -4,7 +4,9 @@ const { tables } = require('../utils/tableNames.utils');
 class RoleModel {
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${tables.Roles}`;
+        let sql = `SELECT * FROM ${tables.Roles}
+        NATURAL JOIN ${tables.MovieRoles}
+        NATURAL JOIN ${tables.Movies}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -20,12 +22,15 @@ class RoleModel {
         const { columnSet, values } = multipleColumnSet(params)
 
         const sql = `SELECT * FROM ${tables.Roles}
-        WHERE ${columnSet}`;
+        NATURAL JOIN ${tables.MovieRoles}
+        NATURAL JOIN ${tables.Movies}
+        WHERE ${columnSet}
+        GROUP BY movie_id`;
 
         const result = await query(sql, [...values]);
 
-        // return back the first row (role)
-        return result[0];
+        // return back the first row (movie)
+        return result;
     }
 
     create = async ({ full_name, age, picture_url }) => {

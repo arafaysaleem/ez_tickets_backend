@@ -29,26 +29,6 @@ class MovieRoleModel {
         return result[0];
     }
 
-    findRoleDetails = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
-
-        const sql = `SELECT role_id, full_name, age, picture_url, role_type FROM ${tables.MovieRoles}
-        NATURAL JOIN ${tables.Roles}
-        WHERE ${columnSet}`;
-
-        return await query(sql, [...values]);
-    }
-
-    findMovieDetails = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
-
-        const sql = `SELECT * FROM ${tables.MovieRoles}
-        NATURAL JOIN ${tables.Movies}
-        WHERE ${columnSet}`;
-
-        return await query(sql, [...values]);
-    }
-
     create = async ({ movie_id, role_id, role_type }) => {
         const sql = `INSERT INTO ${tables.MovieRoles}
         (movie_id, role_id, role_type) 
