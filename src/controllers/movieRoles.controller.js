@@ -22,7 +22,7 @@ class MovieRoleController {
         }
 
         moviesList = moviesList.map((movieBody)=>{
-            const {mr_id,role_id, ...movie} = movieBody;
+            const {role_id, ...movie} = movieBody;
             return movie;
         });
 
@@ -37,7 +37,7 @@ class MovieRoleController {
         }
 
         // roleList = roleList.map((roleBody)=>{
-        //     const {mr_id,movie_id, ...role} = roleBody;
+        //     const {movie_id, ...role} = roleBody;
         //     return role;
         // });
 

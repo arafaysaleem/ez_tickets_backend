@@ -15,13 +15,13 @@ class MovieController {
         let movieList = {};
 
         for (const movie of movieDuplicates) {
-            const {mr_id, role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
+            const {role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
             const movie_id = movie.movie_id;
             if(!movieList[movie_id]) {
                 movieList[movie_id] = movieDetails;
                 movieList[movie_id].roles = []
             }
-            movieList[movie_id].roles.push({ mr_id, role_id, full_name, age, picture_url, role_type });
+            movieList[movie_id].roles.push({ role_id, full_name, age, picture_url, role_type });
         }    
 
         movieList = Object.values(movieList);
@@ -39,9 +39,9 @@ class MovieController {
         let movieBody = {};
 
         const roles = movieDuplicates.map((movie)=>{
-            const {mr_id, role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
+            const {role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
             if(!movieBody.length) movieBody = movieDetails;
-            return { mr_id, role_id, full_name, age, picture_url, role_type };
+            return { role_id, full_name, age, picture_url, role_type };
         })
 
         movieBody.roles = roles;
