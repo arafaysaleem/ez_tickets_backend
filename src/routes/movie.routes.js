@@ -13,7 +13,7 @@ router.get('/id/:id', auth(), awaitHandlerFactory(movieController.getMovieById))
 router.get('/now_showing', auth(), awaitHandlerFactory(movieController.getNowShowingMovies)); // localhost:3000/api/v1/movies/now_showing
 router.get('/coming_soon', auth(), awaitHandlerFactory(movieController.getComingSoonMovies)); // localhost:3000/api/v1/movies/coming_soon
 router.get('/roles/:id', auth(), awaitHandlerFactory(movieRoleController.getRolesByMovieId)); // Get all roles for this movie_id
-router.post('/', createMovieSchema, awaitHandlerFactory(movieController.createMovie)); // localhost:3000/api/v1/movies
+router.post('/', auth(UserRole.Admin,UserRole.SuperUser), createMovieSchema, awaitHandlerFactory(movieController.createMovie)); // localhost:3000/api/v1/movies
 router.patch('/id/:id', auth(UserRole.Admin,UserRole.SuperUser), updateMovieSchema, awaitHandlerFactory(movieController.updateMovie)); // localhost:3000/api/v1/movies/1 , using patch for partial update
 router.delete('/id/:id', auth(UserRole.Admin,UserRole.SuperUser), awaitHandlerFactory(movieController.deleteMovie)); // localhost:3000/api/v1/movies/1
 

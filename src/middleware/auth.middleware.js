@@ -2,7 +2,7 @@ const {
     TokenMissingException,
     TokenVerificationException,
     UnauthorizedException
-} = require('../utils/exceptions/api.exception');
+} = require('../utils/exceptions/auth.exception');
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');

@@ -3,7 +3,7 @@ const {checkValidation}= require('../middleware/validation.middleware');
 const { 
     RegistrationFailedException,
     InvalidCredentialsException
-} = require('../utils/exceptions/api.exception');
+} = require('../utils/exceptions/auth.exception');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');

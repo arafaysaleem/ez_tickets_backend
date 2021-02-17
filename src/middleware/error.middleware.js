@@ -1,4 +1,5 @@
-const { InternalServerException, TokenVerificationException } = require('../utils/exceptions/api.exception')
+const { InternalServerException } = require('../utils/exceptions/api.exception')
+const { TokenVerificationException } = require('../utils/exceptions/auth.exception')
 
 function errorMiddleware(err, req, res, next) {
     if(err.status === 500 || !err.message) {
