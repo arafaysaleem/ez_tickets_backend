@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2021 at 05:11 PM
+-- Generation Time: Feb 19, 2021 at 06:57 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -53,6 +53,14 @@ CREATE TABLE `movies` (
   `movie_type` enum('coming_soon','now_showing','removed') NOT NULL DEFAULT 'coming_soon'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `movies`
+--
+
+INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer_url`, `poster_url`, `movie_type`) VALUES
+(1, 'GOOGLE', 'Fearsome bitches.', 2012, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
+(4, 'FACEBOOK', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon');
+
 -- --------------------------------------------------------
 
 --
@@ -63,6 +71,31 @@ CREATE TABLE `movie_roles` (
   `movie_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL,
   `role_type` enum('director','producer','cast') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `movie_roles`
+--
+
+INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
+(1, 1, 'director'),
+(1, 2, 'cast'),
+(1, 3, 'cast'),
+(4, 1, 'producer'),
+(4, 2, 'director'),
+(4, 3, 'cast');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `otp_codes`
+--
+
+CREATE TABLE `otp_codes` (
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `OTP` text NOT NULL,
+  `expiration_datetime` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -77,6 +110,15 @@ CREATE TABLE `roles` (
   `age` tinyint(3) UNSIGNED NOT NULL,
   `picture_url` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `full_name`, `age`, `picture_url`) VALUES
+(1, 'Mrs. Lady', 29, 'https://www.biography.com/.image/t_share/MTE5NTU2MzE2Mzg0MTY3NDM1/quentin-tarantino-9502086-1-402.jpg'),
+(2, 'Mrs. Women', 29, 'https://www.biography.com/.image/t_share/MTE5NTU2MzE2Mzg0MTY3NDM1/quentin-tarantino-9502086-1-402.jpg'),
+(3, 'Mr. Guy', 36, 'https://www.biography.com/.image/t_share/MTE5NTU2MzE2Mzg0MTY3NDM1/quentin-tarantino-9502086-1-402.jpg');
 
 -- --------------------------------------------------------
 
@@ -137,6 +179,15 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `full_name`, `email`, `password`, `address`, `contact`, `role`) VALUES
+(1, 'Test Admin', 'admin@gmail.com', '$2a$08$y4hYovfviz31AZhru3t4FObYrLFrhdBNETXikx6WFD9VYGbUZucYO', 'Karachi', '+923009999999', 'admin'),
+(2, 'Test User', 'user@gmail.com', '$2a$08$V5FWrXIoHeJPGe0WDgQcJ.eJEX.rz6tCtevaNSKBH6deaoVDKMosS', 'Karachi', '+923009999999', 'api_user'),
+(10, 'Email Test User', 'arafaysaleem@gmail.com', '$2a$08$NMklGbvfLkOwYgo1lB6qbOxGUmOuH4gymNwU6WXC4H2gTa39v9OPW', 'Karachi', '+923009999999', 'api_user');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -159,6 +210,13 @@ ALTER TABLE `movies`
 ALTER TABLE `movie_roles`
   ADD PRIMARY KEY (`movie_id`,`role_id`) USING BTREE,
   ADD KEY `fk_mroles_role_id` (`role_id`);
+
+--
+-- Indexes for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `roles`
@@ -190,7 +248,8 @@ ALTER TABLE `theater_seats`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -200,13 +259,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `shows`
@@ -224,7 +289,7 @@ ALTER TABLE `theaters`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -243,6 +308,12 @@ ALTER TABLE `bookings`
 ALTER TABLE `movie_roles`
   ADD CONSTRAINT `fk_mroles_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`),
   ADD CONSTRAINT `fk_mroles_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+
+--
+-- Constraints for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD CONSTRAINT `fk_otp_codes_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `shows`
