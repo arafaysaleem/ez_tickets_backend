@@ -31,7 +31,7 @@ class OTPModel {
 
     create = async ({ user_id, email, OTP, expiration_datetime }) => {
         const sql = `INSERT INTO ${tables.OtpCodes}
-        (user_id, email, OTP, expiration_datetime) VALUES (?,?,?)`;
+        (user_id, email, OTP, expiration_datetime) VALUES (?,?,?,?)`;
 
         const result = await query(sql, [user_id, email, OTP, expiration_datetime]);
         const created_OTP = !result ? 0 : {

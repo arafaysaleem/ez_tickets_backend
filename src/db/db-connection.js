@@ -51,6 +51,7 @@ class DBConnection{
                 if(err.status === 409) throw new DuplicateEntryException(err.message);
             }
             
+            reject(err);
             throw err;
         });
     }

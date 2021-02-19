@@ -44,7 +44,7 @@ class UserModel {
     }
 
     update = async (params, filters) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         filters = multipleColumnSet(filters);
         const filterSet = filters.columnSet;
         const filterValues = filters.values;

@@ -9,16 +9,14 @@ exports.sendOTPEmail = (user,OTP) => {
         to: user.email, // Change to your recipient
         from: process.env.SENDGRID_SENDER, // Change to your verified sender
         subject: 'EZ Tickets password reset',
-        text: `Hi ${user.full_name} \n 
-        Please note and enter the following code ${OTP} to reset your password. \n\n 
-        If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+        templateId: 'd-a78a15d6feb442618af35cc1dfea2076',
+        dynamic_template_data: {full_name: user.full_name, OTP},
     }
 
     sgMail.send(msg, (err, result) => {
-        if(error) {
-            console.log(error);
-            throw new OTPGenerationException(error.message);
+        if(err) {
+            console.log(err);
+            throw new OTPGenerationException(err.message);
         }
-        console.log(result);
     })
 }

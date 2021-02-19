@@ -12,14 +12,24 @@ exports.forgotPWSchema = [
 ];
 
 exports.changePWSchema = [
+    body('email')
+        .exists()
+        .withMessage('Email is required')
+        .isEmail()
+        .withMessage('Must be a valid email')
+        .normalizeEmail(),
     body('password')
         .exists()
-        .withMessage('Password is required')
-        .notEmpty(),
+        .withMessage('Password field is required')
+        .notEmpty()
+        .withMessage('Password must be filled'),
     body('new_password')
         .exists()
-        .withMessage('New password is required')
-        .notEmpty(),
+        .withMessage('New password field is required')
+        .notEmpty()
+        .withMessage('New password must be filled')
+        .custom((value, { req }) => value !== req.body.password)
+        .withMessage('New password can\'t be the same as the old password'),
 ]
 
 exports.resetPWSchema = [
@@ -32,7 +42,8 @@ exports.resetPWSchema = [
     body('password')
     .exists()
     .withMessage('Password is required')
-    .notEmpty(),
+    .notEmpty()
+    .withMessage('Password must be filled'),
 ]
 
 exports.verifyOTPSchema = [
@@ -47,6 +58,8 @@ exports.verifyOTPSchema = [
         .withMessage('OTP is required')
         .matches(OTPRegex)
         .withMessage('OTP must be 4 digits')
+        .isString()
+        .withMessage('OTP must be a string')
 ];
 
 exports.validateLogin = [

@@ -6,7 +6,7 @@ function errorMiddleware(err, req, res, next) {
         if(!err.isOperational) err = new InternalServerException('Internal server error');
     }
     else if(err.name == "JsonWebTokenError") err = new TokenVerificationException();
-    
+
     let { message, code, error, status, data} = err;
 
     console.log(`[Exception] ${error}, [Code] ${code}`);

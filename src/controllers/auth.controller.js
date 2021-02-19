@@ -91,9 +91,9 @@ class AuthController {
             throw new InvalidCredentialsException('Email not registered');
         }
         
-        this.#removeExpiredOTP(user.user_id);
+        await this.#removeExpiredOTP(user.user_id);
 
-        const OTP = this.#generateOTP(user.user_id);
+        const OTP = await this.#generateOTP(user.user_id, req.body.email);
 
         sendOTPEmail(user,OTP);
 
@@ -102,14 +102,15 @@ class AuthController {
     }
 
     #generateOTP = async (user_id,email) => {
-        const OTP = otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false });
+        const OTP = `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
 
-        OTPHash = await bcrypt.hash(OTP, 8);
+        const OTPHash = await bcrypt.hash(OTP, 8);
 
         let expiration_datetime = new Date();
         expiration_datetime.setHours(expiration_datetime.getHours() + 1);
 
-        const result = await UserModel.createOTP({user_id,email,OTP: OTPHash, expiration_datetime});
+        const body = {user_id,email,OTP: OTPHash, expiration_datetime};
+        const result = await OTPModel.create(body);
 
         if (!result) throw new OTPGenerationException();
 
@@ -120,7 +121,7 @@ class AuthController {
         const result = await OTPModel.findOne({user_id});
 
         if (!!result) { //if found, delete
-            affectedRows = await OTPModel.delete({user_id});
+            const affectedRows = await OTPModel.delete({user_id});
 
             if (!affectedRows) {
                 throw new OTPGenerationException('Expired OTP could not be deleted');
@@ -138,9 +139,9 @@ class AuthController {
             throw new OTPVerificationException();
         }
 
-        const {expiration_datetime,OTPHash} = result;
+        const {expiration_datetime,OTP: OTPHash} = result;
 
-        if(expiration_datetime > new Date()) {
+        if(expiration_datetime < new Date()) {
             throw new OTPExpiredException();
         }
 
@@ -163,15 +164,13 @@ class AuthController {
     changePassword = async (req, res, next) => {
         checkValidation(req);
 
-        const oldPassword = req.body.password;
-
-        const user = await UserModel.findOne({ user_id: req.params.id });
+        const user = await UserModel.findOne({ email: req.body.email });
 
         if (!user) {
             throw new NotFoundException('User not found');
         }
 
-        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
 
         if (!isMatch) {
             throw new InvalidCredentialsException('Incorrect old password');
@@ -190,7 +189,7 @@ class AuthController {
 
         const { password, email } = req.body;
 
-        const result = await UserModel.update(password, {email});
+        const result = await UserModel.update({password}, {email});
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
