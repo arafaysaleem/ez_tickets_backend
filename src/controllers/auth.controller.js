@@ -67,6 +67,39 @@ class AuthController {
         res.send(response);
     };
 
+    forgotPassword = async (req, res, next) => {
+        checkValidation(req);
+
+        const result = await UserModel.findOne(req.body); //body contains "email" : ...
+        
+        if (!result) {
+            throw new InvalidCredentialsException('Email not registered');
+        }
+
+        //implement mailer
+        //generate random 4 digit OTP
+        //encrypt and store in database tempPasswords table (user_id,OTP,creation_time)
+        //an event trigger automatically deletes the record after 2mins code sent
+        //once email send, return a response saying reset email sent
+    }
+
+    resendOTP = async (req, res, next) => {
+        //check if exists in temp password then delete that and resend new
+        //return response
+    }
+
+    verifyOTP = async (req, res, next) => {
+        checkValidation(req);
+
+        //implement finding user in tempPasswords table
+        //if not found reply with OTP expired error
+        //if success then hash and match otp.
+        //if not match reply OTP verify failed
+        //if success reply with success.
+        //then app will handle the set new pw screen
+        //and call the reset password method
+    }
+
     // hash password if it exists
     hashPassword = async (req) => {
         if (req.body.password) {
