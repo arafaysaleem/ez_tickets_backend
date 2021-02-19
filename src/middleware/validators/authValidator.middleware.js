@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const { OTPRegex } = require('../../utils/common.utils');
 
 
-exports.forgetPWSchema = [
+exports.forgotPWSchema = [
     body('email')
         .exists()
         .withMessage('Email is required')
