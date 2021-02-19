@@ -101,7 +101,7 @@ class AuthController {
         res.send(response);
     }
 
-    #generateOTP = (user_id,email) => {
+    #generateOTP = async (user_id,email) => {
         const OTP = otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false });
 
         OTPHash = await bcrypt.hash(OTP, 8);
@@ -116,7 +116,7 @@ class AuthController {
         return OTP;
     }
 
-    #removeExpiredOTP = (user_id) => {
+    #removeExpiredOTP = async (user_id) => {
         const result = await OTPModel.findOne({user_id});
 
         if (!!result) { //if found, delete
