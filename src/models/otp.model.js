@@ -5,7 +5,7 @@ const { tables } = require('../utils/tableNames.utils');
 class OTPModel {
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${tables.VerificationCodes}`;
+        let sql = `SELECT * FROM ${tables.OtpCodes}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -20,7 +20,7 @@ class OTPModel {
     findOne = async (params) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `SELECT * FROM ${tables.VerificationCodes}
+        const sql = `SELECT * FROM ${tables.OtpCodes}
         WHERE ${columnSet}`;
 
         const result = await query(sql, [...values]);
@@ -30,7 +30,7 @@ class OTPModel {
     }
 
     create = async ({ user_id, email, OTP, expiration_datetime }) => {
-        const sql = `INSERT INTO ${tables.VerificationCodes}
+        const sql = `INSERT INTO ${tables.OtpCodes}
         (user_id, email, OTP, expiration_datetime) VALUES (?,?,?)`;
 
         const result = await query(sql, [user_id, email, OTP, expiration_datetime]);
@@ -44,7 +44,7 @@ class OTPModel {
 
     update = async (expiration_datetime, id) => {
 
-        const sql = `UPDATE ${tables.VerificationCodes}
+        const sql = `UPDATE ${tables.OtpCodes}
         SET expiration_datetime = ?
         WHERE user_id = ?`;
 
@@ -56,7 +56,7 @@ class OTPModel {
     delete = async (params) => {
         const { columnSet, values } = multipleColumnSet(params)
 
-        const sql = `DELETE FROM ${tables.VerificationCodes}
+        const sql = `DELETE FROM ${tables.OtpCodes}
         WHERE ${columnSet}`;
 
         const result = await query(sql, [...values]);

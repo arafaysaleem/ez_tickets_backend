@@ -3,5 +3,5 @@ exports.tables = {
     Movies: 'movies',
     Users: 'users',
     Roles: 'roles',
-    VerificationCodes: 'verification_codes'
+    OtpCodes: 'otp_codes'
 }
