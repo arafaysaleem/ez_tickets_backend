@@ -1,14 +1,29 @@
-const UserModel = require('../models/user.model');
-const {checkValidation}= require('../middleware/validation.middleware');
-const { 
-    RegistrationFailedException,
-    InvalidCredentialsException
-} = require('../utils/exceptions/auth.exception');
+const { checkValidation }= require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
+const { sendOTPEmail } = require('../utils/sendgrid.utils');
+const otpGenerator = require('otp-generator')
+
+const UserModel = require('../models/user.model');
+const OTPModel = require('../models/otp.model');
+const { 
+    RegistrationFailedException,
+    InvalidCredentialsException,
+    OTPExpiredException,
+    OTPGenerationException,
+    OTPVerificationException
+} = require('../utils/exceptions/auth.exception');
+
+const { 
+    NotFoundException,
+    UpdateFailedException,
+    UnexpectedException
+} = require('../utils/exceptions/database.exception');
+
+
 
 class AuthController {
 
@@ -70,34 +85,124 @@ class AuthController {
     forgotPassword = async (req, res, next) => {
         checkValidation(req);
 
-        const result = await UserModel.findOne(req.body); //body contains "email" : ...
+        let user = await UserModel.findOne(req.body); //body contains "email" : ...
         
-        if (!result) {
+        if (!user) {
             throw new InvalidCredentialsException('Email not registered');
         }
+        
+        this.#removeExpiredOTP(user.user_id);
 
-        //implement mailer
-        //generate random 4 digit OTP
-        //encrypt and store in database tempPasswords table (user_id,OTP,creation_time)
-        //an event trigger automatically deletes the record after 2mins code sent
-        //once email send, return a response saying reset email sent
+        const OTP = this.#generateOTP(user.user_id);
+
+        sendOTPEmail(user,OTP);
+
+        const response = structureResponse({}, 1, 'OTP generated and sent via email');
+        res.send(response);
     }
 
-    resendOTP = async (req, res, next) => {
-        //check if exists in temp password then delete that and resend new
-        //return response
+    #generateOTP = (user_id,email) => {
+        const OTP = otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false });
+
+        OTPHash = await bcrypt.hash(OTP, 8);
+
+        let expiration_datetime = new Date();
+        expiration_datetime.setHours(expiration_datetime.getHours() + 1);
+
+        const result = await UserModel.createOTP({user_id,email,OTP: OTPHash, expiration_datetime});
+
+        if (!result) throw new OTPGenerationException();
+
+        return OTP;
+    }
+
+    #removeExpiredOTP = (user_id) => {
+        const result = await OTPModel.findOne({user_id});
+
+        if (!!result) { //if found, delete
+            affectedRows = await OTPModel.delete({user_id});
+
+            if (!affectedRows) {
+                throw new OTPGenerationException('Expired OTP could not be deleted');
+            }
+        }
     }
 
     verifyOTP = async (req, res, next) => {
         checkValidation(req);
 
-        //implement finding user in tempPasswords table
-        //if not found reply with OTP expired error
-        //if success then hash and match otp.
-        //if not match reply OTP verify failed
-        //if success reply with success.
-        //then app will handle the set new pw screen
-        //and call the reset password method
+        const {OTP, email} = req.body;
+        let result = await OTPModel.findOne({email});
+
+        if(!result) {
+            throw new OTPVerificationException();
+        }
+
+        const {expiration_datetime,OTPHash} = result;
+
+        if(expiration_datetime > new Date()) {
+            throw new OTPExpiredException();
+        }
+
+        const isMatch = await bcrypt.compare(OTP, OTPHash);
+
+        if(!isMatch) {
+            throw new OTPVerificationException();
+        }
+
+        result = await OTPModel.delete({email});
+
+        if(!result) {
+            throw new OTPVerificationException('Old OTP failed to be deleted');
+        }
+
+        const response = structureResponse({}, 1, 'OTP verified succesfully');
+        res.send(response);
+    }
+
+    changePassword = async (req, res, next) => {
+        checkValidation(req);
+
+        const oldPassword = req.body.password;
+
+        const user = await UserModel.findOne({ user_id: req.params.id });
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+        if (!isMatch) {
+            throw new InvalidCredentialsException('Incorrect old password');
+        }
+
+        req.body.password = req.body.new_password;
+        req.body.new_password = undefined;
+
+        this.resetPassword(req,res,next);
+    };
+
+    resetPassword = async (req, res, next) => {
+        checkValidation(req);
+
+        await this.hashPassword(req);
+
+        const { password, email } = req.body;
+
+        const result = await UserModel.update(password, {email});
+
+        if (!result) {
+            throw new UnexpectedException('Something went wrong');
+        }
+
+        const { affectedRows, changedRows, info } = result;
+
+        if(!affectedRows) throw new NotFoundException('User not found');
+        else if(affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
+        
+        const response = structureResponse(info, 1,'Password changed successfully');
+        res.send(response);
     }
 
     // hash password if it exists

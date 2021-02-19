@@ -22,3 +22,5 @@ exports.structureResponse = (body,success,message) => {
 }
 
 exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
+
+exports.OTPRegex = new RegExp(/^[0-9]{4}$/);

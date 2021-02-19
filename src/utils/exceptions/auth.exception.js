@@ -30,6 +30,24 @@ class TokenVerificationException extends AuthException {
     }
 }
 
+class OTPGenerationException extends AuthException {
+    constructor(message = "OTP generation failed",data){
+    	super(ErrorResponse.OTPGenerationException, message, data);
+    }
+}
+
+class OTPExpiredException extends AuthException {
+    constructor(message = "OTP expired",data){
+    	super(ErrorResponse.OTPExpiredException, message, data);
+    }
+}
+
+class OTPVerificationException extends AuthException {
+    constructor(message = "OTP verification failed",data){
+    	super(ErrorResponse.OTPVerificationException, message, data);
+    }
+}
+
 class InvalidCredentialsException extends AuthException {
     constructor(message,data){
     	super(ErrorResponse.InvalidCredentialsException, message, data);
@@ -47,5 +65,8 @@ module.exports = {
     InvalidCredentialsException,
     TokenVerificationException,
     UnauthorizedException,
-    RegistrationFailedException
+    RegistrationFailedException,
+    OTPExpiredException,
+    OTPGenerationException,
+    OTPVerificationException
 };

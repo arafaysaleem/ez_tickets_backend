@@ -43,12 +43,15 @@ class UserModel {
         return created_user;
     }
 
-    update = async (params, id) => {
+    update = async (params, filters) => {
         const { columnSet, values } = multipleColumnSet(params)
+        filters = multipleColumnSet(filters);
+        const filterSet = filters.columnSet;
+        const filterValues = filters.values;
 
-        const sql = `UPDATE ${tables.Users} SET ${columnSet} WHERE user_id = ?`;
+        const sql = `UPDATE ${tables.Users} SET ${columnSet} WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await query(sql, [...values, ...filterValues]);
 
         return result;
     }

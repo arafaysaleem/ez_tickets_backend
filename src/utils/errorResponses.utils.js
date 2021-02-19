@@ -12,4 +12,7 @@ module.exports.ErrorResponse = {
     RegistrationFailedException: 10,
     InvalidEndpointException: 11,
     TokenVerificationException: 12,
+    OTPGenerationException: 13,
+    OTPExpiredException: 14,
+    OTPVerificationException: 15,
 }

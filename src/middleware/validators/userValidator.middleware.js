@@ -48,9 +48,6 @@ exports.updateUserSchema = [
         .optional()
         .isIn([...Object.values(UserRole)])
         .withMessage('Invalid UserRole type'),
-    body('password')
-        .optional()
-        .notEmpty(),
     body('contact')
         .optional()
         .isMobilePhone('en-PK',{strictMode: true})
@@ -62,22 +59,8 @@ exports.updateUserSchema = [
         .withMessage('Please provide required field to update')
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ['full_name', 'email', 'password', 'role', 'contact', 'address'];
+            const allowUpdates = ['full_name', 'email', 'role', 'contact', 'address'];
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
-];
-
-exports.validateLogin = [
-    body('email')
-        .exists()
-        .withMessage('Email is required')
-        .isEmail()
-        .withMessage('Must be a valid email')
-        .normalizeEmail(),
-    body('password')
-        .exists()
-        .withMessage('Password is required')
-        .notEmpty()
-        .withMessage('Password must be filled')
 ];

@@ -1,17 +1,17 @@
+const { checkValidation }= require('../middleware/validation.middleware');
+const { structureResponse } = require('../utils/common.utils');
+const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
+dotenv.config();
+
 const UserModel = require('../models/user.model');
-const {checkValidation}= require('../middleware/validation.middleware');
 const { 
     NotFoundException,
     CreateFailedException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
-const { structureResponse } = require('../utils/common.utils');
-const bcrypt = require('bcryptjs');
-const dotenv = require('dotenv');
-dotenv.config();
 
-//todo: Move change password support to auth controller
 class UserController {
     getAllUsers = async (req, res, next) => {
         let userList = await UserModel.findAll();
@@ -58,9 +58,7 @@ class UserController {
     updateUser = async (req, res, next) => {
         checkValidation(req);
 
-        await this.hashPassword(req);
-
-        const result = await UserModel.update(req.body, req.params.id);
+        const result = await UserModel.update(req.body, {user_id: req.params.id});
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
