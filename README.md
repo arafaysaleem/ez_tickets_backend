@@ -35,7 +35,22 @@ vscode .env
 
 # Add a gitignore to ignore node_modules and your .env file
 echo -e 'node_modules \n .env \n' >> .gitignore
+```
 
+### Setup MySQL database
+
+Import the ez_ticket.sql using your sql workbench to create the database.
+
+### (Optional) Setup Postman API
+
+If you want to quickly setup the endpoints for testing:
+
+* Go to Postman to import backup
+* Upload the postman_collections_backup.zip
+
+### Setting up node js
+
+``` sh
 # Install dependencies
 npm install
 
