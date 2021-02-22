@@ -1,6 +1,6 @@
 const MovieRoleModel = require('../models/movieRole.model');
-const {checkValidation}= require('../middleware/validation.middleware');
-const { 
+const {checkValidation} = require('../middleware/validation.middleware');
+const {
     NotFoundException,
     UpdateFailedException,
     UnexpectedException
@@ -30,10 +30,10 @@ class MovieRoleController {
 
         const { affectedRows, changedRows, info } = result;
 
-        if(!affectedRows) throw new NotFoundException('Movie Role not found');
-        else if(affectedRows && !changedRows) throw new UpdateFailedException('Movie Role update failed');
+        if (!affectedRows) throw new NotFoundException('Movie Role not found');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('Movie Role update failed');
             
-        const response = structureResponse(info, 1,'Movie Role updated successfully');
+        const response = structureResponse(info, 1, 'Movie Role updated successfully');
 
         res.send(response);
     };
@@ -44,7 +44,7 @@ class MovieRoleController {
             throw new NotFoundException('Movie Role not found');
         }
 
-        const response = structureResponse({}, 1,'Movie Role has been deleted');
+        const response = structureResponse({}, 1, 'Movie Role has been deleted');
         res.send(response);
     };
 }

@@ -12,14 +12,14 @@ class RoleModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `SELECT * FROM ${tables.Roles}
         NATURAL JOIN ${tables.MovieRoles}
@@ -40,15 +40,15 @@ class RoleModel {
 
         const result = await query(sql, [full_name, age, picture_url]);
         const created_role = !result ? 0 : {
-            'role_id':result.insertId,
-            'affected_rows':result.affectedRows
+            role_id: result.insertId,
+            affected_rows: result.affectedRows
         };
 
         return created_role;
     }
 
     update = async (params, id) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `UPDATE ${tables.Roles} SET ${columnSet} WHERE role_id = ?`;
 

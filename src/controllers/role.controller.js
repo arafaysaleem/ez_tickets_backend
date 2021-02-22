@@ -1,6 +1,6 @@
 const RoleModel = require('../models/role.model');
-const {checkValidation}= require('../middleware/validation.middleware');
-const { 
+const {checkValidation} = require('../middleware/validation.middleware');
+const {
     NotFoundException,
     CreateFailedException,
     UpdateFailedException,
@@ -18,13 +18,13 @@ class RoleController {
         let roleList = {};
 
         for (const role of roleDuplicates) {
-            const {role_id,full_name, age, picture_url, ...movieDetails} = role;
-            if(!roleList[role_id]) {
-                roleList[role_id] = {role_id,full_name, age, picture_url};
-                roleList[role_id].movies = []
+            const {role_id, full_name, age, picture_url, ...movieDetails} = role;
+            if (!roleList[role_id]) {
+                roleList[role_id] = {role_id, full_name, age, picture_url};
+                roleList[role_id].movies = [];
             }
             roleList[role_id].movies.push(movieDetails);
-        }    
+        }
 
         roleList = Object.values(roleList);
 
@@ -40,11 +40,11 @@ class RoleController {
 
         let roleBody = {};
 
-        const movies = roleDuplicates.map((role)=>{
-            const {role_id,full_name, age, picture_url, ...movieDetails} = role;
-            if(!roleBody.length) roleBody = {role_id,full_name, age, picture_url};
+        const movies = roleDuplicates.map((role) => {
+            const {role_id, full_name, age, picture_url, ...movieDetails} = role;
+            if (!roleBody.length) roleBody = {role_id, full_name, age, picture_url};
             return movieDetails;
-        })
+        });
 
         roleBody.movies = movies;
 
@@ -58,10 +58,10 @@ class RoleController {
             throw new NotFoundException('Role not found');
         }
 
-        const movies = roleDuplicates.map((role)=>{
-            const {role_id,full_name,age,picture_url, ...movieDetails} = role;
+        const movies = roleDuplicates.map((role) => {
+            const {role_id, full_name, age, picture_url, ...movieDetails} = role;
             return movieDetails;
-        })
+        });
 
         const response = structureResponse(movies, 1, "Success");
         res.send(response);
@@ -76,7 +76,7 @@ class RoleController {
             throw new CreateFailedException('Role failed to be created');
         }
 
-        const response = structureResponse(result, 1,'Role was created!');
+        const response = structureResponse(result, 1, 'Role was created!');
         res.status(201).send(response);
     };
 
@@ -91,12 +91,12 @@ class RoleController {
 
         const { affectedRows, changedRows, info } = result;
 
-        if(!affectedRows) throw new NotFoundException('Role not found');
-        else if(affectedRows && !changedRows) throw new UpdateFailedException('Role update failed');
+        if (!affectedRows) throw new NotFoundException('Role not found');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('Role update failed');
         
         const message = 'Role updated successfully';
 
-        const response = structureResponse(info, 1,message);
+        const response = structureResponse(info, 1, message);
         res.send(response);
     };
 
@@ -106,7 +106,7 @@ class RoleController {
             throw new NotFoundException('Role not found');
         }
 
-        const response = structureResponse({}, 1,'Role has been deleted');
+        const response = structureResponse({}, 1, 'Role has been deleted');
         res.send(response);
     };
 }

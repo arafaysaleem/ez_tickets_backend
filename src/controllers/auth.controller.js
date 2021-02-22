@@ -1,15 +1,15 @@
-const { checkValidation }= require('../middleware/validation.middleware');
+const { checkValidation } = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
-const otpGenerator = require('otp-generator')
+const otpGenerator = require('otp-generator');
 
 const UserModel = require('../models/user.model');
 const OTPModel = require('../models/otp.model');
-const { 
+const {
     RegistrationFailedException,
     InvalidCredentialsException,
     OTPExpiredException,
@@ -17,12 +17,11 @@ const {
     OTPVerificationException
 } = require('../utils/exceptions/auth.exception');
 
-const { 
+const {
     NotFoundException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
-
 
 
 class AuthController {
@@ -43,7 +42,7 @@ class AuthController {
         req.body.password = pass;
         req.body.message = true;
 
-        this.userLogin(req,res,next);
+        this.userLogin(req, res, next);
     };
 
     userLogin = async (req, res, next) => {
@@ -66,17 +65,16 @@ class AuthController {
             expiresIn: '24h'
         });
 
-        let message="";
-        let body="";
-        if(!!req.body.message){ //if registered first 
-            const { user_id, ...userWithoutId } = user;
-            message = "Registered"; //set msg to registered
+        let message = "";
+        let body = "";
+        if (req.body.message){ // if registered first
+            const { user_id } = user;
+            message = "Registered"; // set msg to registered
             body = { user_id, token};
-        }
-        else{
-            const { password, ...userWithoutPassword } = user;
+        } else {
+            user.password = undefined;
             message = "Authenticated";
-            body = { ...userWithoutPassword, token};
+            body = { ...user, token};
         }
         const response = structureResponse(body, 1, message);
         res.send(response);
@@ -85,7 +83,7 @@ class AuthController {
     forgotPassword = async (req, res, next) => {
         checkValidation(req);
 
-        let user = await UserModel.findOne(req.body); //body contains "email" : ...
+        let user = await UserModel.findOne(req.body); // body contains "email" : ...
         
         if (!user) {
             throw new InvalidCredentialsException('Email not registered');
@@ -95,13 +93,13 @@ class AuthController {
 
         const OTP = await this.#generateOTP(user.user_id, req.body.email);
 
-        sendOTPEmail(user,OTP);
+        sendOTPEmail(user, OTP);
 
         const response = structureResponse({}, 1, 'OTP generated and sent via email');
         res.send(response);
     }
 
-    #generateOTP = async (user_id,email) => {
+    #generateOTP = async (user_id, email) => {
         const OTP = `${otpGenerator.generate(4, { alphabets: false, upperCase: false, specialChars: false })}`;
 
         const OTPHash = await bcrypt.hash(OTP, 8);
@@ -109,7 +107,7 @@ class AuthController {
         let expiration_datetime = new Date();
         expiration_datetime.setHours(expiration_datetime.getHours() + 1);
 
-        const body = {user_id,email,OTP: OTPHash, expiration_datetime};
+        const body = {user_id, email, OTP: OTPHash, expiration_datetime};
         const result = await OTPModel.create(body);
 
         if (!result) throw new OTPGenerationException();
@@ -120,7 +118,7 @@ class AuthController {
     #removeExpiredOTP = async (user_id) => {
         const result = await OTPModel.findOne({user_id});
 
-        if (!!result) { //if found, delete
+        if (result) { // if found, delete
             const affectedRows = await OTPModel.delete({user_id});
 
             if (!affectedRows) {
@@ -135,25 +133,25 @@ class AuthController {
         const {OTP, email} = req.body;
         let result = await OTPModel.findOne({email});
 
-        if(!result) {
+        if (!result) {
             throw new OTPVerificationException();
         }
 
-        const {expiration_datetime,OTP: OTPHash} = result;
+        const {expiration_datetime, OTP: OTPHash} = result;
 
-        if(expiration_datetime < new Date()) {
+        if (expiration_datetime < new Date()) {
             throw new OTPExpiredException();
         }
 
         const isMatch = await bcrypt.compare(OTP, OTPHash);
 
-        if(!isMatch) {
+        if (!isMatch) {
             throw new OTPVerificationException();
         }
 
         result = await OTPModel.delete({email});
 
-        if(!result) {
+        if (!result) {
             throw new OTPVerificationException('Old OTP failed to be deleted');
         }
 
@@ -179,7 +177,7 @@ class AuthController {
         req.body.password = req.body.new_password;
         req.body.new_password = undefined;
 
-        this.resetPassword(req,res,next);
+        this.resetPassword(req, res, next);
     };
 
     resetPassword = async (req, res, next) => {
@@ -197,10 +195,10 @@ class AuthController {
 
         const { affectedRows, changedRows, info } = result;
 
-        if(!affectedRows) throw new NotFoundException('User not found');
-        else if(affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
+        if (!affectedRows) throw new NotFoundException('User not found');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('Password change failed');
         
-        const response = structureResponse(info, 1,'Password changed successfully');
+        const response = structureResponse(info, 1, 'Password changed successfully');
         res.send(response);
     }
 

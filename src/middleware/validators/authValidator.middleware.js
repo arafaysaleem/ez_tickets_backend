@@ -8,7 +8,7 @@ exports.forgotPWSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
-        .normalizeEmail(),
+        .normalizeEmail()
 ];
 
 exports.changePWSchema = [
@@ -29,8 +29,8 @@ exports.changePWSchema = [
         .notEmpty()
         .withMessage('New password must be filled')
         .custom((value, { req }) => value !== req.body.password)
-        .withMessage('New password can\'t be the same as the old password'),
-]
+        .withMessage('New password can\'t be the same as the old password')
+];
 
 exports.resetPWSchema = [
     body('email')
@@ -40,11 +40,11 @@ exports.resetPWSchema = [
         .withMessage('Must be a valid email')
         .normalizeEmail(),
     body('password')
-    .exists()
-    .withMessage('Password is required')
-    .notEmpty()
-    .withMessage('Password must be filled'),
-]
+        .exists()
+        .withMessage('Password is required')
+        .notEmpty()
+        .withMessage('Password must be filled')
+];
 
 exports.verifyOTPSchema = [
     body('email')
@@ -67,7 +67,7 @@ exports.validateLogin = [
         .exists()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Must be a valid email') //todo: add email verification
+        .withMessage('Must be a valid email') // todo: add email verification
         .normalizeEmail(),
     body('password')
         .exists()

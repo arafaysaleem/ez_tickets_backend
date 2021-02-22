@@ -1,4 +1,4 @@
-const { 
+const {
     TokenMissingException,
     TokenVerificationException,
     UnauthorizedException
@@ -30,11 +30,11 @@ const auth = (...roles) => {
             }
 
             // check if the current user is the owner user
-            //const ownerAuthorized = req.params.id == user.user_id; //cant update self
+            // const ownerAuthorized = req.params.id == user.user_id; //cant update self
             // if the current user is not the owner and
             // if the user role don't have the permission to do this action.
             // the user will get this error
-            if (/*!ownerAuthorized || */(roles.length && !roles.includes(user.role))) {
+            if (/*! ownerAuthorized || */(roles.length && !roles.includes(user.role))) {
                 throw new UnauthorizedException();
             }
 
@@ -46,7 +46,7 @@ const auth = (...roles) => {
             e.status = 401;
             next(e);
         }
-    }
-}
+    };
+};
 
 module.exports = auth;

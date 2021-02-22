@@ -11,14 +11,14 @@ class MovieRoleModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `SELECT * FROM ${tables.MovieRoles}
         WHERE ${columnSet}`;
@@ -40,7 +40,7 @@ class MovieRoleModel {
     }
 
     update = async (params, filters) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         filters = multipleColumnSet(filters);
         const filterSet = filters.columnSet;
         const filterValues = filters.values;
@@ -53,7 +53,7 @@ class MovieRoleModel {
     }
 
     delete = async (filters) => {
-        const { filterSet, filterValues } = multipleColumnSet(params)
+        const { filterSet, filterValues } = multipleColumnSet(filters);
 
         const sql = `DELETE FROM ${tables.MovieRoles}
         WHERE ${filterSet}`;

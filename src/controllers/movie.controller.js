@@ -1,8 +1,8 @@
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
 const MovieType = require('../utils/movieTypes.utils');
-const {checkValidation}= require('../middleware/validation.middleware');
-const { 
+const {checkValidation} = require('../middleware/validation.middleware');
+const {
     NotFoundException,
     CreateFailedException,
     UpdateFailedException,
@@ -20,14 +20,14 @@ class MovieController {
         let movieList = {};
 
         for (const movie of movieDuplicates) {
-            const {role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
+            const {role_id, full_name, age, picture_url, role_type, ...movieDetails} = movie;
             const movie_id = movie.movie_id;
-            if(!movieList[movie_id]) {
+            if (!movieList[movie_id]) {
                 movieList[movie_id] = movieDetails;
-                movieList[movie_id].roles = []
+                movieList[movie_id].roles = [];
             }
             movieList[movie_id].roles.push({ role_id, full_name, age, picture_url, role_type });
-        }    
+        }
 
         movieList = Object.values(movieList);
 
@@ -43,11 +43,11 @@ class MovieController {
 
         let movieBody = {};
 
-        const roles = movieDuplicates.map((movie)=>{
-            const {role_id,full_name,age,picture_url,role_type, ...movieDetails} = movie;
-            if(!movieBody.length) movieBody = movieDetails;
+        const roles = movieDuplicates.map((movie) => {
+            const {role_id, full_name, age, picture_url, role_type, ...movieDetails} = movie;
+            if (!movieBody.length) movieBody = movieDetails;
             return { role_id, full_name, age, picture_url, role_type };
-        })
+        });
 
         movieBody.roles = roles;
 
@@ -61,16 +61,16 @@ class MovieController {
             throw new NotFoundException('Movie not found');
         }
 
-        const roles = movieDuplicates.map((movie)=>{
-            const {role_id,full_name,age,picture_url,role_type} = movie;
+        const roles = movieDuplicates.map((movie) => {
+            const {role_id, full_name, age, picture_url, role_type} = movie;
             return { role_id, full_name, age, picture_url, role_type };
-        })
+        });
 
         const response = structureResponse(roles, 1, "Success");
         res.send(response);
     };
 
-    //map these too
+    // map these too
     getComingSoonMovies = async (req, res, net) => {
         let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});
         if (!comingSoonList.length) {
@@ -91,7 +91,7 @@ class MovieController {
         res.send(response);
     }
 
-    /*Roles are is form of a map like this
+    /* Roles are is form of a map like this
         [
             {
                 role_id: 1,
@@ -105,8 +105,8 @@ class MovieController {
     */
     createMovie = async (req, res, next) => {
         checkValidation(req);
-        //todo: Run queries in transactions
-        const {roles , ...movieBody} = req.body;
+        // todo: Run queries in transactions
+        const {roles, ...movieBody} = req.body;
         const result = await MovieModel.create(movieBody);
 
         if (!result) {
@@ -115,7 +115,7 @@ class MovieController {
 
         for (const role of roles) {
             const movieRole = {
-                movie_id: result.movie_id, 
+                movie_id: result.movie_id,
                 role_id: role.role_id,
                 role_type: role.role_type
             };
@@ -125,7 +125,7 @@ class MovieController {
             }
         }
 
-        const response = structureResponse(result, 1,'Movie was created!');
+        const response = structureResponse(result, 1, 'Movie was created!');
         res.status(201).send(response);
     };
 
@@ -140,10 +140,10 @@ class MovieController {
 
         const { affectedRows, changedRows, info } = result;
 
-        if(!affectedRows) throw new NotFoundException('Movie not found');
-        else if(affectedRows && !changedRows) throw new UpdateFailedException('Movie update failed');
+        if (!affectedRows) throw new NotFoundException('Movie not found');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('Movie update failed');
             
-        const response = structureResponse(info, 1,'Movie updated successfully');
+        const response = structureResponse(info, 1, 'Movie updated successfully');
 
         res.send(response);
     };
@@ -154,7 +154,7 @@ class MovieController {
             throw new NotFoundException('Movie not found');
         }
 
-        const response = structureResponse({}, 1,'Movie has been deleted');
+        const response = structureResponse({}, 1, 'Movie has been deleted');
         res.send(response);
     };
 }

@@ -6,4 +6,4 @@ exports.checkValidation = (req) => {
     if (!data.isEmpty()) {
         throw new InvalidPropertiesException('Missing or invalid properties', {data: data.errors});
     }
-}
+};

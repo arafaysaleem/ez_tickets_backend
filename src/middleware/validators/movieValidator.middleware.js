@@ -54,7 +54,7 @@ exports.createMovieSchema = [
         .withMessage('RoleType is required for each role')
         .bail()
         .isIn([...Object.values(RoleType)])
-        .withMessage('Invalid RoleType'),
+        .withMessage('Invalid RoleType')
 ];
 
 exports.updateMovieSchema = [
@@ -84,7 +84,7 @@ exports.updateMovieSchema = [
         .withMessage('Invalid movie type'),
     body()
         .custom(value => {
-            return !!Object.keys(value).length;
+            return Object.keys(value).length !== 0;
         })
         .withMessage('Please provide required fields to update')
         .custom(value => {

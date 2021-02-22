@@ -1,11 +1,11 @@
-const { checkValidation }= require('../middleware/validation.middleware');
+const { checkValidation } = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const UserModel = require('../models/user.model');
-const { 
+const {
     NotFoundException,
     CreateFailedException,
     UpdateFailedException,
@@ -51,7 +51,7 @@ class UserController {
             throw new CreateFailedException('User failed to be created');
         }
 
-        const response = structureResponse(result, 1,'User was created!');
+        const response = structureResponse(result, 1, 'User was created!');
         res.status(201).send(response);
     };
 
@@ -66,10 +66,10 @@ class UserController {
 
         const { affectedRows, changedRows, info } = result;
 
-        if(!affectedRows) throw new NotFoundException('User not found');
-        else if(affectedRows && !changedRows) throw new UpdateFailedException('User update failed');
+        if (!affectedRows) throw new NotFoundException('User not found');
+        else if (affectedRows && !changedRows) throw new UpdateFailedException('User update failed');
         
-        const response = structureResponse(info, 1,'User updated successfully');
+        const response = structureResponse(info, 1, 'User updated successfully');
         res.send(response);
     };
 
@@ -79,7 +79,7 @@ class UserController {
             throw new NotFoundException('User not found');
         }
 
-        const response = structureResponse({}, 1,'User has been deleted');
+        const response = structureResponse({}, 1, 'User has been deleted');
         res.send(response);
     };
 

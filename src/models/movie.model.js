@@ -13,14 +13,14 @@ class MovieModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `SELECT * FROM ${tables.Movies}
         NATURAL JOIN ${tables.MovieRoles}
@@ -34,7 +34,7 @@ class MovieModel {
         return result;
     }
 
-    create = async ({ title, year, summary, rating=null, trailer_url, poster_url, movie_type }) => {
+    create = async ({ title, year, summary, rating = null, trailer_url, poster_url, movie_type }) => {
         const sql = `INSERT INTO ${tables.Movies}
         (title, year, summary, rating, trailer_url, poster_url, movie_type) 
         VALUES (?,?,?,?,?,?,?)`;
@@ -42,15 +42,15 @@ class MovieModel {
         const result = await query(sql, [title, year, summary, rating, trailer_url, poster_url, movie_type]);
 
         const created_movie = !result ? 0 : {
-            'movie_id':result.insertId,
-            'affected_rows':result.affectedRows
+            movie_id: result.insertId,
+            affected_rows: result.affectedRows
         };
 
         return created_movie;
     }
 
     update = async (params, id) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `UPDATE ${tables.Movies} SET ${columnSet} WHERE movie_id = ?`;
 

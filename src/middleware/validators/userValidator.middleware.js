@@ -28,8 +28,8 @@ exports.createUserSchema = [
     body('contact')
         .exists()
         .withMessage('Contact is required')
-        .isMobilePhone('en-PK',{strictMode: true})
-        .withMessage('Must be a valid Pakistan mobile number along with country code'),
+        .isMobilePhone('en-PK', {strictMode: true})
+        .withMessage('Must be a valid Pakistan mobile number along with country code')
 ];
 
 exports.updateUserSchema = [
@@ -50,11 +50,11 @@ exports.updateUserSchema = [
         .withMessage('Invalid UserRole type'),
     body('contact')
         .optional()
-        .isMobilePhone('en-PK',{strictMode: true})
+        .isMobilePhone('en-PK', {strictMode: true})
         .withMessage('Must be a valid Pakistan mobile number along with country code'),
     body()
         .custom(value => {
-            return !!Object.keys(value).length;
+            return Object.keys(value).length !== 0;
         })
         .withMessage('Please provide required field to update')
         .custom(value => {

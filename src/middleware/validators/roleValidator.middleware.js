@@ -13,7 +13,7 @@ exports.createRoleSchema = [
         .exists()
         .withMessage('Role age is required')
         .isNumeric()
-        .withMessage('Must be a number')    
+        .withMessage('Must be a number')
 ];
 
 exports.updateRoleSchema = [
@@ -29,7 +29,7 @@ exports.updateRoleSchema = [
         .withMessage('Must be a number'),
     body()
         .custom(value => {
-            return !!Object.keys(value).length;
+            return Object.keys(value).length !== 0;
         })
         .withMessage('Please provide required fields to update')
         .custom(value => {

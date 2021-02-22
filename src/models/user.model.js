@@ -12,14 +12,14 @@ class UserModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `SELECT * FROM ${tables.Users}
         WHERE ${columnSet}`;
@@ -36,8 +36,8 @@ class UserModel {
 
         const result = await query(sql, [full_name, email, password, role, contact, address]);
         const created_user = !result ? 0 : {
-            'user_id':result.insertId,
-            'affected_rows':result.affectedRows
+            user_id: result.insertId,
+            affected_rows: result.affectedRows
         };
 
         return created_user;

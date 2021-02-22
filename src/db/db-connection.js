@@ -4,7 +4,7 @@ const mysql2 = require('mysql2');
 const { DuplicateEntryException } = require('../utils/exceptions/database.exception');
 
 class DBConnection{
-    constructor(){
+    constructor (){
         this.db = mysql2.createPool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -14,9 +14,9 @@ class DBConnection{
         this.checkConnection();
     }
 
-    checkConnection(){
-        this.db.getConnection((err,connection) => {
-            if(err){
+    checkConnection (){
+        this.db.getConnection((err, connection) => {
+            if (err){
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
                     console.error('Database connection was closed.');
                 }
@@ -27,42 +27,40 @@ class DBConnection{
                     console.error('Database connection was refused.');
                 }
             }
-            if(connection){
+            if (connection){
                 connection.release();
             }
             return;
         });
     }
 
-    query = async (sql,values) => {
-        return new Promise((resolve,reject) => {
+    query = async (sql, values) => {
+        return new Promise((resolve, reject) => {
             const callback = (error, result) => {
                 if (error) {
                     reject(error);
                     return;
                 }
                 resolve(result);
-            }
+            };
             this.db.execute(sql, values, callback); // execute will internally call prepare and query
-        }).catch((err)=>{
+        }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
-            if(mysqlErrorList.includes(err.code)) {
+            if (mysqlErrorList.includes(err.code)) {
                 err.status = HttpStatusCodes[err.code];
-                if(err.status === 409) throw new DuplicateEntryException(err.message);
+                if (err.status === 409) throw new DuplicateEntryException(err.message);
             }
             
-            reject(err);
             throw err;
         });
     }
 }
 
-// ENUM of mysql errors mapped to http status codes 
+// ENUM of mysql errors mapped to http status codes
 const HttpStatusCodes = Object.freeze({
     ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: 422,
     ER_DUP_ENTRY: 409
 });
 
-//Export query from the created database instance
+// Export query from the created database instance
 module.exports = new DBConnection().query;
-

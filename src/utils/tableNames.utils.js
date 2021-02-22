@@ -4,4 +4,4 @@ exports.tables = {
     Users: 'users',
     Roles: 'roles',
     OtpCodes: 'otp_codes'
-}
+};

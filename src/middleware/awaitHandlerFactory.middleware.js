@@ -1,11 +1,11 @@
 const awaitHandlerFactory = (middleware) => {
     return async (req, res, next) => {
         try {
-            await middleware(req, res, next)
+            await middleware(req, res, next);
         } catch (err) {
-            next(err)
+            next(err);
         }
-    }
-}
+    };
+};
 
 module.exports = awaitHandlerFactory;

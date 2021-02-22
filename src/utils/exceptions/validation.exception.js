@@ -1,11 +1,11 @@
 const { ErrorResponse } = require("../errorResponses.utils");
 
 class ValidationException extends Error {
-    constructor(code, message, data) {
+    constructor (code, message, data) {
         super(message);
         this.message = "Validation Error: " + message;
         this.name = "Validation Error";
-      	this.code = code;
+        this.code = code;
         this.error = this.constructor.name;
         this.status = 400;
         this.data = data;
@@ -13,8 +13,8 @@ class ValidationException extends Error {
 }
 
 class InvalidPropertiesException extends ValidationException {
-    constructor(message,data){
-    	super(ErrorResponse.InvalidPropertiesException, message, data);
+    constructor (message, data){
+        super(ErrorResponse.InvalidPropertiesException, message, data);
     }
 }
 

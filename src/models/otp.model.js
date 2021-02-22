@@ -11,14 +11,14 @@ class OTPModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
         sql += ` WHERE ${columnSet}`;
 
         return await query(sql, [...values]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `SELECT * FROM ${tables.OtpCodes}
         WHERE ${columnSet}`;
@@ -35,8 +35,8 @@ class OTPModel {
 
         const result = await query(sql, [user_id, email, OTP, expiration_datetime]);
         const created_OTP = !result ? 0 : {
-            'user_id':result.insertId,
-            'affected_rows':result.affectedRows
+            user_id: result.insertId,
+            affected_rows: result.affectedRows
         };
 
         return created_OTP;
@@ -54,7 +54,7 @@ class OTPModel {
     }
 
     delete = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params)
+        const { columnSet, values } = multipleColumnSet(params);
 
         const sql = `DELETE FROM ${tables.OtpCodes}
         WHERE ${columnSet}`;
