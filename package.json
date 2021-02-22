@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "lint": "eslint src/"
   },
   "keywords": [],
   "author": "Abdur Rafay Saleem",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "eslint": "^7.20.0",
+    "eslint-config-strongloop": "^2.1.0",
     "nodemon": "^2.0.7"
   }
 }
