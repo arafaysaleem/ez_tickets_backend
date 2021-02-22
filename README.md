@@ -11,7 +11,8 @@ This example uses a number of open source projects to work properly:
 * [jsonwebtoken]
 * [otp-generator]
 * [express-validator]
-* [dotenv]
+* [dotenv-flow]
+* [cross-env]
 * [cors]
 * [babel-eslint]
 
@@ -27,15 +28,25 @@ cd ez_tickets_backend
 # Make it your own
 rm -rf .git && git init
 
-# Copy example.env and create your own .env file
-cp example.env .env
+# Copy example.env and create your own .env file in configs folder
+cp .env.example configs/.env
 
-# Edit .env file and add your mysql username, password and db name, host, port and jwt_secret
+# Move into the configs dir
+cd configs
+
+# Edit .env file and add your mysql username, password and db name, host,
+# port, jwt_secret, sendgrid api key and sender email
 vscode .env
-# you can edit the file also via text editor
+
+# Create different .env.{NODE_ENV} file for each environment and override only your
+# required variables. The missing ones will be loaded from .env by default.
+# When the NODE_ENV variable is set while running the correct .env loads automatically.
+# For example if you want dev and prod environments:
+cp .env .env.dev
+cp .env.dev .env.prod
 
 # Add a gitignore to ignore node_modules and your .env file
-echo -e 'node_modules \n .env \n' >> .gitignore
+echo -e 'node_modules \n configs \n' >> .gitignore
 ```
 
 ### Setup MySQL database
@@ -55,13 +66,13 @@ If you want to quickly setup the endpoints for testing:
 # Install dependencies
 npm install
 
-# Run the server locally
+# Run the server locally with default .env file
 npm start
 
-# Run the server locally in dev mode with nodemon
+# Run the server in dev mode with nodemon with .env.dev file
 npm run dev
 
-# While deploying to production
+# While deploying to production with .env.prod file
 npm run prod
 ```
 
@@ -77,6 +88,7 @@ npm run prod
    [bcryptjs]: <https://github.com/dcodeIO/bcrypt.js#readme>
    [jsonwebtoken]: <https://github.com/auth0/node-jsonwebtoken#readme>
    [express-validator]: <https://express-validator.github.io/docs/>
-   [dotenv]: <https://github.com/motdotla/dotenv#readme>
+   [dotenv-flow]: <https://github.com/kerimdzhanov/dotenv-flow>
+   [cross-env]: <https://github.com/kentcdodds/cross-env>
    [cors]: <https://github.com/expressjs/cors#readme>
    [babel-eslint]: <https://github.com/babel/babel-eslint>
