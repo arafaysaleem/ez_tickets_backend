@@ -23,6 +23,7 @@
     "otp-generator": "^2.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.20.0",
     "eslint-config-strongloop": "^2.1.0",
     "nodemon": "^2.0.7"
