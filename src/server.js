@@ -1,5 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
 const {InvalidEndpointException} = require('./utils/exceptions/api.exception');
 const errorMiddleware = require('./middleware/error.middleware');
@@ -11,7 +10,6 @@ const movieRouter = require('./routes/movie.routes');
 const roleRouter = require('./routes/role.routes');
 
 const app = express();
-dotenv.config();
 // parse requests of content-type: application/json
 // parses incoming requests with JSON payloads
 app.use(express.json());

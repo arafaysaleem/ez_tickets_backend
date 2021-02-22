@@ -60,6 +60,9 @@ npm start
 
 # Run the server locally in dev mode with nodemon
 npm run dev
+
+# While deploying to production
+npm run prod
 ```
 
 **Enjoy :)**

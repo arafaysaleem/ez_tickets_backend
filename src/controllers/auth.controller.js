@@ -2,8 +2,6 @@ const { checkValidation } = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-dotenv.config();
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
 const otpGenerator = require('otp-generator');
 

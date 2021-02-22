@@ -1,3 +1,9 @@
 node_modules
+
+#configs
 .env
+.env.*
+!.env.example
+
+#compressed code
 ez_tickets_backend.rar

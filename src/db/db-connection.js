@@ -1,5 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config();
 const mysql2 = require('mysql2');
 const { DuplicateEntryException } = require('../utils/exceptions/database.exception');
 
