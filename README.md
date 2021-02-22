@@ -13,6 +13,7 @@ This example uses a number of open source projects to work properly:
 * [express-validator]
 * [dotenv]
 * [cors]
+* [babel-eslint]
 
 ### Getting Started
 
@@ -75,3 +76,4 @@ npm run dev
    [express-validator]: <https://express-validator.github.io/docs/>
    [dotenv]: <https://github.com/motdotla/dotenv#readme>
    [cors]: <https://github.com/expressjs/cors#readme>
+   [babel-eslint]: <https://github.com/babel/babel-eslint>
