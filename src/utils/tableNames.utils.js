@@ -4,5 +4,6 @@ exports.tables = {
     Users: 'users',
     Roles: 'roles',
     OtpCodes: 'otp_codes',
-    Theaters: 'theaters'
+    Theaters: 'theaters',
+    TheaterSeats: 'theater_seats'
 };
