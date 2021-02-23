@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
-const MovieType = require('../../utils/movieTypes.utils');
-const RoleType = require('../../utils/roleTypes.utils');
+const MovieType = require('../../utils/enums/movieTypes.utils');
+const RoleType = require('../../utils/enums/roleTypes.utils');
 const { yearRegex } = require('../../utils/common.utils');
 
 exports.createMovieSchema = [

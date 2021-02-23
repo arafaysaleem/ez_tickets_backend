@@ -4,7 +4,7 @@ const auth = require('../middleware/auth.middleware');
 const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middleware');
 
 const userController = require('../controllers/user.controller');
-const UserRole = require('../utils/userRoles.utils');
+const UserRole = require('../utils/enums/userRoles.utils');
 const { updateUserSchema } = require('../middleware/validators/userValidator.middleware');
 
 router.get('/', auth(), awaitHandlerFactory(userController.getAllUsers)); // localhost:3000/api/v1/users

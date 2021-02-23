@@ -1,6 +1,6 @@
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
-const MovieType = require('../utils/movieTypes.utils');
+const MovieType = require('../utils/enums/movieTypes.utils');
 const {checkValidation} = require('../middleware/validation.middleware');
 const {
     NotFoundException,

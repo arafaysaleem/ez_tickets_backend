@@ -4,7 +4,7 @@ const auth = require('../middleware/auth.middleware');
 const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middleware');
 
 const theaterController = require('../controllers/theater.controller');
-const UserRole = require('../utils/userRoles.utils');
+const UserRole = require('../utils/enums/userRoles.utils');
 const { createTheaterSchema, updateTheaterSchema } = require('../middleware/validators/theaterValidator.middleware');
 
 router.get('/', auth(), awaitHandlerFactory(theaterController.getAllTheaters)); // localhost:3000/api/v1/theaters
