@@ -3,5 +3,6 @@ exports.tables = {
     Movies: 'movies',
     Users: 'users',
     Roles: 'roles',
-    OtpCodes: 'otp_codes'
+    OtpCodes: 'otp_codes',
+    Theaters: 'theaters'
 };
