@@ -42,7 +42,7 @@ class RoleController {
 
         const movies = roleDuplicates.map((role) => {
             const {role_id, full_name, age, picture_url, ...movieDetails} = role;
-            if (!roleBody.length) roleBody = {role_id, full_name, age, picture_url};
+            if (Object.keys(roleBody).length === 0) roleBody = {role_id, full_name, age, picture_url};
             return movieDetails;
         });
 

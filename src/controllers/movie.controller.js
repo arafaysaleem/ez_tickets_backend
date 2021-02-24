@@ -45,7 +45,7 @@ class MovieController {
 
         const roles = movieDuplicates.map((movie) => {
             const {role_id, full_name, age, picture_url, role_type, ...movieDetails} = movie;
-            if (!movieBody.length) movieBody = movieDetails;
+            if (Object.keys(movieBody).length === 0) movieBody = movieDetails;
             return { role_id, full_name, age, picture_url, role_type };
         });
 
