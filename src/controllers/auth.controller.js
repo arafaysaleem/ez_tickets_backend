@@ -1,5 +1,5 @@
 const { checkValidation } = require('../middleware/validation.middleware');
-const { structureResponse } = require('../utils/common.utils');
+const { structureResponse, hashPassword } = require('../utils/common.utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
@@ -29,7 +29,7 @@ class AuthController {
         
         const pass = req.body.password;
 
-        await this.hashPassword(req);
+        await hashPassword(req);
 
         const result = await UserModel.create(req.body);
 
@@ -181,7 +181,7 @@ class AuthController {
     resetPassword = async (req, res, next) => {
         checkValidation(req);
 
-        await this.hashPassword(req);
+        await hashPassword(req);
 
         const { password, email } = req.body;
 
@@ -198,13 +198,6 @@ class AuthController {
         
         const response = structureResponse(info, 1, 'Password changed successfully');
         res.send(response);
-    }
-
-    // hash password if it exists
-    hashPassword = async (req) => {
-        if (req.body.password) {
-            req.body.password = await bcrypt.hash(req.body.password, 8);
-        }
     }
 }
 

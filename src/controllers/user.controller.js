@@ -1,6 +1,5 @@
 const { checkValidation } = require('../middleware/validation.middleware');
-const { structureResponse } = require('../utils/common.utils');
-const bcrypt = require('bcryptjs');
+const { structureResponse, hashPassword } = require('../utils/common.utils');
 
 
 const UserModel = require('../models/user.model');
@@ -42,7 +41,7 @@ class UserController {
     createUser = async (req, res, next) => {
         checkValidation(req);
 
-        await this.hashPassword(req);
+        await hashPassword(req);
 
         const result = await UserModel.create(req.body);
 
@@ -81,13 +80,6 @@ class UserController {
         const response = structureResponse({}, 1, 'User has been deleted');
         res.send(response);
     };
-
-    // hash password if it exists
-    hashPassword = async (req) => {
-        if (req.body.password) {
-            req.body.password = await bcrypt.hash(req.body.password, 8);
-        }
-    }
 }
 
 module.exports = new UserController;

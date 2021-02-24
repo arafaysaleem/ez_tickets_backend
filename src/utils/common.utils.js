@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 exports.multipleColumnSet = (object) => {
     if (typeof object !== 'object') {
         throw new Error('Invalid input');
@@ -20,6 +22,12 @@ exports.structureResponse = (body, success, message) => {
         body: body
     };
 };
+
+exports.hashPassword = async (req) => {
+    if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 8);
+    }
+}
 
 exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
 
