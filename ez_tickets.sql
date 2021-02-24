@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2021 at 06:57 PM
+-- Generation Time: Feb 24, 2021 at 07:57 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -144,10 +144,21 @@ CREATE TABLE `shows` (
 
 CREATE TABLE `theaters` (
   `theater_id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(1) NOT NULL COMMENT 'one letter name',
+  `theater_name` char(1) NOT NULL COMMENT 'one letter name',
   `num_of_rows` smallint(5) UNSIGNED NOT NULL,
-  `seats_per_row` smallint(5) UNSIGNED NOT NULL
+  `seats_per_row` smallint(5) UNSIGNED NOT NULL,
+  `theater_type` enum('normal','royal') NOT NULL DEFAULT 'normal'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `theaters`
+--
+
+INSERT INTO `theaters` (`theater_id`, `theater_name`, `num_of_rows`, `seats_per_row`, `theater_type`) VALUES
+(8, 'A', 10, 20, 'normal'),
+(10, 'B', 5, 5, 'royal'),
+(15, 'C', 10, 20, 'normal'),
+(16, 'D', 5, 5, 'royal');
 
 -- --------------------------------------------------------
 
@@ -159,8 +170,24 @@ CREATE TABLE `theater_seats` (
   `seat_row` varchar(2) NOT NULL,
   `seat_number` smallint(5) UNSIGNED NOT NULL,
   `theater_id` int(10) UNSIGNED NOT NULL,
-  `seat_type` enum('missing','vip','blocked') NOT NULL
+  `seat_type` enum('missing','blocked') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `theater_seats`
+--
+
+INSERT INTO `theater_seats` (`seat_row`, `seat_number`, `theater_id`, `seat_type`) VALUES
+('A', 11, 15, 'missing'),
+('B', 0, 15, 'missing'),
+('C', 23, 15, 'blocked'),
+('C', 22, 15, 'blocked'),
+('D', 23, 15, 'blocked'),
+('D', 22, 15, 'blocked'),
+('A', 11, 16, 'missing'),
+('B', 11, 16, 'missing'),
+('C', 11, 16, 'missing'),
+('D', 11, 16, 'missing');
 
 -- --------------------------------------------------------
 
@@ -236,7 +263,8 @@ ALTER TABLE `shows`
 -- Indexes for table `theaters`
 --
 ALTER TABLE `theaters`
-  ADD PRIMARY KEY (`theater_id`);
+  ADD PRIMARY KEY (`theater_id`),
+  ADD UNIQUE KEY `theater_name` (`theater_name`) USING BTREE;
 
 --
 -- Indexes for table `theater_seats`
@@ -283,7 +311,7 @@ ALTER TABLE `shows`
 -- AUTO_INCREMENT for table `theaters`
 --
 ALTER TABLE `theaters`
-  MODIFY `theater_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `theater_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
