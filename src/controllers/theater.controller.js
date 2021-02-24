@@ -12,7 +12,7 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class TheaterController {
-    getAlTheaters = async (req, res, next) => {
+    getAllTheaters = async (req, res, next) => {
         let theaterDuplicates = await TheaterModel.findAll();
         if (!theaterDuplicates.length) {
             throw new NotFoundException('Theaters not found');
@@ -51,9 +51,10 @@ class TheaterController {
 
         for (const theater of theaterDuplicates) {
             const {seat_row, seat_number, seat_type, ...theaterDetails} = theater;
-            if (!theaterBody.length) {
+            if (Object.keys(theaterBody).length === 0) {
                 theaterBody = theaterDetails;
-                theaterBody.missing = theaterBody.blocked = [];
+                theaterBody.missing = [];
+                theaterBody.blocked = [];
             }
             if (seat_type === SeatType.Missing){
                 theaterBody.missing.push({ seat_row, seat_number });
@@ -76,31 +77,34 @@ class TheaterController {
             throw new CreateFailedException('Theater failed to be created');
         }
 
-        for (let seat of missing) {
-            seat = seat.split("-"); // "A-11" -> ["A",11];
-            const theaterSeat = {
-                theater_id: result.theater_id,
-                seat_type: SeatType.Missing,
-                seat_row: seat[0],
-                seat_num: seat[1]
-            };
-            const success = await TheaterSeatModel.create(theaterSeat);
-            if (!success) {
-                throw new CreateFailedException('Theater missing seat failed to be created');
+        if (missing) {
+            for (let seat of missing) {
+                seat = seat.split("-"); // "A-11" -> ["A",11];
+                const theaterSeat = {
+                    theater_id: result.theater_id,
+                    seat_type: SeatType.Missing,
+                    seat_row: seat[0],
+                    seat_number: seat[1]
+                };
+                const success = await TheaterSeatModel.create(theaterSeat);
+                if (!success) {
+                    throw new CreateFailedException('Theater missing seat failed to be created');
+                }
             }
         }
-
-        for (let seat of blocked) {
-            seat = seat.split("-"); // "A-11" -> ["A",11];
-            const theaterSeat = {
-                theater_id: result.theater_id,
-                seat_type: SeatType.Blocked,
-                seat_row: seat[0],
-                seat_num: seat[1]
-            };
-            const success = await TheaterSeatModel.create(theaterSeat);
-            if (!success) {
-                throw new CreateFailedException('Theater blocked seat failed to be created');
+        if (blocked){
+            for (let seat of blocked) {
+                seat = seat.split("-"); // "A-11" -> ["A",11];
+                const theaterSeat = {
+                    theater_id: result.theater_id,
+                    seat_type: SeatType.Blocked,
+                    seat_row: seat[0],
+                    seat_number: seat[1]
+                };
+                const success = await TheaterSeatModel.create(theaterSeat);
+                if (!success) {
+                    throw new CreateFailedException('Theater blocked seat failed to be created');
+                }
             }
         }
 

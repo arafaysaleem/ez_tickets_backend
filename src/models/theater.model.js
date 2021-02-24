@@ -23,8 +23,7 @@ class TheaterModel {
 
         const sql = `SELECT * FROM ${tables.Theaters}
         NATURAL JOIN ${tables.TheaterSeats}
-        WHERE ${columnSet}
-        GROUP BY theater_id`;
+        WHERE ${columnSet}`;
 
         const result = await query(sql, [...values]);
 

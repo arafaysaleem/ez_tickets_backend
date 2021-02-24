@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const seatRegex = require('../../utils/common.utils');
+const { seatRegex } = require('../../utils/common.utils');
 const TheaterType = require('../../utils/enums/theaterTypes.utils');
 
 exports.createTheaterSchema = [
@@ -29,7 +29,7 @@ exports.createTheaterSchema = [
     body('missing')
         .optional()
         .isArray()
-        .withMessage('Missing must be an array like ["A-11","B-12","F-21",...]')
+        .withMessage("Missing must be an array like ['A-11','B-12','F-21',...]")
         .bail()
         .notEmpty()
         .withMessage('Missing can\'t be empty'),
@@ -37,12 +37,14 @@ exports.createTheaterSchema = [
         .exists()
         .withMessage('Missing seats are required for "missing" key')
         .bail()
+        .isString()
+        .withMessage('Each seat has to be a string')
         .matches(seatRegex)
-        .withMessage('Invalid seat id found'),
+        .withMessage('Invalid seat id found. Follow format \'A-11\''),
     body('blocked')
         .optional()
         .isArray()
-        .withMessage('Blocked must be an array like ["A-11","B-12","F-21",...]')
+        .withMessage('Blocked must be an array like [\"A-11\",\"B-12\",\"F-21\",...]')
         .bail()
         .notEmpty()
         .withMessage('Blocked can\'t be empty'),
@@ -50,8 +52,10 @@ exports.createTheaterSchema = [
         .exists()
         .withMessage('Blocked seats are required for "blocked" key')
         .bail()
+        .isString()
+        .withMessage('Each seat has to be a string')
         .matches(seatRegex)
-        .withMessage('Invalid seat id found')
+        .withMessage('Invalid seat id found. Follow format \'A-11\'')
 ];
 
 exports.updateTheaterSchema = [
