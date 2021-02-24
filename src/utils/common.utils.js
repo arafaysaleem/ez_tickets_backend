@@ -34,3 +34,5 @@ exports.yearRegex = new RegExp(/^(19[5-9]\d|20[0-4]\d|2050)$/);
 exports.OTPRegex = new RegExp(/^[0-9]{4}$/);
 
 exports.seatRegex = new RegExp(/^[A-Z]{1,2}-[0-9]{1,}$/);
+
+exports.timeRegex = new RegExp(/^(10|11|12|[1-9]):[0-5][0-9]$/);

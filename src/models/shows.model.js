@@ -2,11 +2,10 @@ const query = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
-class TheaterModel {
+class ShowModel {
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${tables.Theaters}
-        NATURAL JOIN ${tables.TheaterSeats}`;
+        let sql = `SELECT * FROM ${tables.Shows}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -21,41 +20,44 @@ class TheaterModel {
     findOne = async (params) => {
         const { columnSet, values } = multipleColumnSet(params);
 
-        const sql = `SELECT * FROM ${tables.Theaters}
-        NATURAL JOIN ${tables.TheaterSeats}
-        WHERE ${columnSet}`;
+        const sql = `SELECT * FROM ${tables.Shows}
+        WHERE ${columnSet}
+        GROUP BY show_id`;
 
         const result = await query(sql, [...values]);
 
+        // return back the first row (movie)
         return result;
     }
 
-    create = async ({ theater_name, num_of_rows, seats_per_row, theater_type }) => {
-        const sql = `INSERT INTO ${tables.Theaters}
-        ( theater_name, num_of_rows, seats_per_row, theater_type ) VALUES (?,?,?,?)`;
+    create = async ({ start_time, end_time, date, movie_id, theater_id, show_status }) => {
+        const sql = `INSERT INTO ${tables.Shows}
+        (start_time, end_time, date, movie_id, theater_id, show_status) 
+        VALUES (?,?,?,?,?,?)`;
 
-        const result = await query(sql, [theater_name, num_of_rows, seats_per_row, theater_type]);
-        const created_theater = !result ? 0 : {
-            theater_id: result.insertId,
+        const result = await query(sql, [start_time, end_time, date, movie_id, theater_id, show_status]);
+
+        const created_show = !result ? 0 : {
+            show_id: result.insertId,
             affected_rows: result.affectedRows
         };
 
-        return created_theater;
+        return created_show;
     }
 
     update = async (params, id) => {
         const { columnSet, values } = multipleColumnSet(params);
 
-        const sql = `UPDATE ${tables.Theaters} SET ${columnSet} WHERE theater_id = ? `;
+        const sql = `UPDATE ${tables.Shows} SET ${columnSet} WHERE show_id = ?`;
 
         const result = await query(sql, [...values, id]);
-
+        
         return result;
     }
 
     delete = async (id) => {
-        const sql = `DELETE FROM ${tables.Theaters}
-        WHERE theater_id = ?`;
+        const sql = `DELETE FROM ${tables.Shows}
+        WHERE show_id = ?`;
         const result = await query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
@@ -63,4 +65,4 @@ class TheaterModel {
     }
 }
 
-module.exports = new TheaterModel;
+module.exports = new ShowModel;
