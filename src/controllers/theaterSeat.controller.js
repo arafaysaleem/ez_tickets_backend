@@ -1,4 +1,4 @@
-const TheaterSeatModel = require('../models/theaterRole.model');
+const TheaterSeatModel = require('../models/theaterSeat.model');
 const {checkValidation} = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
 const {

@@ -1,5 +1,6 @@
 const { body } = require('express-validator');
-const seatRegex = require('../utils/common.utils');
+const seatRegex = require('../../utils/common.utils');
+const TheaterType = require('../../utils/enums/theaterTypes.utils');
 
 exports.createTheaterSchema = [
     body('theater_name')
@@ -20,6 +21,11 @@ exports.createTheaterSchema = [
         .withMessage('Define num of rows in theater')
         .isInt({min: 1})
         .withMessage('Num of rows has to be a whole number >= 1'),
+    body('theater_type')
+        .exists()
+        .withMessage('Theater type is required')
+        .isIn([...Object.values(TheaterType)])
+        .withMessage('Invalid theater type'),
     body('missing')
         .optional()
         .isArray()
@@ -29,7 +35,7 @@ exports.createTheaterSchema = [
         .withMessage('Missing can\'t be empty'),
     body('missing.*')
         .exists()
-        .withMessage('Missing seats are required for in case of "missing" key')
+        .withMessage('Missing seats are required for "missing" key')
         .bail()
         .matches(seatRegex)
         .withMessage('Invalid seat id found'),
@@ -42,7 +48,7 @@ exports.createTheaterSchema = [
         .withMessage('Blocked can\'t be empty'),
     body('blocked.*')
         .exists()
-        .withMessage('Blocked seats are required for in case of "blocked" key')
+        .withMessage('Blocked seats are required for "blocked" key')
         .bail()
         .matches(seatRegex)
         .withMessage('Invalid seat id found')
@@ -64,6 +70,10 @@ exports.updateTheaterSchema = [
         .optional()
         .isInt({min: 1})
         .withMessage('Num of rows has to be a whole number >= 1'),
+    body('theater_type')
+        .optional()
+        .isIn([...Object.values(TheaterType)])
+        .withMessage('Invalid theater type'),
     body()
         .custom(value => {
             return Object.keys(value).length !== 0;
@@ -71,7 +81,7 @@ exports.updateTheaterSchema = [
         .withMessage('Please provide required fields to update')
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ['theater_name', 'seats_per_row', 'num_of_rows'];
+            const allowUpdates = ['theater_name', 'seats_per_row', 'num_of_rows', 'theater_type'];
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')

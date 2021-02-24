@@ -66,11 +66,11 @@ class TheaterController {
         res.send(response);
     };
 
-    createMovie = async (req, res, next) => {
+    createTheater = async (req, res, next) => {
         checkValidation(req);
 
-        const {missing, blocked, ...movieBody} = req.body;
-        const result = await TheaterModel.create(movieBody);
+        const {missing, blocked, ...theaterBody} = req.body;
+        const result = await TheaterModel.create(theaterBody);
 
         if (!result) {
             throw new CreateFailedException('Theater failed to be created');

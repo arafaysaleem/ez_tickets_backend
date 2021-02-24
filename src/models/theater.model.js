@@ -31,11 +31,11 @@ class TheaterModel {
         return result;
     }
 
-    create = async ({ theater_name, num_of_rows, seats_per_row }) => {
+    create = async ({ theater_name, num_of_rows, seats_per_row, theater_type }) => {
         const sql = `INSERT INTO ${tables.Theaters}
-        ( theater_name, num_of_rows, seats_per_row ) VALUES (?,?,?)`;
+        ( theater_name, num_of_rows, seats_per_row, theater_type ) VALUES (?,?,?,?)`;
 
-        const result = await query(sql, [theater_name, num_of_rows, seats_per_row]);
+        const result = await query(sql, [theater_name, num_of_rows, seats_per_row, theater_type]);
         const created_user = !result ? 0 : {
             theater_id: result.insertId,
             affected_rows: result.affectedRows
