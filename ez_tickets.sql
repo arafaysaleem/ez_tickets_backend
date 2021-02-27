@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2021 at 07:57 AM
+-- Generation Time: Feb 27, 2021 at 07:17 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -59,7 +59,8 @@ CREATE TABLE `movies` (
 
 INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer_url`, `poster_url`, `movie_type`) VALUES
 (1, 'GOOGLE', 'Fearsome bitches.', 2012, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(4, 'FACEBOOK', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon');
+(4, 'FACEBOOK', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
+(7, 'APPLE', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing');
 
 -- --------------------------------------------------------
 
@@ -83,7 +84,10 @@ INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
 (1, 3, 'cast'),
 (4, 1, 'producer'),
 (4, 2, 'director'),
-(4, 3, 'cast');
+(4, 3, 'cast'),
+(7, 1, 'producer'),
+(7, 2, 'director'),
+(7, 3, 'cast');
 
 -- --------------------------------------------------------
 
@@ -158,7 +162,8 @@ INSERT INTO `theaters` (`theater_id`, `theater_name`, `num_of_rows`, `seats_per_
 (8, 'A', 10, 20, 'normal'),
 (10, 'B', 5, 5, 'royal'),
 (15, 'C', 10, 20, 'normal'),
-(16, 'D', 5, 5, 'royal');
+(16, 'D', 5, 5, 'royal'),
+(22, 'E', 10, 2, 'normal');
 
 -- --------------------------------------------------------
 
@@ -187,7 +192,11 @@ INSERT INTO `theater_seats` (`seat_row`, `seat_number`, `theater_id`, `seat_type
 ('A', 11, 16, 'missing'),
 ('B', 11, 16, 'missing'),
 ('C', 11, 16, 'missing'),
-('D', 11, 16, 'missing');
+('D', 11, 16, 'missing'),
+('A', 1, 22, 'blocked'),
+('B', 2, 22, 'blocked'),
+('C', 1, 22, 'blocked'),
+('D', 2, 22, 'blocked');
 
 -- --------------------------------------------------------
 
@@ -212,7 +221,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `full_name`, `email`, `password`, `address`, `contact`, `role`) VALUES
 (1, 'Test Admin', 'admin@gmail.com', '$2a$08$y4hYovfviz31AZhru3t4FObYrLFrhdBNETXikx6WFD9VYGbUZucYO', 'Karachi', '+923009999999', 'admin'),
 (2, 'Test User', 'user@gmail.com', '$2a$08$V5FWrXIoHeJPGe0WDgQcJ.eJEX.rz6tCtevaNSKBH6deaoVDKMosS', 'Karachi', '+923009999999', 'api_user'),
-(10, 'Email Test User', 'arafaysaleem@gmail.com', '$2a$08$NMklGbvfLkOwYgo1lB6qbOxGUmOuH4gymNwU6WXC4H2gTa39v9OPW', 'Karachi', '+923009999999', 'api_user');
+(10, 'Email Test User', 'arafaysaleem@gmail.com', '$2a$08$NMklGbvfLkOwYgo1lB6qbOxGUmOuH4gymNwU6WXC4H2gTa39v9OPW', 'Karachi', '+923009999999', 'api_user'),
+(11, 'Test User', 'user2@gmail.com', '$2a$08$dP89ppGNiMczZM0JToQwF.WtiR53NL0j.r55wBNJP03sjDh/VpcrC', 'Karachi', '+923009999999', 'api_user');
 
 --
 -- Indexes for dumped tables
@@ -229,7 +239,8 @@ ALTER TABLE `bookings`
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
-  ADD PRIMARY KEY (`movie_id`);
+  ADD PRIMARY KEY (`movie_id`),
+  ADD UNIQUE KEY `title` (`title`);
 
 --
 -- Indexes for table `movie_roles`
@@ -287,7 +298,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `otp_codes`
@@ -311,13 +322,13 @@ ALTER TABLE `shows`
 -- AUTO_INCREMENT for table `theaters`
 --
 ALTER TABLE `theaters`
-  MODIFY `theater_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `theater_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
