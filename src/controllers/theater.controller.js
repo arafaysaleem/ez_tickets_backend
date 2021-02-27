@@ -1,5 +1,6 @@
 const { checkValidation } = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
+const { dbTransaction } = require('../db/db-connection');
 
 const TheaterModel = require('../models/theater.model');
 const TheaterSeatModel = require('../models/theaterSeat.model');
@@ -71,9 +72,13 @@ class TheaterController {
         checkValidation(req);
 
         const {missing, blocked, ...theaterBody} = req.body;
+
+        await dbTransaction.beginTransaction();
+
         const result = await TheaterModel.create(theaterBody);
 
         if (!result) {
+            await dbTransaction.rollback();
             throw new CreateFailedException('Theater failed to be created');
         }
 
@@ -88,6 +93,7 @@ class TheaterController {
                 };
                 const success = await TheaterSeatModel.create(theaterSeat);
                 if (!success) {
+                    await dbTransaction.rollback();
                     throw new CreateFailedException('Theater missing seat failed to be created');
                 }
             }
@@ -103,10 +109,13 @@ class TheaterController {
                 };
                 const success = await TheaterSeatModel.create(theaterSeat);
                 if (!success) {
+                    await dbTransaction.rollback();
                     throw new CreateFailedException('Theater blocked seat failed to be created');
                 }
             }
         }
+
+        await dbTransaction.commit();
 
         const response = structureResponse(result, 1, 'Theater was created!');
         res.status(201).send(response);

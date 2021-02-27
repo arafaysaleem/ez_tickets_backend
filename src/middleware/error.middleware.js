@@ -25,11 +25,3 @@ function errorMiddleware (err, req, res, next) {
 }
 
 module.exports = errorMiddleware;
-/*
-{
-    type: 'err',
-    status: 404,
-    message: 'Not Found'
-    data: {...} // optional
-}
-*/

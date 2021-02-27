@@ -1,14 +1,16 @@
+const {checkValidation} = require('../middleware/validation.middleware');
+const { structureResponse } = require('../utils/common.utils');
+const { dbTransaction } = require('../db/db-connection');
+
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
 const MovieType = require('../utils/enums/movieTypes.utils');
-const {checkValidation} = require('../middleware/validation.middleware');
 const {
     NotFoundException,
     CreateFailedException,
     UpdateFailedException,
     UnexpectedException
 } = require('../utils/exceptions/database.exception');
-const { structureResponse } = require('../utils/common.utils');
 
 class MovieController {
     getAllMovies = async (req, res, next) => {
@@ -105,11 +107,15 @@ class MovieController {
     */
     createMovie = async (req, res, next) => {
         checkValidation(req);
-        // todo: Run queries in transactions
+
         const {roles, ...movieBody} = req.body;
+
+        await dbTransaction.beginTransaction();
+
         const result = await MovieModel.create(movieBody);
 
         if (!result) {
+            await dbTransaction.rollback();
             throw new CreateFailedException('Movie failed to be created');
         }
 
@@ -121,9 +127,12 @@ class MovieController {
             };
             const success = await MovieRoleModel.create(movieRole);
             if (!success) {
+                await dbTransaction.rollback();
                 throw new CreateFailedException('Movie role failed to be created');
             }
         }
+
+        await dbTransaction.commit();
 
         const response = structureResponse(result, 1, 'Movie was created!');
         res.status(201).send(response);

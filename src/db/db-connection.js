@@ -1,5 +1,6 @@
 const mysql2 = require('mysql2');
 const { DuplicateEntryException } = require('../utils/exceptions/database.exception');
+const { InternalServerException } = require('../utils/exceptions/api.exception');
 
 class DBConnection{
     constructor (){
@@ -26,6 +27,7 @@ class DBConnection{
                 }
             }
             if (connection){
+                this.connection = connection;
                 connection.release();
             }
             return;
@@ -48,10 +50,53 @@ class DBConnection{
                 err.status = HttpStatusCodes[err.code];
                 if (err.status === 409) throw new DuplicateEntryException(err.message);
             }
-            
-            throw err;
+
+            console.log(`[DBError] ${err}`);
+            throw new InternalServerException();
+            // throw err;
         });
     }
+
+    beginTransaction = async () => {
+        return new Promise((resolve, reject) => {
+            const callback = (error, result) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result);
+            };
+            this.connection.beginTransaction(callback);
+        });
+    }
+
+    rollback = async () => {
+        return new Promise((resolve, reject) => {
+            const callback = (error, result) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(result);
+            };
+            this.connection.rollback(callback);
+        });
+    }
+
+    commit = async () => {
+        return new Promise((resolve, reject) => {
+            const callback = (error, result) => {
+                if (error) {
+                    reject(error);
+                    this.rollback();
+                    return;
+                }
+                resolve(result);
+            };
+            this.connection.commit(callback);
+        });
+    }
+
 }
 
 // ENUM of mysql errors mapped to http status codes
@@ -60,5 +105,11 @@ const HttpStatusCodes = Object.freeze({
     ER_DUP_ENTRY: 409
 });
 
-// Export query from the created database instance
-module.exports = new DBConnection().query;
+const dbConnection = new DBConnection();
+
+exports.query = dbConnection.query;
+exports.dbTransaction = {
+    beginTransaction: dbConnection.beginTransaction,
+    rollback: dbConnection.rollback,
+    commit: dbConnection.commit
+};

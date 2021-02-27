@@ -1,4 +1,4 @@
-const query = require('../db/db-connection');
+const { query } = require('../db/db-connection');
 const { multipleColumnSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 class RoleModel {
