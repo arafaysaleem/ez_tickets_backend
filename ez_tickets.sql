@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 27, 2021 at 07:17 PM
+-- Generation Time: Mar 01, 2021 at 06:48 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -140,6 +140,17 @@ CREATE TABLE `shows` (
   `show_status` enum('free','almost_full','full') NOT NULL DEFAULT 'free'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `shows`
+--
+
+INSERT INTO `shows` (`show_id`, `start_time`, `end_time`, `date`, `movie_id`, `theater_id`, `show_status`) VALUES
+(14, '12:30:00', '02:45:00', '2021-03-15', 1, 8, 'free'),
+(17, '02:30:00', '04:45:00', '2021-03-14', 4, 10, 'free'),
+(18, '02:30:00', '04:45:00', '2021-03-16', 4, 10, 'full'),
+(20, '11:30:00', '13:45:00', '2021-03-16', 4, 8, 'full'),
+(21, '10:00:00', '12:15:00', '2021-03-16', 4, 10, 'full');
+
 -- --------------------------------------------------------
 
 --
@@ -267,6 +278,7 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `shows`
   ADD PRIMARY KEY (`show_id`),
+  ADD UNIQUE KEY `unique_show_details` (`start_time`,`end_time`,`date`,`movie_id`,`theater_id`) USING BTREE,
   ADD KEY `fk_shows_movie_id` (`movie_id`),
   ADD KEY `fk_shows_theater_id` (`theater_id`);
 
@@ -316,7 +328,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `shows`
 --
 ALTER TABLE `shows`
-  MODIFY `show_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `show_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `theaters`
