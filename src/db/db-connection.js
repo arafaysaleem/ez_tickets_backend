@@ -1,5 +1,8 @@
 const mysql2 = require('mysql2');
-const { DuplicateEntryException } = require('../utils/exceptions/database.exception');
+const {
+    DuplicateEntryException,
+    ForeignKeyViolationException
+} = require('../utils/exceptions/database.exception');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
 class DBConnection{
@@ -8,7 +11,8 @@ class DBConnection{
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE
+            database: process.env.DB_DATABASE,
+            dateStrings: ['DATE', 'DATETIME']
         });
         this.checkConnection();
     }
@@ -49,9 +53,11 @@ class DBConnection{
             if (mysqlErrorList.includes(err.code)) {
                 err.status = HttpStatusCodes[err.code];
                 if (err.status === 409) throw new DuplicateEntryException(err.message);
+                if (err.status === 512) throw new ForeignKeyViolationException(err.message);
             }
 
             console.log(`[DBError] ${err}`);
+            console.log(`[Code] ${err.code}`);
             throw new InternalServerException();
             // throw err;
         });
@@ -102,7 +108,8 @@ class DBConnection{
 // ENUM of mysql errors mapped to http status codes
 const HttpStatusCodes = Object.freeze({
     ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: 422,
-    ER_DUP_ENTRY: 409
+    ER_DUP_ENTRY: 409,
+    ER_NO_REFERENCED_ROW_2: 512
 });
 
 const dbConnection = new DBConnection();

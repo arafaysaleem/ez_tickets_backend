@@ -25,6 +25,12 @@ class DuplicateEntryException extends DatabaseException {
     }
 }
 
+class ForeignKeyViolationException extends DatabaseException {
+    constructor (message, data){
+        super(ErrorResponse.ForeignKeyViolationException, message, data, true, 512);
+    }
+}
+
 class UpdateFailedException extends DatabaseException {
     constructor (message, data){
         super(ErrorResponse.UpdateFailedException, message, data, true, 500);
@@ -46,6 +52,7 @@ class UnexpectedException extends DatabaseException {
 module.exports = {
     NotFoundException,
     DuplicateEntryException,
+    ForeignKeyViolationException,
     UnexpectedException,
     UpdateFailedException,
     CreateFailedException
