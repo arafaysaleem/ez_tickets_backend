@@ -1,5 +1,5 @@
 const { query } = require('../db/db-connection');
-const { multipleColumnSet } = require('../utils/common.utils');
+const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const UserRole = require('../utils/enums/userRoles.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -12,19 +12,19 @@ class UserModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params);
-        sql += ` WHERE ${columnSet}`;
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...values]);
+        return await query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(params);
 
         const sql = `SELECT * FROM ${tables.Users}
-        WHERE ${columnSet}`;
+        WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values]);
+        const result = await query(sql, [...filterValues]);
 
         // return back the first row (user)
         return result[0];
@@ -45,9 +45,7 @@ class UserModel {
 
     update = async (params, filters) => {
         const { columnSet, values } = multipleColumnSet(params);
-        filters = multipleColumnSet(filters);
-        const filterSet = filters.columnSet;
-        const filterValues = filters.values;
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `UPDATE ${tables.Users} SET ${columnSet} WHERE ${filterSet}`;
 

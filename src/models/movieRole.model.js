@@ -1,5 +1,5 @@
 const { query } = require('../db/db-connection');
-const { multipleColumnSet } = require('../utils/common.utils');
+const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
 class MovieRoleModel {
@@ -11,19 +11,19 @@ class MovieRoleModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params);
-        sql += ` WHERE ${columnSet}`;
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...values]);
+        return await query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(params);
 
         const sql = `SELECT * FROM ${tables.MovieRoles}
-        WHERE ${columnSet}`;
+        WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values]);
+        const result = await query(sql, [...filterValues]);
 
         // return back the first row (movie_role)
         return result[0];
@@ -41,9 +41,7 @@ class MovieRoleModel {
 
     update = async (params, filters) => {
         const { columnSet, values } = multipleColumnSet(params);
-        filters = multipleColumnSet(filters);
-        const filterSet = filters.columnSet;
-        const filterValues = filters.values;
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `UPDATE ${tables.MovieRoles} SET ${columnSet} WHERE ${filterSet}`;
 
@@ -53,7 +51,7 @@ class MovieRoleModel {
     }
 
     delete = async (filters) => {
-        const { filterSet, filterValues } = multipleColumnSet(filters);
+        const { filterSet, filterValues } = multipleFilterSet(filters);
 
         const sql = `DELETE FROM ${tables.MovieRoles}
         WHERE ${filterSet}`;

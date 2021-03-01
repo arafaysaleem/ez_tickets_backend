@@ -1,5 +1,5 @@
 const { query } = require('../db/db-connection');
-const { multipleColumnSet } = require('../utils/common.utils');
+const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
 class TheaterSeatModel {
@@ -11,19 +11,19 @@ class TheaterSeatModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params);
-        sql += ` WHERE ${columnSet}`;
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...values]);
+        return await query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(params);
 
         const sql = `SELECT * FROM ${tables.TheaterSeats}
-        WHERE ${columnSet}`;
+        WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values]);
+        const result = await query(sql, [...filterValues]);
 
         return result[0];
     }
