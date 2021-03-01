@@ -16,6 +16,22 @@ exports.multipleColumnSet = (object) => {
     };
 };
 
+exports.multipleFilterSet = (object) => {
+    if (typeof object !== 'object') {
+        throw new Error('Invalid input');
+    }
+
+    const keys = Object.keys(object);
+    const values = Object.values(object);
+
+    const filterSet = keys.map(key => `${key} = ?`).join(' AND ');
+
+    return {
+        filterSet,
+        filterValues: values
+    };
+};
+
 exports.structureResponse = (body, success, message) => {
     return {
         headers: {success, message},
@@ -35,4 +51,4 @@ exports.OTPRegex = new RegExp(/^[0-9]{4}$/);
 
 exports.seatRegex = new RegExp(/^[A-Z]{1,2}-[0-9]{1,}$/);
 
-exports.timeRegex = new RegExp(/^(10|11|12|[1-9]):[0-5][0-9]$/);
+exports.timeRegex = new RegExp(/^([01][0-9]|2[0-3]):[0-5][0-9]$/);

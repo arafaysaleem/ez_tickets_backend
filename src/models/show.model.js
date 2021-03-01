@@ -1,5 +1,5 @@
 const { query } = require('../db/db-connection');
-const { multipleColumnSet } = require('../utils/common.utils');
+const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
 class ShowModel {
@@ -11,23 +11,33 @@ class ShowModel {
             return await query(sql);
         }
 
-        const { columnSet, values } = multipleColumnSet(params);
-        sql += ` WHERE ${columnSet}`;
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...values]);
+        return await query(sql, [...filterValues]);
+    }
+
+    findTimeConflicts = async ({start_time, end_time, date, theater_id}) => {
+        const sql = `SELECT COUNT(*) FROM ${tables.Shows}
+        WHERE theater_id = ? AND date = ?
+        AND (? BETWEEN start_time AND end_time
+        OR ? BETWEEN start_time AND end_time
+        OR (start_time AND end_time) BETWEEN ? AND ?)`;
+
+        const result = await query(sql, [theater_id, date, start_time, end_time, start_time, end_time]);
+
+        return result[0]['COUNT(*)'];
     }
 
     findOne = async (params) => {
-        const { columnSet, values } = multipleColumnSet(params);
+        const { filterSet, filterValues } = multipleFilterSet(params);
 
         const sql = `SELECT * FROM ${tables.Shows}
-        WHERE ${columnSet}
-        GROUP BY show_id`;
+        WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values]);
+        const result = await query(sql, [...filterValues]);
 
-        // return back the first row (movie)
-        return result;
+        return result[0];
     }
 
     create = async ({ start_time, end_time, date, movie_id, theater_id, show_status }) => {

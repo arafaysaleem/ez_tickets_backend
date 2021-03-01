@@ -1,4 +1,4 @@
-const ShowModel = require('../models/movie.model');
+const ShowModel = require('../models/show.model');
 const {checkValidation} = require('../middleware/validation.middleware');
 const {
     NotFoundException,
@@ -21,7 +21,7 @@ class ShowController {
 
     getShowById = async (req, res, next) => {
         const result = await ShowModel.findOne({ show_id: req.params.id });
-        if (!result.length) {
+        if (!result) {
             throw new NotFoundException('Show not found');
         }
 
@@ -30,17 +30,25 @@ class ShowController {
     };
 
     getFilteredShows = async (req, res, next) => {
+        checkValidation(req);
+
         let showList = await ShowModel.findAll(req.body);
         if (!showList.length) {
             throw new NotFoundException('Shows for this movie not found');
         }
-
+        
         const response = structureResponse(showList, 1, "Success");
         res.send(response);
     };
 
     createShow = async (req, res, next) => {
         checkValidation(req);
+        
+        const conflicts = await ShowModel.findTimeConflicts(req.body);
+
+        if (conflicts !== 0) {
+            throw new CreateFailedException('Show time conflicts found');
+        }
 
         const result = await ShowModel.create(req.body);
 
@@ -54,6 +62,14 @@ class ShowController {
 
     updateShow = async (req, res, next) => {
         checkValidation(req);
+
+        if (req.body.start_time !== undefined) {
+            const conflicts = await ShowModel.findTimeConflicts(req.body);
+
+            if (conflicts !== 0) {
+                throw new UpdateFailedException('Show time conflicts found');
+            }
+        }
 
         const result = await ShowModel.update(req.body, req.params.id);
 

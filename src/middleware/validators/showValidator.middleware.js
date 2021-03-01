@@ -12,12 +12,16 @@ exports.createShowSchema = [
         .exists()
         .withMessage('Show start time is required')
         .matches(timeRegex)
-        .withMessage('Show start must be a valid time of format \'hh:mm\''),
+        .withMessage('Show end must be a valid time of format \'hh:mm\'')
+        .custom((end_time, { req }) => {
+            return end_time > req.body.start_time;
+        })
+        .withMessage('End time must be after start time'),
     body('date')
         .exists()
         .withMessage('Show date is required')
-        .isDate()
-        .withMessage('Show date must be a valid date'),
+        .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
+        .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\''),
     body('show_status')
         .exists()
         .withMessage('Show status is required')
@@ -27,27 +31,15 @@ exports.createShowSchema = [
         .exists()
         .withMessage('MovieID is required for the show')
         .isInt()
-        .withMessage('Invalid RoleId found'),
+        .withMessage('Invalid MovieID found'),
     body('theater_id')
         .exists()
         .withMessage('TheaterID is required for the show')
         .isInt()
-        .withMessage('Invalid RoleId found')
+        .withMessage('Invalid TheaterID found')
 ];
 
 exports.updateShowSchema = [
-    body('start_time')
-        .optional()
-        .matches(timeRegex)
-        .withMessage('Show start must be a valid time of format \'hh:mm\''),
-    body('end_time')
-        .optional()
-        .matches(timeRegex)
-        .withMessage('Show start must be a valid time of format \'hh:mm\''),
-    body('date')
-        .optional()
-        .isDate()
-        .withMessage('Show date must be a valid date'),
     body('show_status')
         .optional()
         .isIn([...Object.values(ShowStatus)])
@@ -55,11 +47,51 @@ exports.updateShowSchema = [
     body('movie_id')
         .optional()
         .isInt()
-        .withMessage('Invalid RoleId found'),
+        .withMessage('Invalid MovieID found'),
+    body('start_time')
+        .optional()
+        .matches(timeRegex)
+        .withMessage('Show start must be a valid time of format \'hh:mm\'')
+        .custom((start_time, {req}) => {
+            if ((req.body.end_time === undefined) || (req.body.date === undefined)
+                || (req.body.theater_id === undefined)) return false;
+            return true;
+        })
+        .withMessage('end_time, date, theater_id is required to update show timings'),
+    body('end_time')
+        .optional()
+        .matches(timeRegex)
+        .withMessage('Show end must be a valid time of format \'hh:mm\'')
+        .custom((end_time, { req }) => {
+            return end_time > req.body.start_time;
+        })
+        .withMessage('End time must be after start time')
+        .custom((end_time, {req}) => {
+            if ((req.body.start_time === undefined) || (req.body.date === undefined)
+                || (req.body.theater_id === undefined)) return false;
+            return true;
+        })
+        .withMessage('start_time, date, theater_id is required to update show timings'),
+    body('date')
+        .optional()
+        .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
+        .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\'')
+        .custom((date, {req}) => {
+            if ((req.body.end_time === undefined) || (req.body.start_time === undefined)
+                || (req.body.theater_id === undefined)) return false;
+            return true;
+        })
+        .withMessage('end_time, start_time, theater_id is required to update show date'),
     body('theater_id')
         .optional()
         .isInt()
-        .withMessage('Invalid RoleId found'),
+        .withMessage('Invalid TheaterID found')
+        .custom((theater_id, {req}) => {
+            if ((req.body.end_time === undefined) || (req.body.date === undefined)
+                || (req.body.start_time === undefined)) return false;
+            return true;
+        })
+        .withMessage('end_time, start_time, date is required to update show theater'),
     body()
         .custom(value => {
             return Object.keys(value).length !== 0;
@@ -71,4 +103,35 @@ exports.updateShowSchema = [
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
+];
+
+exports.showFiltersSchema = [
+    body('start_time')
+        .optional()
+        .matches(timeRegex)
+        .withMessage('Show start must be a valid time of format \'hh:mm\''),
+    body('end_time')
+        .optional()
+        .matches(timeRegex)
+        .withMessage('Show end must be a valid time of format \'hh:mm\'')
+        .custom((end_time, { req }) => {
+            return end_time > req.body.start_time;
+        })
+        .withMessage('End time must be after start time'),
+    body('date')
+        .optional()
+        .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
+        .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\''),
+    body('show_status')
+        .optional()
+        .isIn([...Object.values(ShowStatus)])
+        .withMessage('Invalid show status'),
+    body('movie_id')
+        .optional()
+        .isInt()
+        .withMessage('Invalid MovieID found'),
+    body('theater_id')
+        .optional()
+        .isInt()
+        .withMessage('Invalid TheaterID found')
 ];
