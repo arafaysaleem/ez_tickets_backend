@@ -6,5 +6,6 @@ exports.tables = {
     OtpCodes: 'otp_codes',
     Theaters: 'theaters',
     TheaterSeats: 'theater_seats',
-    Shows: 'shows'
+    Shows: 'shows',
+    Bookings: 'bookings'
 };

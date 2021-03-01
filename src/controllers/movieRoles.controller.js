@@ -22,6 +22,7 @@ class MovieRoleController {
     updateMovieRole = async (req, res, next) => {
         checkValidation(req);
 
+        // todo: fix API
         const result = await MovieRoleModel.update(req.body, req.params.id);
 
         if (!result) {
