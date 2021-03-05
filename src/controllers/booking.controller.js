@@ -20,10 +20,28 @@ class BookingController {
         res.send(response);
     };
 
+    getBookingById = async (req, res, next) => {
+        let booking = await BookingModel.findOne({booking_id: req.params.id});
+        if (!booking) {
+            throw new NotFoundException('Booking not found');
+        }
+
+        const response = structureResponse(booking, 1, "Success");
+        res.send(response);
+    };
+
     getFilteredBookings = async (req, res, next) => {
         checkValidation(req);
 
-        let showList = await BookingModel.findAll(req.body);
+        let {seat, ...reqBody} = req.body;
+
+        if (seat !== undefined){
+            seat = seat.split("-"); // "A-11" -> ["A",11];
+            reqBody.seat_row = seat[0];
+            reqBody.seat_number = seat[1];
+        }
+
+        let showList = await BookingModel.findAll(reqBody);
         if (!showList.length) {
             throw new NotFoundException('Shows for this movie not found');
         }
@@ -53,7 +71,7 @@ class BookingController {
     updateBooking = async (req, res, next) => {
         checkValidation(req);
 
-        const result = await BookingModel.update(req.body, req.body.filters);
+        const result = await BookingModel.update(req.body, req.params.id);
 
         if (!result) {
             throw new UnexpectedException('Something went wrong');
@@ -69,7 +87,7 @@ class BookingController {
     };
 
     deleteBooking = async (req, res, next) => {
-        const result = await BookingModel.delete(req.body.filters);
+        const result = await BookingModel.delete(req.params.id);
         
         if (!result) {
             throw new NotFoundException('Booking not found');

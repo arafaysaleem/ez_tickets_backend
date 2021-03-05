@@ -6,14 +6,14 @@ const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middlewar
 const bookingController = require('../controllers/booking.controller');
 const UserRole = require('../utils/enums/userRoles.utils');
 const {
-    createBookingSchema, updateBookingSchema,
-    bookingGetFiltersSchema, bookingDeleteFiltersSchema
+    createBookingSchema, updateBookingSchema, bookingGetFiltersSchema
 } = require('../middleware/validators/bookingValidator.middleware');
 
 router.get('/', auth(), awaitHandlerFactory(bookingController.getAllBookings)); // localhost:3000/api/v1/bookings
+router.get('/id/:id', auth(), awaitHandlerFactory(bookingController.getBookingById)); // localhost:3000/api/v1/bookings
 router.post('/filters', auth(), bookingGetFiltersSchema, awaitHandlerFactory(bookingController.getFilteredBookings)); // localhost:3000/api/v1/bookings/filters
 router.post('/', auth(UserRole.Admin, UserRole.SuperUser), createBookingSchema, awaitHandlerFactory(bookingController.createBooking)); // localhost:3000/api/v1/bookings
-router.patch('/filters', auth(UserRole.Admin, UserRole.SuperUser), updateBookingSchema, awaitHandlerFactory(bookingController.updateBooking)); // localhost:3000/api/v1/bookings/filters
-router.delete('/filters', auth(UserRole.Admin, UserRole.SuperUser), bookingDeleteFiltersSchema, awaitHandlerFactory(bookingController.deleteBooking)); // localhost:3000/api/v1/bookings/filters
+router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updateBookingSchema, awaitHandlerFactory(bookingController.updateBooking)); // localhost:3000/api/v1/bookings/filters
+router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(bookingController.deleteBooking)); // localhost:3000/api/v1/bookings/filters
 
 module.exports = router;

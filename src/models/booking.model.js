@@ -10,7 +10,6 @@ class BookingModel {
         if (!Object.keys(params).length) {
             return await query(sql);
         }
-
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
@@ -28,34 +27,36 @@ class BookingModel {
         return result[0];
     }
 
-    create = async ({ user_id, show_id, seat_row, seat_number, price, booking_status }) => {
+    create = async ({ user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime }) => {
         const sql = `INSERT INTO ${tables.Bookings}
-        ( user_id, show_id, seat_row, seat_number, price, booking_status ) 
-        VALUES (?,?,?,?,?,?)`;
+        ( user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime ) 
+        VALUES (?,?,?,?,?,?,?)`;
 
-        const result = await query(sql, [user_id, show_id, seat_row, seat_number, price, booking_status]);
+        const result = await query(sql, [user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime]);
 
-        return result;
+        const created_booking = !result ? 0 : {
+            booking_id: result.insertId,
+            affected_rows: result.affectedRows
+        };
+
+        return created_booking;
     }
 
-    update = async (params, filters) => {
+    update = async (params, id) => {
         const { columnSet, values } = multipleColumnSet(params);
-        const { filterSet, filterValues } = multipleFilterSet(filters);
 
-        const sql = `UPDATE ${tables.Bookings} SET ${columnSet} WHERE ${filterSet}`;
+        const sql = `UPDATE ${tables.Bookings} SET ${columnSet} WHERE booking_id=?`;
 
-        const result = await query(sql, [...values, ...filterValues]);
+        const result = await query(sql, [...values, id]);
         
         return result;
     }
 
-    delete = async (filters) => {
-        const { filterSet, filterValues } = multipleFilterSet(filters);
-
+    delete = async (id) => {
         const sql = `DELETE FROM ${tables.Bookings}
-        WHERE ${filterSet}`;
+        WHERE booking_id=?`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;
