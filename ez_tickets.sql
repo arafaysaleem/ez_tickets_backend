@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2021 at 06:48 AM
+-- Generation Time: Mar 05, 2021 at 03:06 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -28,13 +28,25 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bookings` (
+  `booking_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `show_id` int(10) UNSIGNED NOT NULL,
-  `seat_row` int(11) NOT NULL,
+  `seat_row` varchar(2) NOT NULL,
   `seat_number` int(11) NOT NULL,
   `price` double NOT NULL COMMENT 'seat price',
-  `booking_status` enum('confirmed','reserved','cancelled') NOT NULL DEFAULT 'reserved'
+  `booking_status` enum('confirmed','reserved','cancelled') NOT NULL DEFAULT 'reserved',
+  `booking_datetime` datetime NOT NULL COMMENT 'the date time on which booking was made'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_number`, `price`, `booking_status`, `booking_datetime`) VALUES
+(1, 1, 14, 'A', 11, 700, 'confirmed', '0000-00-00 00:00:00'),
+(2, 2, 14, 'A', 16, 700, 'confirmed', '0000-00-00 00:00:00'),
+(3, 2, 14, 'A', 17, 700, 'confirmed', '0000-00-00 00:00:00'),
+(6, 2, 18, 'B', 2, 700, 'confirmed', '2021-03-05 06:41:00');
 
 -- --------------------------------------------------------
 
@@ -243,7 +255,8 @@ INSERT INTO `users` (`user_id`, `full_name`, `email`, `password`, `address`, `co
 -- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD PRIMARY KEY (`user_id`,`show_id`,`seat_row`,`seat_number`) USING BTREE,
+  ADD PRIMARY KEY (`booking_id`),
+  ADD UNIQUE KEY `unique_booking_details` (`user_id`,`show_id`,`seat_row`,`seat_number`) USING BTREE,
   ADD KEY `fk_bookings_show_id` (`show_id`);
 
 --
@@ -307,6 +320,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
@@ -340,7 +359,7 @@ ALTER TABLE `theaters`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
