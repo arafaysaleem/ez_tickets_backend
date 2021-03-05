@@ -137,7 +137,8 @@ exports.bookingGetFiltersSchema = [
         .isInt({ min: 1 })
         .withMessage('Price should a valid whole number > 0'),
     body('booking_datetime')
-        .optional()
+        .exists()
+        .withMessage('Booking datetime is required')
         .matches(datetimeRegex)
         .withMessage('Booking datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
 ];
