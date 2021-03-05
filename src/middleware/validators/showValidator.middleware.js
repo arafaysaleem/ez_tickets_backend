@@ -4,11 +4,13 @@ const { timeRegex } = require('../../utils/common.utils');
 
 exports.createShowSchema = [
     body('start_time')
+        .trim()
         .exists()
         .withMessage('Show start time is required')
         .matches(timeRegex)
         .withMessage('Show start must be a valid time of format \'hh:mm\''),
     body('end_time')
+        .trim()
         .exists()
         .withMessage('Show start time is required')
         .matches(timeRegex)
@@ -18,21 +20,25 @@ exports.createShowSchema = [
         })
         .withMessage('End time must be after start time'),
     body('date')
+        .trim()
         .exists()
         .withMessage('Show date is required')
         .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
         .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\''),
     body('show_status')
+        .trim()
         .exists()
         .withMessage('Show status is required')
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
     body('movie_id')
+        .trim()
         .exists()
         .withMessage('MovieID is required for the show')
         .isInt()
         .withMessage('Invalid MovieID found'),
     body('theater_id')
+        .trim()
         .exists()
         .withMessage('TheaterID is required for the show')
         .isInt()
@@ -42,14 +48,17 @@ exports.createShowSchema = [
 exports.updateShowSchema = [
     body('show_status')
         .optional()
+        .trim()
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
     body('movie_id')
         .optional()
+        .trim()
         .isInt()
         .withMessage('Invalid MovieID found'),
     body('start_time')
         .optional()
+        .trim()
         .matches(timeRegex)
         .withMessage('Show start must be a valid time of format \'hh:mm\'')
         .custom((start_time, {req}) => {
@@ -60,6 +69,7 @@ exports.updateShowSchema = [
         .withMessage('end_time, date, theater_id is required to update show timings'),
     body('end_time')
         .optional()
+        .trim()
         .matches(timeRegex)
         .withMessage('Show end must be a valid time of format \'hh:mm\'')
         .custom((end_time, { req }) => {
@@ -74,6 +84,7 @@ exports.updateShowSchema = [
         .withMessage('start_time, date, theater_id is required to update show timings'),
     body('date')
         .optional()
+        .trim()
         .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
         .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\'')
         .custom((date, {req}) => {
@@ -84,6 +95,7 @@ exports.updateShowSchema = [
         .withMessage('end_time, start_time, theater_id is required to update show date'),
     body('theater_id')
         .optional()
+        .trim()
         .isInt()
         .withMessage('Invalid TheaterID found')
         .custom((theater_id, {req}) => {
@@ -108,10 +120,12 @@ exports.updateShowSchema = [
 exports.showFiltersSchema = [
     body('start_time')
         .optional()
+        .trim()
         .matches(timeRegex)
         .withMessage('Show start must be a valid time of format \'hh:mm\''),
     body('end_time')
         .optional()
+        .trim()
         .matches(timeRegex)
         .withMessage('Show end must be a valid time of format \'hh:mm\'')
         .custom((end_time, { req }) => {
@@ -120,18 +134,22 @@ exports.showFiltersSchema = [
         .withMessage('End time must be after start time'),
     body('date')
         .optional()
+        .trim()
         .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
         .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\''),
     body('show_status')
         .optional()
+        .trim()
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
     body('movie_id')
         .optional()
+        .trim()
         .isInt()
         .withMessage('Invalid MovieID found'),
     body('theater_id')
         .optional()
+        .trim()
         .isInt()
         .withMessage('Invalid TheaterID found')
 ];

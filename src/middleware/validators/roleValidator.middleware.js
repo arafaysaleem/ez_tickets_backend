@@ -2,14 +2,17 @@ const { body } = require('express-validator');
 
 exports.createRoleSchema = [
     body('full_name')
+        .trim()
         .exists()
         .withMessage('Full name is required'),
     body('picture_url')
+        .trim()
         .exists()
         .withMessage('Picture url is required')
         .isURL()
         .withMessage('Must be a valid url'),
     body('age')
+        .trim()
         .exists()
         .withMessage('Role age is required')
         .isNumeric()
@@ -18,13 +21,16 @@ exports.createRoleSchema = [
 
 exports.updateRoleSchema = [
     body('full_name')
-        .optional(),
+        .optional()
+        .trim(),
     body('picture_url')
         .optional()
+        .trim()
         .isURL()
         .withMessage('Must be a valid url'),
     body('age')
         .optional()
+        .trim()
         .isNumeric()
         .withMessage('Must be a number'),
     body()

@@ -4,6 +4,7 @@ const TheaterType = require('../../utils/enums/theaterTypes.utils');
 
 exports.createTheaterSchema = [
     body('theater_name')
+        .trim()
         .exists()
         .withMessage('Theater name is required')
         .isLength({min: 1, max: 1})
@@ -12,16 +13,19 @@ exports.createTheaterSchema = [
         .withMessage('Must be alphabetic')
         .toUpperCase(),
     body('seats_per_row')
+        .trim()
         .exists()
         .withMessage('Define max number of seats for a row')
         .isInt({min: 1})
         .withMessage('Seats per row has to be a whole number >= 1'),
     body('num_of_rows')
+        .trim()
         .exists()
         .withMessage('Define num of rows in theater')
         .isInt({min: 1})
         .withMessage('Num of rows has to be a whole number >= 1'),
     body('theater_type')
+        .trim()
         .exists()
         .withMessage('Theater type is required')
         .isIn([...Object.values(TheaterType)])
@@ -34,6 +38,7 @@ exports.createTheaterSchema = [
         .notEmpty()
         .withMessage('Missing can\'t be empty'),
     body('missing.*')
+        .trim()
         .exists()
         .withMessage('Missing seats are required for "missing" key')
         .bail()
@@ -49,6 +54,7 @@ exports.createTheaterSchema = [
         .notEmpty()
         .withMessage('Blocked can\'t be empty'),
     body('blocked.*')
+        .trim()
         .exists()
         .withMessage('Blocked seats are required for "blocked" key')
         .bail()
@@ -61,6 +67,7 @@ exports.createTheaterSchema = [
 exports.updateTheaterSchema = [
     body('theater_name')
         .optional()
+        .trim()
         .isLength({min: 1, max: 1})
         .withMessage('Theater name must be a single letter')
         .isAlpha()
@@ -68,14 +75,17 @@ exports.updateTheaterSchema = [
         .toUpperCase(),
     body('seats_per_row')
         .optional()
+        .trim()
         .isInt({min: 1})
         .withMessage('Seats per row has to be a whole number >= 1'),
     body('num_of_rows')
         .optional()
+        .trim()
         .isInt({min: 1})
         .withMessage('Num of rows has to be a whole number >= 1'),
     body('theater_type')
         .optional()
+        .trim()
         .isIn([...Object.values(TheaterType)])
         .withMessage('Invalid theater type'),
     body()

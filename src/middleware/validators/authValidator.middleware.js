@@ -4,6 +4,7 @@ const { OTPRegex } = require('../../utils/common.utils');
 
 exports.forgotPWSchema = [
     body('email')
+        .trim()
         .exists()
         .withMessage('Email is required')
         .isEmail()
@@ -13,17 +14,20 @@ exports.forgotPWSchema = [
 
 exports.changePWSchema = [
     body('email')
+        .trim()
         .exists()
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
         .normalizeEmail(),
     body('password')
+        .trim()
         .exists()
         .withMessage('Password field is required')
         .notEmpty()
         .withMessage('Password must be filled'),
     body('new_password')
+        .trim()
         .exists()
         .withMessage('New password field is required')
         .notEmpty()
@@ -34,12 +38,14 @@ exports.changePWSchema = [
 
 exports.resetPWSchema = [
     body('email')
+        .trim()
         .exists()
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
         .normalizeEmail(),
     body('password')
+        .trim()
         .exists()
         .withMessage('Password is required')
         .notEmpty()
@@ -48,12 +54,14 @@ exports.resetPWSchema = [
 
 exports.verifyOTPSchema = [
     body('email')
+        .trim()
         .exists()
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
         .normalizeEmail(),
     body('OTP')
+        .trim()
         .exists()
         .withMessage('OTP is required')
         .matches(OTPRegex)
@@ -64,12 +72,14 @@ exports.verifyOTPSchema = [
 
 exports.validateLogin = [
     body('email')
+        .trim()
         .exists()
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email') // todo: add email verification
         .normalizeEmail(),
     body('password')
+        .trim()
         .exists()
         .withMessage('Password is required')
         .notEmpty()
