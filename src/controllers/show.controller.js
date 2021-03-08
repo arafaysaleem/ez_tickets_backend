@@ -32,7 +32,7 @@ class ShowController {
     getFilteredShows = async (req, res, next) => {
         checkValidation(req);
 
-        let showList = await ShowModel.findAll(req.body);
+        let showList = await ShowModel.findAll(req.query);
         if (!showList.length) {
             throw new NotFoundException('Shows for this movie not found');
         }

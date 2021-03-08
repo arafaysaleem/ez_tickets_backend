@@ -9,7 +9,7 @@ const { createShowSchema, updateShowSchema, showFiltersSchema } = require('../mi
 
 router.get('/', auth(), awaitHandlerFactory(showController.getAllShows)); // localhost:3000/api/v1/shows
 router.get('/id/:id', auth(), awaitHandlerFactory(showController.getShowById)); // localhost:3000/api/v1/shows/id/1
-router.post('/filters', auth(), showFiltersSchema, awaitHandlerFactory(showController.getFilteredShows)); // localhost:3000/api/v1/shows
+router.get('/filters', auth(), showFiltersSchema, awaitHandlerFactory(showController.getFilteredShows)); // localhost:3000/api/v1/shows
 router.post('/', auth(UserRole.Admin, UserRole.SuperUser), createShowSchema, awaitHandlerFactory(showController.createShow)); // localhost:3000/api/v1/shows
 router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updateShowSchema, awaitHandlerFactory(showController.updateShow)); // localhost:3000/api/v1/shows/id/1 , using patch for partial update
 router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(showController.deleteShow)); // localhost:3000/api/v1/shows/id/1

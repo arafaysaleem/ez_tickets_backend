@@ -33,7 +33,7 @@ class BookingController {
     getFilteredBookings = async (req, res, next) => {
         checkValidation(req);
 
-        let {seat, ...reqBody} = req.body;
+        let {seat, ...reqBody} = req.query;
 
         if (seat !== undefined){
             seat = seat.split("-"); // "A-11" -> ["A",11];

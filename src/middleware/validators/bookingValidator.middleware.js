@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const BookingStatus = require('../../utils/enums/bookingStatus.utils');
 const { seatRegex, datetimeRegex } = require('../../utils/common.utils');
 
@@ -63,34 +63,34 @@ exports.updateBookingSchema = [
 ];
 
 exports.bookingGetFiltersSchema = [
-    body('user_id')
+    query('user_id')
         .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid UserID found'),
-    body('booking_status')
+    query('booking_status')
         .optional()
         .trim()
         .isIn([...Object.values(BookingStatus)])
         .withMessage('Invalid booking status'),
-    body('show_id')
+    query('show_id')
         .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Invalid ShowID found'),
-    body('seat')
+    query('seat')
         .optional()
         .trim()
         .isString()
         .withMessage('Seat has to be a string')
         .matches(seatRegex)
         .withMessage('Invalid seat id found. Follow format \'A-11\''),
-    body('price')
+    query('price')
         .optional()
         .trim()
         .isInt({ min: 1 })
         .withMessage('Price should a valid whole number > 0'),
-    body('booking_datetime')
+    query('booking_datetime')
         .optional()
         .trim()
         .matches(datetimeRegex)

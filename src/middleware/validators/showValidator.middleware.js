@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const ShowStatus = require('../../utils/enums/showStatus.utils');
 const { timeRegex } = require('../../utils/common.utils');
 
@@ -118,36 +118,36 @@ exports.updateShowSchema = [
 ];
 
 exports.showFiltersSchema = [
-    body('start_time')
+    query('start_time')
         .optional()
         .trim()
         .matches(timeRegex)
         .withMessage('Show start must be a valid time of format \'hh:mm\''),
-    body('end_time')
+    query('end_time')
         .optional()
         .trim()
         .matches(timeRegex)
         .withMessage('Show end must be a valid time of format \'hh:mm\'')
         .custom((end_time, { req }) => {
-            return end_time > req.body.start_time;
+            return end_time > req.query.start_time;
         })
         .withMessage('End time must be after start time'),
-    body('date')
+    query('date')
         .optional()
         .trim()
         .isDate({format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-']})
         .withMessage('Show date must be a valid date of format \'YYYY-MM-DD\''),
-    body('show_status')
+    query('show_status')
         .optional()
         .trim()
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
-    body('movie_id')
+    query('movie_id')
         .optional()
         .trim()
         .isInt()
         .withMessage('Invalid MovieID found'),
-    body('theater_id')
+    query('theater_id')
         .optional()
         .trim()
         .isInt()
