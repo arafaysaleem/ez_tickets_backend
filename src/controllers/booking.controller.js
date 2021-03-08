@@ -68,6 +68,12 @@ class BookingController {
         res.status(201).send(response);
     };
 
+    confirmBooking = async (req, res, next) => {
+        req.body.booking_status = 'confirmed';
+
+        this.updateBooking(req, res, next);
+    };
+
     updateBooking = async (req, res, next) => {
         checkValidation(req);
 

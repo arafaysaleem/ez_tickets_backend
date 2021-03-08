@@ -14,6 +14,7 @@ router.get('/id/:id', auth(), awaitHandlerFactory(bookingController.getBookingBy
 router.get('/filters', auth(), bookingGetFiltersSchema, awaitHandlerFactory(bookingController.getFilteredBookings)); // localhost:3000/api/v1/bookings/filters
 router.post('/', auth(UserRole.Admin, UserRole.SuperUser), createBookingSchema, awaitHandlerFactory(bookingController.createBooking)); // localhost:3000/api/v1/bookings
 router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updateBookingSchema, awaitHandlerFactory(bookingController.updateBooking)); // localhost:3000/api/v1/bookings/filters
+router.patch('/id/:id/confirm', auth(UserRole.Admin, UserRole.SuperUser), updateBookingSchema, awaitHandlerFactory(bookingController.updateBooking)); // localhost:3000/api/v1/bookings/filters
 router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(bookingController.deleteBooking)); // localhost:3000/api/v1/bookings/filters
 
 module.exports = router;
