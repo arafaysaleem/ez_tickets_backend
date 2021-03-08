@@ -15,5 +15,6 @@ module.exports.ErrorResponse = {
     OTPGenerationException: 13,
     OTPExpiredException: 14,
     OTPVerificationException: 15,
-    ForeignKeyViolationException: 16
+    ForeignKeyViolationException: 16,
+    UnimplementedException: 17
 };

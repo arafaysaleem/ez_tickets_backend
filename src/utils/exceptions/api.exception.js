@@ -24,7 +24,14 @@ class InvalidEndpointException extends ApiException {
     }
 }
 
+class UnimplementedException extends ApiException {
+    constructor (message = "API unimplemented", data){
+        super(ErrorResponse.UnimplementedException, message, data, 404);
+    }
+}
+
 module.exports = {
     InternalServerException,
-    InvalidEndpointException
+    InvalidEndpointException,
+    UnimplementedException
 };
