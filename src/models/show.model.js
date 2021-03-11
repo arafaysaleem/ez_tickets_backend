@@ -40,20 +40,6 @@ class ShowModel {
         return result[0];
     }
 
-    findBookings = async (params) => {
-        let sql = `SELECT * FROM ${tables.Bookings}
-        NATURAL JOIN ${tables.Shows}`;
-
-        if (!Object.keys(params).length) {
-            return await query(sql);
-        }
-
-        const { filterSet, filterValues } = multipleFilterSet(params);
-        sql += ` WHERE ${filterSet}`;
-
-        return await query(sql, [...filterValues]);
-    }
-
     create = async ({ start_time, end_time, date, movie_id, theater_id, show_status }) => {
         const sql = `INSERT INTO ${tables.Shows}
         (start_time, end_time, date, movie_id, theater_id, show_status) 

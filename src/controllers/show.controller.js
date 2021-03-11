@@ -29,29 +29,6 @@ class ShowController {
         res.send(response);
     };
 
-    getShowBookedSeats = async (req, res, next) => {
-        const bookingDuplicates = await ShowModel.findBookings({
-            show_id: req.params.id, booking_status: 'confirmed'
-        });
-
-        if (!bookingDuplicates) {
-            throw new NotFoundException('No bookings found');
-        }
-
-        let seatsList = {};
-        seatsList.booked_seats = [];
-
-        if (bookingDuplicates.length > 0){
-            for (const booking of bookingDuplicates) {
-                const {seat_row, seat_number} = booking;
-                seatsList.booked_seats.push({ seat_row, seat_number });
-            }
-        }
-
-        const response = structureResponse(seatsList, 1, "Success");
-        res.send(response);
-    };
-
     getFilteredShows = async (req, res, next) => {
         checkValidation(req);
 
