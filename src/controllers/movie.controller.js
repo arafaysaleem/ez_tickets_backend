@@ -72,7 +72,6 @@ class MovieController {
         res.send(response);
     };
 
-    // map these too
     getComingSoonMovies = async (req, res, net) => {
         let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});
         if (!comingSoonList.length) {
