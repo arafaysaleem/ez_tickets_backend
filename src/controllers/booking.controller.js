@@ -50,6 +50,32 @@ class BookingController {
         res.send(response);
     };
 
+    getUserBookings = async (req, res, next) => {
+        let bookingDuplicates = await BookingModel.findAllByUser(req.params.id, req.query);
+        if (!bookingDuplicates.length) {
+            throw new NotFoundException('Shows for this movie not found');
+        }
+        
+        let bookingList = {};
+
+        for (const booking of bookingDuplicates) {
+            const {booking_id, show_id, price, seat_row,
+                seat_number, booking_status, password, ...userDetails} = booking;
+            const user_id = booking.user_id;
+            if (!bookingList[user_id]) {
+                bookingList[user_id] = userDetails;
+                bookingList[user_id].bookings = [];
+            }
+            bookingList[user_id].bookings.push({ booking_id, show_id, price, seat_row,
+                seat_number, booking_status });
+        }
+
+        bookingList = Object.values(bookingList);
+
+        const response = structureResponse(bookingList, 1, "Success");
+        res.send(response);
+    };
+
     createBooking = async (req, res, next) => {
         checkValidation(req);
 

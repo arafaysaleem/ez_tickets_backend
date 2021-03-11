@@ -16,6 +16,21 @@ class BookingModel {
         return await query(sql, [...filterValues]);
     }
 
+    findAllByUser = async (id, params = {}) => {
+        let sql = `SELECT * FROM ${tables.Bookings}
+        NATURAL JOIN ${tables.Users}
+        WHERE user_id = ?
+        GROUP BY booking_id`;
+
+        if (!Object.keys(params).length) {
+            return await query(sql, [id]);
+        }
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` AND ${filterSet}`;
+
+        return await query(sql, [id, ...filterValues]);
+    }
+
     findOne = async (params) => {
         const { filterSet, filterValues } = multipleFilterSet(params);
 
