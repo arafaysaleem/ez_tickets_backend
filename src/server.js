@@ -11,6 +11,7 @@ const roleRouter = require('./routes/role.routes');
 const theaterRouter = require('./routes/theater.routes');
 const showRouter = require('./routes/show.routes');
 const bookingRouter = require('./routes/booking.routes');
+const paymentRouter = require('./routes/payment.routes');
 
 const app = express();
 // parse requests of content-type: application/json
@@ -28,6 +29,7 @@ app.use(`/api/v1/roles`, roleRouter);
 app.use(`/api/v1/theaters`, theaterRouter);
 app.use(`/api/v1/shows`, showRouter);
 app.use(`/api/v1/bookings`, bookingRouter);
+app.use(`/api/v1/payments`, paymentRouter);
 
 // 404 error
 app.all('*', (req, res, next) => {
