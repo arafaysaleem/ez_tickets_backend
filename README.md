@@ -58,7 +58,7 @@ Import the ez_ticket.sql using your sql workbench to create the database.
 If you want to quickly setup the endpoints for testing:
 
 * Go to Postman to import backup
-* Upload the postman_collections_backup.zip
+* Upload the schema_backup or unzip postman_collections_backup.zip upload the folder
 
 ### Setting up node js
 
