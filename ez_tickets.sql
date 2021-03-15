@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2021 at 08:52 PM
+-- Generation Time: Mar 15, 2021 at 09:40 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -47,6 +47,17 @@ INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_nu
 (2, 2, 14, 'A', 16, 700, 'confirmed', '0000-00-00 00:00:00'),
 (3, 2, 14, 'A', 17, 700, 'confirmed', '0000-00-00 00:00:00'),
 (6, 2, 18, 'B', 2, 700, 'cancelled', '2021-03-05 06:41:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_payments`
+--
+
+CREATE TABLE `booking_payments` (
+  `payment_id` int(10) UNSIGNED NOT NULL,
+  `booking_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -104,6 +115,27 @@ INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
 (12, 1, 'producer'),
 (12, 2, 'director'),
 (12, 3, 'cast');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `payment_id` int(10) UNSIGNED NOT NULL,
+  `amount` int(11) NOT NULL,
+  `payment_datetime` datetime NOT NULL,
+  `payment_method` enum('cash','card','cod') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_method`) VALUES
+(1, 3000, '2021-03-11 06:41:00', 'cash'),
+(2, 5000, '2021-03-15 06:41:00', 'cash');
 
 -- --------------------------------------------------------
 
@@ -252,6 +284,13 @@ ALTER TABLE `bookings`
   ADD KEY `fk_bookings_show_id` (`show_id`);
 
 --
+-- Indexes for table `booking_payments`
+--
+ALTER TABLE `booking_payments`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `fk_payments_payment_id` (`payment_id`);
+
+--
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
@@ -264,6 +303,12 @@ ALTER TABLE `movies`
 ALTER TABLE `movie_roles`
   ADD PRIMARY KEY (`movie_id`,`role_id`) USING BTREE,
   ADD KEY `fk_mroles_role_id` (`role_id`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`payment_id`);
 
 --
 -- Indexes for table `roles`
@@ -317,6 +362,12 @@ ALTER TABLE `movies`
   MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
@@ -350,6 +401,13 @@ ALTER TABLE `users`
 ALTER TABLE `bookings`
   ADD CONSTRAINT `fk_bookings_show_id` FOREIGN KEY (`show_id`) REFERENCES `shows` (`show_id`),
   ADD CONSTRAINT `fk_bookings_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `booking_payments`
+--
+ALTER TABLE `booking_payments`
+  ADD CONSTRAINT `fk_payment_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`),
+  ADD CONSTRAINT `fk_payments_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`payment_id`);
 
 --
 -- Constraints for table `movie_roles`
