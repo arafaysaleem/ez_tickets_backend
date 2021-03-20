@@ -56,8 +56,10 @@ class DBConnection{
                 if (err.status === 512) throw new ForeignKeyViolationException(err.message);
             }
 
-            console.log(`[DBError] ${err}`);
-            console.log(`[Code] ${err.code}`);
+            if (process.env.NODE_ENV === "dev"){
+                console.log(`[DBError] ${err}`);
+                console.log(`[Code] ${err.code}`);
+            }
             throw new InternalServerException();
             // throw err;
         });
