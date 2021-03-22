@@ -1,6 +1,8 @@
 const { checkValidation } = require('../middleware/validation.middleware');
 const { structureResponse } = require('../utils/common.utils');
+const { dbTransaction } = require('../db/db-connection');
 
+const BookingModel = require('../models/booking.model');
 const PaymentModel = require('../models/payment.model');
 const {
     NotFoundException,
@@ -50,13 +52,39 @@ class PaymentController {
     createPayment = async (req, res, _next) => {
         checkValidation(req);
 
-        const result = await PaymentModel.create(req.body);
+        const { bookings, ...reqBody } = req.body;
+
+        await dbTransaction.beginTransaction();
+        
+        const result = await PaymentModel.create(reqBody);
 
         if (!result) {
+            await dbTransaction.rollback();
             throw new CreateFailedException('Payment failed to be created');
         }
 
-        const response = structureResponse(result, 1, 'Payment was created!');
+        for (const booking_id of bookings) {
+            const success = await BookingModel.update({ booking_status: "confirmed" }, booking_id);
+            
+            if (!success) {
+                await dbTransaction.rollback();
+                throw new UpdateFailedException('One of the bookings failed to be confirmed');
+            }
+
+            const { affectedRows, changedRows} = success;
+
+            if (!affectedRows) {
+                await dbTransaction.rollback();
+                throw new NotFoundException(`Booking ID: ${booking_id} not found`);
+            } else if (affectedRows && !changedRows) {
+                await dbTransaction.rollback();
+                throw new UpdateFailedException('One of the bookings failed to be confirmed');
+            }
+        }
+
+        await dbTransaction.commit();
+
+        const response = structureResponse(result, 1, 'Payment was created! Booking confirmed!');
         res.status(201).send(response);
     };
 

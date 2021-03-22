@@ -32,7 +32,23 @@ exports.createPaymentSchema = [
         .exists()
         .withMessage('ShowID is required for the booking')
         .isInt({ min: 1 })
-        .withMessage('Invalid ShowID found')
+        .withMessage('Invalid ShowID found'),
+    body('bookings')
+        .exists()
+        .withMessage('Booking IDs are required')
+        .bail()
+        .isArray({min: 1})
+        .withMessage('Bookings must be an array like [1,2,3]')
+        .bail()
+        .notEmpty()
+        .withMessage('Bookings can\'t be empty'),
+    body('bookings.*')
+        .trim()
+        .exists()
+        .withMessage('Booking IDs are required for "bookings" key')
+        .bail()
+        .isInt()
+        .withMessage('Each booking ID has to be an int')
 ];
 
 exports.updatePaymentSchema = [
