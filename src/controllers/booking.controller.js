@@ -58,16 +58,13 @@ class BookingController {
         
         let bookingList = {};
 
-        for (const booking of bookingDuplicates) {
-            const {booking_id, show_id, price, seat_row,
-                seat_number, booking_status, password, ...userDetails} = booking;
-            const user_id = booking.user_id;
-            if (!bookingList[user_id]) {
-                bookingList[user_id] = userDetails;
-                bookingList[user_id].bookings = [];
+        for (let booking of bookingDuplicates) {
+            const {title, poster_url, show_id, ...bookingDetails} = booking;
+            if (!bookingList[show_id]) {
+                bookingList[show_id] = {show_id, title, poster_url};
+                bookingList[show_id].bookings = [];
             }
-            bookingList[user_id].bookings.push({ booking_id, show_id, price, seat_row,
-                seat_number, booking_status });
+            bookingList[show_id].bookings.push(bookingDetails);
         }
 
         bookingList = Object.values(bookingList);

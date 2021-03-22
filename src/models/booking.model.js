@@ -17,8 +17,10 @@ class BookingModel {
     }
 
     findAllByUser = async (id, params = {}) => {
-        let sql = `SELECT * FROM ${tables.Bookings}
-        NATURAL JOIN ${tables.Users}
+        let sql = `SELECT booking_id, show_id, price, seat_row,
+        seat_number, booking_status, booking_datetime, title, poster_url FROM ${tables.Bookings}
+        NATURAL JOIN ${tables.Shows}
+        NATURAL JOIN ${tables.Movies}
         WHERE user_id = ?`;
 
         if (!Object.keys(params).length) {
