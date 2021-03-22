@@ -20,7 +20,19 @@ exports.createPaymentSchema = [
         .exists()
         .withMessage('Payment datetime is required')
         .matches(datetimeRegex)
-        .withMessage('Payment datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
+        .withMessage('Payment datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
+    body('user_id')
+        .trim()
+        .exists()
+        .withMessage('UserID is required for the booking')
+        .isInt({ min: 1 })
+        .withMessage('Invalid UserID found'),
+    body('show_id')
+        .trim()
+        .exists()
+        .withMessage('ShowID is required for the booking')
+        .isInt({ min: 1 })
+        .withMessage('Invalid ShowID found')
 ];
 
 exports.updatePaymentSchema = [

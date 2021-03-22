@@ -53,7 +53,7 @@ class BookingController {
     getUserBookings = async (req, res, next) => {
         let bookingDuplicates = await BookingModel.findAllByUser(req.params.id, req.query);
         if (!bookingDuplicates.length) {
-            throw new NotFoundException('Shows for this movie not found');
+            throw new NotFoundException('Bookings for this user not found');
         }
         
         let bookingList = {};

@@ -11,6 +11,7 @@ const {
 
 router.get('/', auth(), awaitHandlerFactory(paymentController.getAllPayments)); // localhost:3000/api/v1/payments
 router.get('/id/:id', auth(), awaitHandlerFactory(paymentController.getPaymentById)); // localhost:3000/api/v1/payments/id/1
+router.get('/users/:id', auth(), awaitHandlerFactory(paymentController.getUserPayments)); // localhost:3000/api/v1/payments/users/1
 router.post('/', auth(UserRole.Admin, UserRole.SuperUser), createPaymentSchema, awaitHandlerFactory(paymentController.createPayment)); // localhost:3000/api/v1/payments
 router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updatePaymentSchema, awaitHandlerFactory(paymentController.updatePayment)); // localhost:3000/api/v1/payments/id/1
 router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(paymentController.deletePayment)); // localhost:3000/api/v1/payments/id/1

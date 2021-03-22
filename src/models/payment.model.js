@@ -17,6 +17,23 @@ class PaymentModel {
         return await query(sql, [...filterValues]);
     }
 
+    findAllByUser = async (id, params = {}) => {
+        let sql = `SELECT payment_id, amount, payment_datetime, payment_method, title, poster_url
+        FROM ${tables.Payments}
+        NATURAL JOIN ${tables.Shows}
+        NATURAL JOIN ${tables.Movies}
+        WHERE user_id = ?`;
+
+        if (!Object.keys(params).length) {
+            return await query(sql, [id]);
+        }
+
+        const { filterSet, filterValues } = multipleFilterSet(params);
+        sql += ` AND ${filterSet}`;
+
+        return await query(sql, [id, ...filterValues]);
+    }
+
     findOne = async (params) => {
         const { filterSet, filterValues } = multipleFilterSet(params);
 
@@ -28,12 +45,12 @@ class PaymentModel {
         return result[0];
     }
 
-    create = async ({ amount, payment_datetime, payment_method }) => {
+    create = async ({ amount, payment_datetime, payment_method, user_id, show_id }) => {
         const sql = `INSERT INTO ${tables.Payments}
-        ( amount, payment_datetime, payment_method ) 
-        VALUES (?,?,?)`;
+        ( amount, payment_datetime, payment_method, user_id, show_id ) 
+        VALUES (?,?,?,?,?)`;
 
-        const result = await query(sql, [amount, payment_datetime, payment_method]);
+        const result = await query(sql, [amount, payment_datetime, payment_method, user_id, show_id]);
 
         const created_payment = !result ? 0 : {
             payment_id: result.insertId,

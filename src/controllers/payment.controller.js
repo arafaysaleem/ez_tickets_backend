@@ -10,7 +10,7 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class PaymentController {
-    getAllPayments = async (req, res, next) => {
+    getAllPayments = async (_req, res, _next) => {
         let payments = await PaymentModel.findAll();
         if (!payments.length) {
             throw new NotFoundException('Payments not found');
@@ -20,7 +20,7 @@ class PaymentController {
         res.send(response);
     };
 
-    getPaymentById = async (req, res, next) => {
+    getPaymentById = async (req, res, _next) => {
         let payment = await PaymentModel.findOne({payment_id: req.params.id});
         if (!payment) {
             throw new NotFoundException('Payment not found');
@@ -30,7 +30,24 @@ class PaymentController {
         res.send(response);
     };
 
-    createPayment = async (req, res, next) => {
+    getUserPayments = async (req, res, _next) => {
+        let payments = await PaymentModel.findAllByUser(req.params.id, req.query);
+        if (!payments.length) {
+            throw new NotFoundException('Payments for this user not found');
+        }
+
+        payments = payments.map((payment, _i, _payments) => {
+            const {title, poster_url, ...paymentDetails} = payment;
+            payment = paymentDetails;
+            payment.movie = {title, poster_url};
+            return payment;
+        });
+
+        const response = structureResponse(payments, 1, "Success");
+        res.send(response);
+    };
+
+    createPayment = async (req, res, _next) => {
         checkValidation(req);
 
         const result = await PaymentModel.create(req.body);
@@ -43,7 +60,7 @@ class PaymentController {
         res.status(201).send(response);
     };
 
-    updatePayment = async (req, res, next) => {
+    updatePayment = async (req, res, _next) => {
         checkValidation(req);
 
         const result = await PaymentModel.update(req.body, req.params.id);
@@ -61,7 +78,7 @@ class PaymentController {
         res.send(response);
     };
 
-    deletePayment = async (req, res, next) => {
+    deletePayment = async (req, res, _next) => {
         const result = await PaymentModel.delete(req.params.id);
         
         if (!result) {

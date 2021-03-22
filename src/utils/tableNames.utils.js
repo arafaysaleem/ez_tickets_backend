@@ -8,5 +8,6 @@ exports.tables = {
     TheaterSeats: 'theater_seats',
     Shows: 'shows',
     Bookings: 'bookings',
-    Payments: 'payments'
+    Payments: 'payments',
+    BookingPayments: 'booking_payments'
 };
