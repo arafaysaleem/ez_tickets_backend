@@ -27,7 +27,6 @@ class DBConnection{
                     console.error('Database has too many connections.');
                 }
                 if (err.code === 'ECONNREFUSED') {
-                    console.log(this.db);
                     console.error('Database connection was refused.');
                 }
             }
