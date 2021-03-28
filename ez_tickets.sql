@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 15, 2021 at 09:40 PM
+-- Generation Time: Mar 29, 2021 at 01:01 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -43,21 +43,10 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_number`, `price`, `booking_status`, `booking_datetime`) VALUES
-(1, 1, 14, 'A', 11, 700, 'confirmed', '0000-00-00 00:00:00'),
-(2, 2, 14, 'A', 16, 700, 'confirmed', '0000-00-00 00:00:00'),
-(3, 2, 14, 'A', 17, 700, 'confirmed', '0000-00-00 00:00:00'),
-(6, 2, 18, 'B', 2, 700, 'cancelled', '2021-03-05 06:41:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `booking_payments`
---
-
-CREATE TABLE `booking_payments` (
-  `payment_id` int(10) UNSIGNED NOT NULL,
-  `booking_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+(1, 1, 14, 'A', 11, 700, 'confirmed', '2021-03-05 06:41:00'),
+(2, 2, 14, 'A', 16, 700, 'confirmed', '2021-03-05 06:41:00'),
+(3, 2, 14, 'A', 17, 700, 'confirmed', '2021-03-05 06:41:00'),
+(6, 2, 18, 'B', 2, 700, 'confirmed', '2021-03-05 06:41:00');
 
 -- --------------------------------------------------------
 
@@ -126,16 +115,19 @@ CREATE TABLE `payments` (
   `payment_id` int(10) UNSIGNED NOT NULL,
   `amount` int(11) NOT NULL,
   `payment_datetime` datetime NOT NULL,
-  `payment_method` enum('cash','card','cod') NOT NULL
+  `payment_method` enum('cash','card','cod') NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `show_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_method`) VALUES
-(1, 3000, '2021-03-11 06:41:00', 'cash'),
-(2, 5000, '2021-03-15 06:41:00', 'cash');
+INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_method`, `user_id`, `show_id`) VALUES
+(18, 1400, '2021-03-20 06:30:00', 'card', 2, 14),
+(19, 1400, '2021-03-20 06:30:00', 'card', 2, 18),
+(21, 1400, '2021-03-20 06:33:00', 'card', 1, 14);
 
 -- --------------------------------------------------------
 
@@ -284,13 +276,6 @@ ALTER TABLE `bookings`
   ADD KEY `fk_bookings_show_id` (`show_id`);
 
 --
--- Indexes for table `booking_payments`
---
-ALTER TABLE `booking_payments`
-  ADD PRIMARY KEY (`booking_id`),
-  ADD KEY `fk_payments_payment_id` (`payment_id`);
-
---
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
@@ -308,7 +293,9 @@ ALTER TABLE `movie_roles`
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
-  ADD PRIMARY KEY (`payment_id`);
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `fk_payments_user_id` (`user_id`),
+  ADD KEY `fk_payment_show_id` (`show_id`);
 
 --
 -- Indexes for table `roles`
@@ -365,7 +352,7 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -403,18 +390,18 @@ ALTER TABLE `bookings`
   ADD CONSTRAINT `fk_bookings_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
--- Constraints for table `booking_payments`
---
-ALTER TABLE `booking_payments`
-  ADD CONSTRAINT `fk_payment_booking_id` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`),
-  ADD CONSTRAINT `fk_payments_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `payments` (`payment_id`);
-
---
 -- Constraints for table `movie_roles`
 --
 ALTER TABLE `movie_roles`
   ADD CONSTRAINT `fk_mroles_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`),
   ADD CONSTRAINT `fk_mroles_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+
+--
+-- Constraints for table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `fk_payment_show_id` FOREIGN KEY (`show_id`) REFERENCES `shows` (`show_id`),
+  ADD CONSTRAINT `fk_payments_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `shows`
