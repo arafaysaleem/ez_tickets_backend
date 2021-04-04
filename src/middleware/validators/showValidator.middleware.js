@@ -151,5 +151,12 @@ exports.showFiltersSchema = [
         .optional()
         .trim()
         .isInt()
-        .withMessage('Invalid TheaterID found')
+        .withMessage('Invalid TheaterID found'),
+    query()
+        .custom(value => {
+            const filters = Object.keys(value);
+            const allowFilters = ['start_time', 'end_time', 'date', 'show_status', 'movie_id', 'theater_id'];
+            return filters.every(filter => allowFilters.includes(filter));
+        })
+        .withMessage('Invalid query filters!')
 ];
