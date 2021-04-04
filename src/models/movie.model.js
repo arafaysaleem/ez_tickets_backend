@@ -5,9 +5,7 @@ const { tables } = require('../utils/tableNames.utils');
 class MovieModel {
 
     findAll = async (params = {}) => {
-        let sql = `SELECT * FROM ${tables.Movies}
-        NATURAL JOIN ${tables.MovieRoles}
-        NATURAL JOIN ${tables.Roles}`;
+        let sql = `SELECT * FROM ${tables.Movies}`;
 
         if (!Object.keys(params).length) {
             return await query(sql);
@@ -20,6 +18,17 @@ class MovieModel {
     }
 
     findOne = async (params) => {
+        const { filterSet, filterValues } = multipleFilterSet(params);
+
+        const sql = `SELECT * FROM ${tables.Movies}
+        WHERE ${filterSet}`;
+
+        const result = await query(sql, [...filterValues]);
+
+        return result;
+    }
+
+    findAllRolesByMovie = async (params) => {
         const { filterSet, filterValues } = multipleFilterSet(params);
 
         const sql = `SELECT * FROM ${tables.Movies}

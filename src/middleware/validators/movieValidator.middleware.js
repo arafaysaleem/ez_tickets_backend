@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const MovieType = require('../../utils/enums/movieTypes.utils');
 const RoleType = require('../../utils/enums/roleTypes.utils');
 const { yearRegex } = require('../../utils/common.utils');
@@ -109,4 +109,19 @@ exports.updateMovieSchema = [
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
+];
+
+exports.movieFiltersSchema = [
+    query('movie_type')
+        .optional()
+        .trim()
+        .isIn([...Object.values(MovieType)])
+        .withMessage('Invalid movie type'),
+    query()
+        .custom(value => {
+            const filters = Object.keys(value);
+            const allowFilters = ['movie_type'];
+            return filters.every(filter => allowFilters.includes(filter));
+        })
+        .withMessage('Invalid query filters!')
 ];

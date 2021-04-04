@@ -4,7 +4,6 @@ const { dbTransaction } = require('../db/db-connection');
 
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
-const MovieType = require('../utils/enums/movieTypes.utils');
 const {
     NotFoundException,
     CreateFailedException,
@@ -13,52 +12,31 @@ const {
 } = require('../utils/exceptions/database.exception');
 
 class MovieController {
+    
     getAllMovies = async (req, res, next) => {
-        let movieDuplicates = await MovieModel.findAll();
-        if (!movieDuplicates.length) {
+        checkValidation(req);
+
+        let movies = await MovieModel.findAll(req.query);
+        if (!movies.length) {
             throw new NotFoundException('Movies not found');
         }
 
-        let movieList = {};
-
-        for (const movie of movieDuplicates) {
-            const {role_id, full_name, age, picture_url, role_type, ...movieDetails} = movie;
-            const movie_id = movie.movie_id;
-            if (!movieList[movie_id]) {
-                movieList[movie_id] = movieDetails;
-                movieList[movie_id].roles = [];
-            }
-            movieList[movie_id].roles.push({ role_id, full_name, age, picture_url, role_type });
-        }
-
-        movieList = Object.values(movieList);
-
-        const response = structureResponse(movieList, 1, "Success");
+        const response = structureResponse(movies, 1, "Success");
         res.send(response);
     };
 
     getMovieById = async (req, res, next) => {
-        const movieDuplicates = await MovieModel.findOne({ movie_id: req.params.id });
-        if (!movieDuplicates.length) {
+        const movie = await MovieModel.findOne({ movie_id: req.params.id });
+        if (!movie.length) {
             throw new NotFoundException('Movie not found');
         }
 
-        let movieBody = {};
-
-        const roles = movieDuplicates.map((movie) => {
-            const {role_id, full_name, age, picture_url, role_type, ...movieDetails} = movie;
-            if (Object.keys(movieBody).length === 0) movieBody = movieDetails;
-            return { role_id, full_name, age, picture_url, role_type };
-        });
-
-        movieBody.roles = roles;
-
-        const response = structureResponse(movieBody, 1, "Success");
+        const response = structureResponse(movie, 1, "Success");
         res.send(response);
     };
 
     getMovieRoles = async (req, res, next) => {
-        const movieDuplicates = await MovieModel.findOne({ movie_id: req.params.id, ...req.body });
+        const movieDuplicates = await MovieModel.findAllRolesByMovie({ movie_id: req.params.id });
         if (!movieDuplicates.length) {
             throw new NotFoundException('Movie not found');
         }
@@ -71,26 +49,6 @@ class MovieController {
         const response = structureResponse(roles, 1, "Success");
         res.send(response);
     };
-
-    getComingSoonMovies = async (req, res, net) => {
-        let comingSoonList = await MovieModel.findAll({movie_type: MovieType.ComingSoon});
-        if (!comingSoonList.length) {
-            throw new NotFoundException('Movies not found');
-        }
-
-        const response = structureResponse(comingSoonList, 1, "Success");
-        res.send(response);
-    }
-
-    getNowShowingMovies = async (req, res, net) => {
-        let nowShowingList = await MovieModel.findAll({movie_type: MovieType.NowShowing});
-        if (!nowShowingList.length) {
-            throw new NotFoundException('Movies not found');
-        }
-
-        const response = structureResponse(nowShowingList, 1, "Success");
-        res.send(response);
-    }
 
     /* Roles are is form of a map like this
         [
