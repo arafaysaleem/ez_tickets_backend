@@ -94,5 +94,12 @@ exports.bookingGetFiltersSchema = [
         .optional()
         .trim()
         .matches(datetimeRegex)
-        .withMessage('Booking datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\'')
+        .withMessage('Booking datetime should be valid datetime of format \'YYYY-MM-DD HH:mm:ss\''),
+    query()
+        .custom(value => {
+            const filters = Object.keys(value);
+            const allowFilters = ['user_id', 'booking_status', 'show_id', 'seat', 'price', 'booking_datetime'];
+            return filters.every(filter => allowFilters.includes(filter));
+        })
+        .withMessage('Invalid query filters!')
 ];
