@@ -10,6 +10,7 @@ const OTPModel = require('../models/otp.model');
 const {
     RegistrationFailedException,
     InvalidCredentialsException,
+    TokenVerificationException,
     OTPExpiredException,
     OTPGenerationException,
     OTPVerificationException
@@ -75,6 +76,36 @@ class AuthController {
             body = { ...user, token};
         }
         const response = structureResponse(body, 1, message);
+        res.send(response);
+    };
+
+    refreshToken = async (req, res, next) => {
+        checkValidation(req);
+        const { email, password: pass, oldToken } = req.body;
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            throw new InvalidCredentialsException('Email not registered');
+        }
+
+        const isMatch = await bcrypt.compare(pass, user.password);
+
+        if (!isMatch) {
+            throw new InvalidCredentialsException('Incorrect password');
+        }
+
+        // user matched!
+        const secretKey = process.env.SECRET_JWT || "";
+        const user_id = jwt.decode(oldToken);
+
+        if (user.user_id.toString() === user_id){
+            throw new TokenVerificationException();
+        }
+        
+        const token = jwt.sign({ user_id: user.user_id.toString() }, secretKey, {
+            expiresIn: '24h'
+        });
+
+        const response = structureResponse({ token }, 1, "Refreshed");
         res.send(response);
     };
 

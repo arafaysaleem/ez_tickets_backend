@@ -4,10 +4,11 @@ const awaitHandlerFactory = require('../middleware/awaitHandlerFactory.middlewar
 
 const authController = require('../controllers/auth.controller');
 const { createUserSchema } = require('../middleware/validators/userValidator.middleware');
-const { validateLogin, forgotPWSchema, resetPWSchema, changePWSchema, verifyOTPSchema } = require('../middleware/validators/authValidator.middleware');
+const { validateLogin, forgotPWSchema, resetPWSchema, changePWSchema, verifyOTPSchema, validateRefresh } = require('../middleware/validators/authValidator.middleware');
 
 router.post('/register', createUserSchema, awaitHandlerFactory(authController.registerUser)); // localhost:3000/api/v1/auth/register
 router.post('/login', validateLogin, awaitHandlerFactory(authController.userLogin)); // localhost:3000/api/v1/auth/login
+router.post('/token', validateRefresh, awaitHandlerFactory(authController.refreshToken)); // localhost:3000/api/v1/auth/token
 
 // / For requesting otp for password reset
 router.post('/password/forgot', forgotPWSchema, awaitHandlerFactory(authController.forgotPassword)); // localhost:3000/api/v1/auth/password/forgot
