@@ -95,9 +95,9 @@ class AuthController {
 
         // user matched!
         const secretKey = process.env.SECRET_JWT || "";
-        const user_id = jwt.decode(oldToken);
-
-        if (user.user_id.toString() === user_id){
+        const { user_id } = jwt.decode(oldToken);
+        
+        if (user.user_id.toString() !== user_id){
             throw new TokenVerificationException();
         }
         
