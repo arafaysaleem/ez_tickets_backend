@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 const { OTPRegex } = require('../../utils/common.utils');
-import validate from 'deep-email-validator';
+const EmailValidator = require('deep-email-validator');
 
 
 exports.forgotPWSchema = [
@@ -11,7 +11,7 @@ exports.forgotPWSchema = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
@@ -26,7 +26,7 @@ exports.changePWSchema = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
@@ -55,7 +55,7 @@ exports.resetPWSchema = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
@@ -76,7 +76,7 @@ exports.verifyOTPSchema = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
@@ -99,7 +99,7 @@ exports.validateLogin = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
@@ -120,7 +120,7 @@ exports.validateRefresh = [
         .isEmail()
         .withMessage('Must be a valid email')
         .custom(async (email) => {
-            const {valid} = await validate(email);
+            const {valid} = await EmailValidator.validate(email);
             return valid;
         })
         .withMessage('Email unrecognized')
