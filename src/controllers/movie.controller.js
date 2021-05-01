@@ -43,14 +43,14 @@ class MovieController {
     };
 
     getMovieRoles = async (req, res, next) => {
-        const movieDuplicates = await MovieModel.findAllRolesByMovie({ movie_id: req.params.id });
-        if (!movieDuplicates.length) {
+        let roles = await MovieModel.findAllRolesByMovie({ movie_id: req.params.id });
+        if (!roles.length) {
             throw new NotFoundException('Movie not found');
         }
 
-        const roles = movieDuplicates.map((movie) => {
-            const {role_id, full_name, age, picture_url, role_type} = movie;
-            return { role_id, full_name, age, picture_url, role_type };
+        roles = roles.map((movie) => {
+            const {role_type, movie_id, ...role} = movie;
+            return { movie_id, role, role_type};
         });
 
         const response = structureResponse(roles, 1, "Success");

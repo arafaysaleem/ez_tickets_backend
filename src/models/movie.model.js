@@ -31,8 +31,7 @@ class MovieModel {
     findAllRolesByMovie = async (params) => {
         const { filterSet, filterValues } = multipleFilterSet(params);
 
-        const sql = `SELECT * FROM ${tables.Movies}
-        NATURAL JOIN ${tables.MovieRoles}
+        const sql = `SELECT * FROM ${tables.MovieRoles}
         NATURAL JOIN ${tables.Roles}
         WHERE ${filterSet}
         GROUP BY role_id`;
