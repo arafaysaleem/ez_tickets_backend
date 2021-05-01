@@ -5,3 +5,6 @@ configs
 
 #compressed code
 ez_tickets_backend.rar
+
+#bash scripts
+*.bat
