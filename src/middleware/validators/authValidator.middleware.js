@@ -1,5 +1,6 @@
 const { body } = require('express-validator');
 const { OTPRegex } = require('../../utils/common.utils');
+import validate from 'deep-email-validator';
 
 
 exports.forgotPWSchema = [
@@ -9,6 +10,11 @@ exports.forgotPWSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail()
 ];
 
@@ -19,6 +25,11 @@ exports.changePWSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('password')
         .trim()
@@ -43,6 +54,11 @@ exports.resetPWSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('password')
         .trim()
@@ -59,6 +75,11 @@ exports.verifyOTPSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('OTP')
         .trim()
@@ -76,7 +97,12 @@ exports.validateLogin = [
         .exists()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Must be a valid email') // todo: add email verification
+        .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('password')
         .trim()
@@ -92,7 +118,12 @@ exports.validateRefresh = [
         .exists()
         .withMessage('Email is required')
         .isEmail()
-        .withMessage('Must be a valid email') // todo: add email verification
+        .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('password')
         .trim()

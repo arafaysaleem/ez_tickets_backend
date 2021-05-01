@@ -1,5 +1,6 @@
 const { body } = require('express-validator');
 const UserRole = require('../../utils/enums/userRoles.utils');
+import validate from 'deep-email-validator';
 
 
 exports.createUserSchema = [
@@ -19,6 +20,11 @@ exports.createUserSchema = [
         .withMessage('Email is required')
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('role')
         .optional()
@@ -51,6 +57,11 @@ exports.updateUserSchema = [
         .trim()
         .isEmail()
         .withMessage('Must be a valid email')
+        .custom(async (email) => {
+            const {valid} = await validate(email);
+            return valid;
+        })
+        .withMessage('Email unrecognized')
         .normalizeEmail(),
     body('role')
         .optional()
