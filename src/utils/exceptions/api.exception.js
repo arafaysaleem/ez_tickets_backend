@@ -4,7 +4,8 @@ const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 class ApiException extends Error {
     constructor (code, message, data, status = 401) {
         super(message);
-        this.message = "Api Error: " + message;
+        if (process.env.NODE_ENV === "dev") this.message = "Api Error: " + message;
+        else this.message = message;
         this.name = "Api Error";
         this.code = code;
         this.error = this.constructor.name;

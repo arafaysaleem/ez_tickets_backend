@@ -4,7 +4,8 @@ const { ErrorCodes } = require("../errorCodes.utils");
 class DatabaseException extends Error {
     constructor (code, message, data, isOperational = false, status = 404) {
         super(message);
-        this.message = "Database Error: " + message;
+        if (process.env.NODE_ENV === "dev") this.message = "Database Error: " + message;
+        else this.message = message;
         this.name = "Database Error";
         this.code = code;
         this.isOperational = isOperational;
