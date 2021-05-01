@@ -40,12 +40,12 @@ class ShowModel {
         return result[0];
     }
 
-    create = async ({ start_time, end_time, date, movie_id, theater_id, show_status }) => {
+    create = async ({ start_time, end_time, date, movie_id, theater_id, show_status, show_type }) => {
         const sql = `INSERT INTO ${tables.Shows}
-        (start_time, end_time, date, movie_id, theater_id, show_status) 
-        VALUES (?,?,?,?,?,?)`;
+        (start_time, end_time, date, movie_id, theater_id, show_status, show_type) 
+        VALUES (?,?,?,?,?,?,?)`;
 
-        const result = await query(sql, [start_time, end_time, date, movie_id, theater_id, show_status]);
+        const result = await query(sql, [start_time, end_time, date, movie_id, theater_id, show_status, show_type]);
 
         const created_show = !result ? 0 : {
             show_id: result.insertId,

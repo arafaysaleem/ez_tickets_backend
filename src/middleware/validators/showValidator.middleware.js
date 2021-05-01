@@ -1,5 +1,6 @@
 const { body, query } = require('express-validator');
 const ShowStatus = require('../../utils/enums/showStatus.utils');
+const ShowType = require('../../utils/enums/showTypes.utils');
 const { timeRegex } = require('../../utils/common.utils');
 
 exports.createShowSchema = [
@@ -31,6 +32,12 @@ exports.createShowSchema = [
         .withMessage('Show status is required')
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
+    body('show_type')
+        .trim()
+        .exists()
+        .withMessage('Show type is required')
+        .isIn([...Object.values(ShowType)])
+        .withMessage('Invalid show type'),
     body('movie_id')
         .trim()
         .exists()
@@ -51,6 +58,11 @@ exports.updateShowSchema = [
         .trim()
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
+    body('show_type')
+        .optional()
+        .trim()
+        .isIn([...Object.values(ShowType)])
+        .withMessage('Invalid show type'),
     body('movie_id')
         .optional()
         .trim()
@@ -111,7 +123,7 @@ exports.updateShowSchema = [
         .withMessage('Please provide required fields to update')
         .custom(value => {
             const updates = Object.keys(value);
-            const allowUpdates = ['start_time', 'end_time', 'date', 'show_status', 'movie_id', 'theater_id'];
+            const allowUpdates = ['start_time', 'end_time', 'date', 'show_status', 'movie_id', 'theater_id', 'show_type'];
             return updates.every(update => allowUpdates.includes(update));
         })
         .withMessage('Invalid updates!')
@@ -142,6 +154,11 @@ exports.showFiltersSchema = [
         .trim()
         .isIn([...Object.values(ShowStatus)])
         .withMessage('Invalid show status'),
+    query('show_type')
+        .optional()
+        .trim()
+        .isIn([...Object.values(ShowType)])
+        .withMessage('Invalid show type'),
     query('movie_id')
         .optional()
         .trim()
@@ -155,7 +172,7 @@ exports.showFiltersSchema = [
     query()
         .custom(value => {
             const filters = Object.keys(value);
-            const allowFilters = ['start_time', 'end_time', 'date', 'show_status', 'movie_id', 'theater_id'];
+            const allowFilters = ['start_time', 'end_time', 'date', 'show_status', 'movie_id', 'theater_id', 'show_type'];
             return filters.every(filter => allowFilters.includes(filter));
         })
         .withMessage('Invalid query filters!')
