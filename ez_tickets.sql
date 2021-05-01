@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 29, 2021 at 01:01 AM
+-- Generation Time: May 01, 2021 at 06:09 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -33,7 +33,7 @@ CREATE TABLE `bookings` (
   `show_id` int(10) UNSIGNED NOT NULL,
   `seat_row` varchar(2) NOT NULL,
   `seat_number` int(11) NOT NULL,
-  `price` double NOT NULL COMMENT 'seat price',
+  `price` float NOT NULL COMMENT 'seat price',
   `booking_status` enum('confirmed','reserved','cancelled') NOT NULL DEFAULT 'reserved',
   `booking_datetime` datetime NOT NULL COMMENT 'the date time on which booking was made'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -59,7 +59,7 @@ CREATE TABLE `movies` (
   `title` varchar(100) NOT NULL,
   `summary` text NOT NULL,
   `year` year(4) NOT NULL,
-  `rating` decimal(1,1) UNSIGNED DEFAULT NULL,
+  `rating` decimal(2,1) UNSIGNED DEFAULT NULL,
   `trailer_url` text NOT NULL,
   `poster_url` text NOT NULL,
   `movie_type` enum('coming_soon','now_showing','removed') NOT NULL DEFAULT 'coming_soon'
@@ -70,10 +70,12 @@ CREATE TABLE `movies` (
 --
 
 INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer_url`, `poster_url`, `movie_type`) VALUES
-(1, 'GOOGLE', 'Fearsome bitches.', 2012, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(4, 'FACEBOOK', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(7, 'APPLE', 'Fearsome bitches.', 2020, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(12, 'LIONNESS', 'Fearsome lionness.', 2021, '0.9', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon');
+(1, 'GOOGLE', 'Fearsome bitches.', 2012, '8.6', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
+(4, 'FACEBOOK', 'Fearsome bitches.', 2020, '8.1', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
+(7, 'APPLE', 'Fearsome bitches.', 2020, '7.6', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
+(12, 'LIONNESS', 'Fearsome lionness.', 2021, NULL, 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
+(14, 'JOKER', 'Fearsome lionness.', 2022, '9.2', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
+(16, 'JOKER2', 'Fearsome lionness.', 2022, NULL, 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon');
 
 -- --------------------------------------------------------
 
@@ -103,7 +105,13 @@ INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
 (7, 3, 'cast'),
 (12, 1, 'producer'),
 (12, 2, 'director'),
-(12, 3, 'cast');
+(12, 3, 'cast'),
+(14, 1, 'producer'),
+(14, 2, 'director'),
+(14, 3, 'cast'),
+(16, 1, 'producer'),
+(16, 2, 'director'),
+(16, 3, 'cast');
 
 -- --------------------------------------------------------
 
@@ -164,19 +172,21 @@ CREATE TABLE `shows` (
   `date` date NOT NULL,
   `movie_id` int(10) UNSIGNED NOT NULL,
   `theater_id` int(10) UNSIGNED NOT NULL,
-  `show_status` enum('free','almost_full','full') NOT NULL DEFAULT 'free'
+  `show_status` enum('free','almost_full','full') NOT NULL DEFAULT 'free',
+  `show_type` enum('3D','2D') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `shows`
 --
 
-INSERT INTO `shows` (`show_id`, `start_time`, `end_time`, `date`, `movie_id`, `theater_id`, `show_status`) VALUES
-(14, '12:30:00', '02:45:00', '2021-03-15', 1, 8, 'free'),
-(17, '02:30:00', '04:45:00', '2021-03-14', 4, 10, 'free'),
-(18, '02:30:00', '04:45:00', '2021-03-16', 4, 10, 'full'),
-(20, '11:30:00', '13:45:00', '2021-03-16', 4, 8, 'full'),
-(21, '10:00:00', '12:15:00', '2021-03-16', 4, 10, 'full');
+INSERT INTO `shows` (`show_id`, `start_time`, `end_time`, `date`, `movie_id`, `theater_id`, `show_status`, `show_type`) VALUES
+(14, '12:30:00', '02:45:00', '2021-03-15', 1, 8, 'free', '3D'),
+(17, '02:30:00', '04:45:00', '2021-03-14', 4, 10, 'free', '3D'),
+(18, '02:30:00', '04:45:00', '2021-03-16', 4, 10, 'full', '3D'),
+(20, '11:30:00', '13:45:00', '2021-03-16', 4, 8, 'full', '3D'),
+(21, '10:00:00', '12:15:00', '2021-03-16', 4, 10, 'full', '3D'),
+(22, '10:00:00', '12:15:00', '2021-03-16', 4, 16, 'full', '2D');
 
 -- --------------------------------------------------------
 
@@ -346,7 +356,7 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -364,7 +374,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `shows`
 --
 ALTER TABLE `shows`
-  MODIFY `show_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `show_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `theaters`
@@ -393,7 +403,7 @@ ALTER TABLE `bookings`
 -- Constraints for table `movie_roles`
 --
 ALTER TABLE `movie_roles`
-  ADD CONSTRAINT `fk_mroles_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`),
+  ADD CONSTRAINT `fk_mroles_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_mroles_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
 
 --
