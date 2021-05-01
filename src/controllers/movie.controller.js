@@ -21,6 +21,11 @@ class MovieController {
             throw new NotFoundException('Movies not found');
         }
 
+        movies = movies.map((movie) => {
+            movie.rating = parseFloat(movie.rating);
+            return movie;
+        });
+
         const response = structureResponse(movies, 1, "Success");
         res.send(response);
     };
@@ -30,6 +35,8 @@ class MovieController {
         if (!movie.length) {
             throw new NotFoundException('Movie not found');
         }
+
+        movie.rating = parseFloat(movie.rating);
 
         const response = structureResponse(movie, 1, "Success");
         res.send(response);

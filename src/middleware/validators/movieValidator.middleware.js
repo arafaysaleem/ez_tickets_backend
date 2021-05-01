@@ -22,7 +22,9 @@ exports.createMovieSchema = [
         .optional()
         .trim()
         .isDecimal({force_decimal: true, decimal_digits: '1'})
-        .withMessage('Rating should a valid decimal (0.0)'),
+        .withMessage('Rating should a valid decimal (0.0)')
+        .isFloat({min: 0.1, max: 9.9})
+        .withMessage('Rating should in range [0.1-9.9]'),
     body('trailer_url')
         .trim()
         .exists()
@@ -82,7 +84,9 @@ exports.updateMovieSchema = [
         .optional()
         .trim()
         .isDecimal({force_decimal: true, decimal_digits: '1'})
-        .withMessage('Rating should a valid decimal (0.0)'),
+        .withMessage('Rating should a valid decimal (0.0)')
+        .isFloat({min: 0.1, max: 9.9})
+        .withMessage('Rating should in range [0.1-9.9]'),
     body('trailer_url')
         .optional()
         .trim()
