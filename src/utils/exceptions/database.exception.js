@@ -1,10 +1,12 @@
 const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
+const { ErrorCodes } = require("../errorCodes.utils");
 
 class DatabaseException extends Error {
-    constructor (message, data, isOperational = false, status = 404) {
+    constructor (code, message, data, isOperational = false, status = 404) {
         super(message);
         this.message = "Database Error: " + message;
         this.name = "Database Error";
+        this.code = code;
         this.isOperational = isOperational;
         this.error = this.constructor.name;
         this.status = status;
@@ -14,37 +16,37 @@ class DatabaseException extends Error {
 
 class NotFoundException extends DatabaseException {
     constructor (message, data){
-        super(message, data, true);
+        super(ErrorCodes.NotFoundException, message, data, true);
     }
 }
 
 class DuplicateEntryException extends DatabaseException {
     constructor (message, data){
-        super(message, data, true, ErrorStatusCodes.DuplicateEntryException);
+        super(ErrorCodes.DuplicateEntryException, message, data, true, ErrorStatusCodes.DuplicateEntryException);
     }
 }
 
 class ForeignKeyViolationException extends DatabaseException {
     constructor (message, data){
-        super(message, data, true, ErrorStatusCodes.ForeignKeyViolationException);
+        super(ErrorCodes.ForeignKeyViolationException, message, data, true, ErrorStatusCodes.ForeignKeyViolationException);
     }
 }
 
 class UpdateFailedException extends DatabaseException {
     constructor (message, data){
-        super(message, data, true, ErrorStatusCodes.UpdateFailedException);
+        super(ErrorCodes.UpdateFailedException, message, data, true, ErrorStatusCodes.UpdateFailedException);
     }
 }
 
 class CreateFailedException extends DatabaseException {
     constructor (message, data){
-        super(message, data, true, ErrorStatusCodes.CreateFailedException);
+        super(ErrorCodes.CreateFailedException, message, data, true, ErrorStatusCodes.CreateFailedException);
     }
 }
 
 class UnexpectedException extends DatabaseException {
     constructor (message = "Something went wrong", data){
-        super(message, data);
+        super(ErrorCodes.UnexpectedException, message, data);
     }
 }
 

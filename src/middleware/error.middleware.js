@@ -7,10 +7,10 @@ function errorMiddleware (err, req, res, next) {
     } else if (err.name === "JsonWebTokenError") err = new TokenVerificationException();
     else if (err.message === "jwt expired") err = new TokenExpiredException();
 
-    let { message, error, status, data, stack } = err;
+    let { message, code, error, status, data, stack } = err;
 
     if (process.env.NODE_ENV === "dev"){
-        console.log(`[Exception] ${error}`);
+        console.log(`[Exception] ${error}, [Code] ${code}`);
         console.log(`[Error] ${message}`);
         console.log(`[Stack] ${stack}`);
     }
@@ -18,7 +18,7 @@ function errorMiddleware (err, req, res, next) {
     const headers = {
         success: "0",
         error,
-        // status,
+        code,
         message,
         ...(data) && data
     };
