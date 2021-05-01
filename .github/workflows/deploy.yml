@@ -1,0 +1,27 @@
+name: Deploy To Heroku
+on:
+  push:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Load config vars into .env
+        env:
+          CONFIG_VARS: ${{ secrets.CONFIG_VARS }}
+        run: echo $CONFIG_VARS > .env
+      - uses: akhileshns/heroku-deploy@v3.12.12
+      - name: Setup heroku API
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: "a.rafaysaleem@gmail.com"
+          procfile: "web: npm run prod"
+          env_file: ".env"
+          
