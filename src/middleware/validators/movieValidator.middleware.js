@@ -57,7 +57,7 @@ exports.createMovieSchema = [
         .exists()
         .withMessage('RoleId is required for each role')
         .bail()
-        .isInt()
+        .isInt({min: 1})
         .withMessage('Invalid RoleId found'),
     body('roles.*.role_type')
         .trim()
@@ -65,7 +65,23 @@ exports.createMovieSchema = [
         .withMessage('RoleType is required for each role')
         .bail()
         .isIn([...Object.values(RoleType)])
-        .withMessage('Invalid RoleType')
+        .withMessage('Invalid RoleType'),
+    body('genres')
+        .exists()
+        .withMessage('Movie genres is required')
+        .bail()
+        .isArray()
+        .withMessage('Genres must be an array like [1, 9]')
+        .bail()
+        .notEmpty()
+        .withMessage('Genres can\'t be empty'),
+    body('genres.*')
+        .trim()
+        .exists()
+        .withMessage('GenreId is required for each genre')
+        .bail()
+        .isInt({min: 1})
+        .withMessage('Invalid GenreId found')
 ];
 
 exports.updateMovieSchema = [
