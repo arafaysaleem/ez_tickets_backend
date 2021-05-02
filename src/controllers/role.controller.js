@@ -9,31 +9,29 @@ const {
 const { structureResponse } = require('../utils/common.utils');
 
 class RoleController {
+
     getAllRoles = async (req, res, next) => {
-        let roleDuplicates = await RoleModel.findAll();
-        if (!roleDuplicates.length) {
+        let roleList = await RoleModel.findAll();
+        if (!roleList.length) {
             throw new NotFoundException('Roles not found');
         }
-
-        let roleList = {};
-
-        for (const role of roleDuplicates) {
-            const {role_id, full_name, age, picture_url, ...movieDetails} = role;
-            if (!roleList[role_id]) {
-                roleList[role_id] = {role_id, full_name, age, picture_url};
-                roleList[role_id].movies = [];
-            }
-            roleList[role_id].movies.push(movieDetails);
-        }
-
-        roleList = Object.values(roleList);
 
         const response = structureResponse(roleList, 1, "Success");
         res.send(response);
     };
 
     getRoleById = async (req, res, next) => {
-        const roleDuplicates = await RoleModel.findOne({ role_id: req.params.id });
+        const result = await RoleModel.findOne({ role_id: req.params.id });
+        if (!result) {
+            throw new NotFoundException('Role not found');
+        }
+
+        const response = structureResponse(result, 1, "Success");
+        res.send(response);
+    };
+
+    getRoleMovies = async (req, res, next) => {
+        const roleDuplicates = await RoleModel.findAllMoviesByRole({ role_id: req.params.id });
         if (!roleDuplicates.length) {
             throw new NotFoundException('Role not found');
         }
@@ -49,21 +47,6 @@ class RoleController {
         roleBody.movies = movies;
 
         const response = structureResponse(roleBody, 1, "Success");
-        res.send(response);
-    };
-
-    getRoleMovies = async (req, res, next) => {
-        const roleDuplicates = await RoleModel.findOne({ role_id: req.params.id, ...req.body });
-        if (!roleDuplicates.length) {
-            throw new NotFoundException('Role not found');
-        }
-
-        const movies = roleDuplicates.map((role) => {
-            const {role_id, full_name, age, picture_url, ...movieDetails} = role;
-            return movieDetails;
-        });
-
-        const response = structureResponse(movies, 1, "Success");
         res.send(response);
     };
 
