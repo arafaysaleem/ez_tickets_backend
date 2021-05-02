@@ -16,5 +16,6 @@ module.exports.ErrorStatusCodes = {
     OTPExpiredException: 401,
     OTPVerificationException: 401,
     ForeignKeyViolationException: 512,
-    UnimplementedException: 404
+    UnimplementedException: 404,
+    HealthCheckFailedException: 503
 };

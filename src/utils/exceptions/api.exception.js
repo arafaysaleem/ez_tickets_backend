@@ -32,8 +32,15 @@ class UnimplementedException extends ApiException {
     }
 }
 
+class HealthCheckFailedException extends ApiException {
+    constructor (data){
+        super(ErrorCodes.HealthCheckFailedException, "API failed to run", data, ErrorStatusCodes.HealthCheckFailedException);
+    }
+}
+
 module.exports = {
     InternalServerException,
     InvalidEndpointException,
-    UnimplementedException
+    UnimplementedException,
+    HealthCheckFailedException
 };

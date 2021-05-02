@@ -17,5 +17,6 @@ module.exports.ErrorCodes = {
     InvalidPropertiesException: 15,
     InvalidEndpointException: 16,
     UnexpectedException: 17,
-    UnimplementedException: 18
+    UnimplementedException: 18,
+    HealthCheckFailedException: 19
 };
