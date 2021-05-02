@@ -25,7 +25,7 @@ class MovieModel {
 
         const result = await query(sql, [...filterValues]);
 
-        return result;
+        return result[0];
     }
 
     findAllRolesByMovie = async (params) => {

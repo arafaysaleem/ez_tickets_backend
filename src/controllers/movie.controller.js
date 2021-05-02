@@ -32,7 +32,7 @@ class MovieController {
 
     getMovieById = async (req, res, next) => {
         const movie = await MovieModel.findOne({ movie_id: req.params.id });
-        if (!movie.length) {
+        if (!movie) {
             throw new NotFoundException('Movie not found');
         }
 
