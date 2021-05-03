@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -23,7 +23,21 @@ jobs:
       run: npm install
     - name: Code linting
       run: npm run lint
+    - name: Load config vars into .env
+      env:
+        CONFIG_VARS: ${{ secrets.CONFIG_VARS }}
+      run: |
+        echo $CONFIG_VARS > .env
+        source .env
     - name: Running tests
       run: npm test
       env:
         CI: true
+        PORT: 3000
+        DB_HOST: $DB_HOST
+        DB_USER: $DB_USER
+        DB_PASS: $DB_PASS
+        DB_DATABASE: $DB_DATABASE
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        SENDGRID_SENDER: ${{ secrets.SENDGRID_SENDER }}
+        SECRET_JWT: ${{ secrets.SECRET_JWT }}

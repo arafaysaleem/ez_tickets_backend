@@ -8,7 +8,7 @@
     "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=configs",
     "prod": "cross-env NODE_ENV=prod npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=configs nodemon -r dotenv-flow/config",
-    "test": "mocha ./test/* --exit -r dotenv-flow/config -- --dotenv-flow-path=configs",
+    "test": "mocha ./test/* --exit",
     "lint": "eslint src/"
   },
   "keywords": [],
