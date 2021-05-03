@@ -8,6 +8,7 @@
     "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=configs",
     "prod": "cross-env NODE_ENV=prod npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=configs nodemon -r dotenv-flow/config",
+    "test": "mocha ./test/* --exit -r dotenv-flow/config -- --dotenv-flow-path=configs",
     "lint": "eslint src/"
   },
   "keywords": [],
@@ -34,6 +35,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.25.0",
     "eslint-config-strongloop": "^2.1.0",
-    "nodemon": "^2.0.7"
+    "mocha": "^8.3.2",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
   }
 }
