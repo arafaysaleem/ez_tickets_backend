@@ -1,15 +1,16 @@
 name: Deploy To Heroku
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows:
+      - "Node Build, Test And Lint CI"
+    types:
+      - completed
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   deploy:
-    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
