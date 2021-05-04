@@ -9,6 +9,13 @@ const {
 const { structureResponse } = require('../utils/common.utils');
 
 class ShowController {
+    parseTime = (time) => {
+        let times = time.split(":");
+        let hours = times[0];
+        if (hours.length === 1) hours = `0${hours}`; // pad leading 0
+        return `${hours}:${times[1]}:${times[2]}`;
+    }
+
     getAllShows = async (req, res, next) => {
         let showList = await ShowModel.findAll();
         if (!showList.length) {
@@ -23,8 +30,8 @@ class ShowController {
                 showDatesList[date] = {date, movie_id};
                 showDatesList[date].show_times = [];
             }
-            showDetails.start_time = `${date} ${showDetails.start_time}`;
-            showDetails.end_time = `${date} ${showDetails.end_time}`;
+            showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.start_time)}`;
             showDatesList[date].show_times.push(showDetails);
         }
 
@@ -60,8 +67,8 @@ class ShowController {
                 showDatesList[date] = {date, movie_id};
                 showDatesList[date].show_times = [];
             }
-            showDetails.start_time = `${date} ${showDetails.start_time}`;
-            showDetails.end_time = `${date} ${showDetails.end_time}`;
+            showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.start_time)}`;
             showDatesList[date].show_times.push(showDetails);
         }
 
