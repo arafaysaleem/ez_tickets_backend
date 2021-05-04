@@ -15,7 +15,20 @@ class ShowController {
             throw new NotFoundException('Shows not found');
         }
 
-        const response = structureResponse(showList, 1, "Success");
+        let showDatesList = {};
+
+        for (const show of showList) {
+            const { date, movie_id, ...showDetails } = show;
+            if (!showDatesList[date]) {
+                showDatesList[date] = {date, movie_id};
+                showDatesList[date].shows = [];
+            }
+            showDatesList[date].shows.push(showDetails);
+        }
+
+        showDatesList = Object.values(showDatesList);
+
+        const response = structureResponse(showDatesList, 1, "Success");
         res.send(response);
     };
 
@@ -37,7 +50,20 @@ class ShowController {
             throw new NotFoundException('Shows for this movie not found');
         }
         
-        const response = structureResponse(showList, 1, "Success");
+        let showDatesList = {};
+
+        for (const show of showList) {
+            const { date, movie_id, ...showDetails } = show;
+            if (!showDatesList[date]) {
+                showDatesList[date] = {date, movie_id};
+                showDatesList[date].shows = [];
+            }
+            showDatesList[date].shows.push(showDetails);
+        }
+
+        showDatesList = Object.values(showDatesList);
+
+        const response = structureResponse(showDatesList, 1, "Success");
         res.send(response);
     };
 
