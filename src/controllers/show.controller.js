@@ -23,6 +23,8 @@ class ShowController {
                 showDatesList[date] = {date, movie_id};
                 showDatesList[date].shows = [];
             }
+            showDetails.start_time = `${date} ${showDetails.start_time}`;
+            showDetails.end_time = `${date} ${showDetails.end_time}`;
             showDatesList[date].shows.push(showDetails);
         }
 
@@ -58,6 +60,8 @@ class ShowController {
                 showDatesList[date] = {date, movie_id};
                 showDatesList[date].shows = [];
             }
+            showDetails.start_time = `${date} ${showDetails.start_time}`;
+            showDetails.end_time = `${date} ${showDetails.end_time}`;
             showDatesList[date].shows.push(showDetails);
         }
 
