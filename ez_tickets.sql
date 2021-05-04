@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 01, 2021 at 06:09 PM
+-- Generation Time: May 04, 2021 at 12:52 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.5
 
@@ -51,6 +51,32 @@ INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_nu
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `genres`
+--
+
+CREATE TABLE `genres` (
+  `genre_id` int(10) UNSIGNED NOT NULL,
+  `genre` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `genres`
+--
+
+INSERT INTO `genres` (`genre_id`, `genre`) VALUES
+(1, 'Horror'),
+(2, 'Action'),
+(3, 'Fantasy'),
+(4, 'Comedy'),
+(5, 'Drama'),
+(6, 'Thriller'),
+(7, 'Mystery'),
+(8, 'Romance'),
+(10, 'Sci-Fi');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `movies`
 --
 
@@ -72,10 +98,37 @@ CREATE TABLE `movies` (
 INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer_url`, `poster_url`, `movie_type`) VALUES
 (1, 'GOOGLE', 'Fearsome bitches.', 2012, '8.6', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
 (4, 'FACEBOOK', 'Fearsome bitches.', 2020, '8.1', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(7, 'APPLE', 'Fearsome bitches.', 2020, '7.6', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing'),
-(12, 'LIONNESS', 'Fearsome lionness.', 2021, NULL, 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
-(14, 'JOKER', 'Fearsome lionness.', 2022, '9.2', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
-(16, 'JOKER2', 'Fearsome lionness.', 2022, NULL, 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon');
+(28, 'JOKER 3', 'Fearsome lionness.', 2022, '9.4', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'coming_soon'),
+(29, 'KING KONG', 'Fearsome monkey.', 2021, '8.4', 'https://www.youtube.com/watch?v=odM92ap8_c0', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpMwciKW5gytHux-4a4B7e50sQCyvnix9C57mAGnY0DNX4-uGQ', 'now_showing');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie_genres`
+--
+
+CREATE TABLE `movie_genres` (
+  `movie_id` int(10) UNSIGNED NOT NULL,
+  `genre_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `movie_genres`
+--
+
+INSERT INTO `movie_genres` (`movie_id`, `genre_id`) VALUES
+(1, 3),
+(1, 5),
+(1, 10),
+(4, 1),
+(4, 2),
+(4, 4),
+(28, 5),
+(28, 6),
+(28, 10),
+(29, 2),
+(29, 4),
+(29, 6);
 
 -- --------------------------------------------------------
 
@@ -100,18 +153,12 @@ INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
 (4, 1, 'producer'),
 (4, 2, 'director'),
 (4, 3, 'cast'),
-(7, 1, 'producer'),
-(7, 2, 'director'),
-(7, 3, 'cast'),
-(12, 1, 'producer'),
-(12, 2, 'director'),
-(12, 3, 'cast'),
-(14, 1, 'producer'),
-(14, 2, 'director'),
-(14, 3, 'cast'),
-(16, 1, 'producer'),
-(16, 2, 'director'),
-(16, 3, 'cast');
+(28, 1, 'producer'),
+(28, 2, 'director'),
+(28, 3, 'cast'),
+(29, 1, 'director'),
+(29, 2, 'cast'),
+(29, 3, 'producer');
 
 -- --------------------------------------------------------
 
@@ -286,11 +333,24 @@ ALTER TABLE `bookings`
   ADD KEY `fk_bookings_show_id` (`show_id`);
 
 --
+-- Indexes for table `genres`
+--
+ALTER TABLE `genres`
+  ADD PRIMARY KEY (`genre_id`);
+
+--
 -- Indexes for table `movies`
 --
 ALTER TABLE `movies`
   ADD PRIMARY KEY (`movie_id`),
   ADD UNIQUE KEY `title` (`title`);
+
+--
+-- Indexes for table `movie_genres`
+--
+ALTER TABLE `movie_genres`
+  ADD PRIMARY KEY (`movie_id`,`genre_id`),
+  ADD KEY `fk_mgenres_genre_id` (`genre_id`);
 
 --
 -- Indexes for table `movie_roles`
@@ -353,10 +413,16 @@ ALTER TABLE `bookings`
   MODIFY `booking_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `genres`
+--
+ALTER TABLE `genres`
+  MODIFY `genre_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `movie_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -398,6 +464,13 @@ ALTER TABLE `users`
 ALTER TABLE `bookings`
   ADD CONSTRAINT `fk_bookings_show_id` FOREIGN KEY (`show_id`) REFERENCES `shows` (`show_id`),
   ADD CONSTRAINT `fk_bookings_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `movie_genres`
+--
+ALTER TABLE `movie_genres`
+  ADD CONSTRAINT `fk_mgenres_genre_id` FOREIGN KEY (`genre_id`) REFERENCES `genres` (`genre_id`),
+  ADD CONSTRAINT `fk_mgenres_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `movie_roles`
