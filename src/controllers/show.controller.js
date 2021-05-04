@@ -21,11 +21,11 @@ class ShowController {
             const { date, movie_id, ...showDetails } = show;
             if (!showDatesList[date]) {
                 showDatesList[date] = {date, movie_id};
-                showDatesList[date].shows = [];
+                showDatesList[date].show_times = [];
             }
             showDetails.start_time = `${date} ${showDetails.start_time}`;
             showDetails.end_time = `${date} ${showDetails.end_time}`;
-            showDatesList[date].shows.push(showDetails);
+            showDatesList[date].show_times.push(showDetails);
         }
 
         showDatesList = Object.values(showDatesList);
@@ -58,11 +58,11 @@ class ShowController {
             const { date, movie_id, ...showDetails } = show;
             if (!showDatesList[date]) {
                 showDatesList[date] = {date, movie_id};
-                showDatesList[date].shows = [];
+                showDatesList[date].show_times = [];
             }
             showDetails.start_time = `${date} ${showDetails.start_time}`;
             showDetails.end_time = `${date} ${showDetails.end_time}`;
-            showDatesList[date].shows.push(showDetails);
+            showDatesList[date].show_times.push(showDetails);
         }
 
         showDatesList = Object.values(showDatesList);
