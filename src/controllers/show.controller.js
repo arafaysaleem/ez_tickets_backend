@@ -31,7 +31,7 @@ class ShowController {
                 showDatesList[date].show_times = [];
             }
             showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
-            showDetails.end_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.end_time)}`;
             showDatesList[date].show_times.push(showDetails);
         }
 
@@ -68,7 +68,7 @@ class ShowController {
                 showDatesList[date].show_times = [];
             }
             showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
-            showDetails.end_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.end_time)}`;
             showDatesList[date].show_times.push(showDetails);
         }
 
