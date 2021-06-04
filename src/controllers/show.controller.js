@@ -9,13 +9,35 @@ const {
 const { structureResponse } = require('../utils/common.utils');
 
 class ShowController {
+    parseTime = (time) => {
+        let times = time.split(":");
+        let hours = times[0];
+        if (hours.length === 1) hours = `0${hours}`; // pad leading 0
+        return `${hours}:${times[1]}:${times[2]}`;
+    }
+
     getAllShows = async (req, res, next) => {
         let showList = await ShowModel.findAll();
         if (!showList.length) {
             throw new NotFoundException('Shows not found');
         }
 
-        const response = structureResponse(showList, 1, "Success");
+        let showDatesList = {};
+
+        for (const show of showList) {
+            const { date, movie_id, ...showDetails } = show;
+            if (!showDatesList[date]) {
+                showDatesList[date] = {date, movie_id};
+                showDatesList[date].show_times = [];
+            }
+            showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.end_time)}`;
+            showDatesList[date].show_times.push(showDetails);
+        }
+
+        showDatesList = Object.values(showDatesList);
+
+        const response = structureResponse(showDatesList, 1, "Success");
         res.send(response);
     };
 
@@ -37,7 +59,22 @@ class ShowController {
             throw new NotFoundException('Shows for this movie not found');
         }
         
-        const response = structureResponse(showList, 1, "Success");
+        let showDatesList = {};
+
+        for (const show of showList) {
+            const { date, movie_id, ...showDetails } = show;
+            if (!showDatesList[date]) {
+                showDatesList[date] = {date, movie_id};
+                showDatesList[date].show_times = [];
+            }
+            showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${this.parseTime(showDetails.end_time)}`;
+            showDatesList[date].show_times.push(showDetails);
+        }
+
+        showDatesList = Object.values(showDatesList);
+
+        const response = structureResponse(showDatesList, 1, "Success");
         res.send(response);
     };
 
