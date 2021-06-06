@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '**.md'
+      - '**.sql'
+      - '**.zip'
+      - '.gitignore'
 
   workflow_dispatch:
 
