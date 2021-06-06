@@ -24,7 +24,6 @@ jobs:
           check-name: test
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 20
-          allowed-conclusions: success
 
       - name: Load config vars into .env
         env:
