@@ -22,8 +22,8 @@ exports.createTheaterSchema = [
         .trim()
         .exists()
         .withMessage('Define num of rows in theater')
-        .isInt({min: 1})
-        .withMessage('Num of rows has to be a whole number >= 1'),
+        .isInt({min: 1, max: 12})
+        .withMessage('Num of rows has to be a whole number between 1 and 12'),
     body('theater_type')
         .trim()
         .exists()
@@ -81,8 +81,8 @@ exports.updateTheaterSchema = [
     body('num_of_rows')
         .optional()
         .trim()
-        .isInt({min: 1})
-        .withMessage('Num of rows has to be a whole number >= 1'),
+        .isInt({min: 1, max: 12})
+        .withMessage('Num of rows has to be a whole number between 1 and 12'),
     body('theater_type')
         .optional()
         .trim()
