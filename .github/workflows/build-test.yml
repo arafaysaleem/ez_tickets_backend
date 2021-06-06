@@ -1,7 +1,7 @@
 name: Node Build, Test And Lint CI
 
 on:
-  push:
+  pull_request:
     branches:
       - master
     paths-ignore:
