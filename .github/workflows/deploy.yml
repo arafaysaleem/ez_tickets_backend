@@ -14,6 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      # This step will retry until required check passes
+      # and will fail the whole workflow if the check conclusion is not a success
+      - name: Wait on tests
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: master
+          check-name: test
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 20
+          allowed-conclusions: success
+
       - name: Load config vars into .env
         env:
           CONFIG_VARS: ${{ secrets.CONFIG_VARS }}
