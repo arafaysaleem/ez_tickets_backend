@@ -22,7 +22,7 @@ utilities:
 enums:
 - any: ['src/utils/enums/**/*']
 
-enums:
+exceptions:
 - any: ['src/utils/exceptions/**/*']
 
 config:
