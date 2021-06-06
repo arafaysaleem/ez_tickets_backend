@@ -1,0 +1,51 @@
+controllers:
+- any: ['src/controllers/**/*.controller.js']
+
+database:
+- any: ['src/db/**/*']
+
+middlewares:
+- any: ['src/middleware/**/*.middleware.js']
+
+validators:
+- any: ['src/middleware/validators/*.middleware.js']
+
+models:
+- any: ['src/models/**/*.model.js']
+
+routes:
+- any: ['src/routes/**/*.routes.js']
+
+utilities:
+- any: ['src/utils/**/*']
+
+enums:
+- any: ['src/utils/enums/**/*']
+
+enums:
+- any: ['src/utils/exceptions/**/*']
+
+config:
+- any: ['src/server.js']
+
+scripts:
+- any: ['package.json']
+  all: ['!package-lock.json']
+
+dependencies:
+- all: ['package.json','package-lock.json']
+
+linting:
+- any: ['.eslintrc.json']
+
+CI/CD:
+- any: ['.github/**/*']
+
+backups:
+- any: ['ez_tickets.sql','postman_collections_backup.zip','encrypted_cfgs']
+
+documentation:
+- any: ['README.md']
+
+tests:
+- any: ['test/**/*.spec.js']
