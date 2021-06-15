@@ -1,5 +1,5 @@
 const { checkValidation } = require('../middleware/validation.middleware');
-const { structureResponse } = require('../utils/common.utils');
+const { structureResponse, parseTime } = require('../utils/common.utils');
 
 const BookingModel = require('../models/booking.model');
 const {
@@ -62,7 +62,7 @@ class BookingController {
             const {title, poster_url, show_id, start_time, date, show_type, ...bookingDetails} = booking;
             if (!bookingList[show_id]) {
                 bookingList[show_id] = {title, poster_url};
-                const show_datetime = `${date} ${this.parseTime(start_time)}`;
+                const show_datetime = `${date} ${parseTime(start_time)}`;
                 bookingList[show_id].show = {show_id, show_type, show_datetime };
                 bookingList[show_id].bookings = [];
             }

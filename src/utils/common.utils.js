@@ -16,6 +16,13 @@ exports.multipleColumnSet = (object) => {
     };
 };
 
+exports.parseTime = (time) => {
+    let times = time.split(":");
+    let hours = times[0];
+    if (hours.length === 1) hours = `0${hours}`; // pad leading 0
+    return `${hours}:${times[1]}:${times[2]}`;
+};
+
 exports.multipleFilterSet = (object) => {
     if (typeof object !== 'object') {
         throw new Error('Invalid input');
