@@ -61,8 +61,8 @@ class ShowController {
                 showDatesList[date] = {date, movie_id};
                 showDatesList[date].show_times = [];
             }
-            showDetails.start_time = `${date} ${this.parseTime(showDetails.start_time)}`;
-            showDetails.end_time = `${date} ${this.parseTime(showDetails.end_time)}`;
+            showDetails.start_time = `${date} ${parseTime(showDetails.start_time)}`;
+            showDetails.end_time = `${date} ${parseTime(showDetails.end_time)}`;
             showDatesList[date].show_times.push(showDetails);
         }
 
