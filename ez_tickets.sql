@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysqldb.coowsb1lwe26.ap-south-1.rds.amazonaws.com:3306
--- Generation Time: Jun 06, 2021 at 08:11 PM
+-- Generation Time: Jun 15, 2021 at 06:13 PM
 -- Server version: 8.0.20
 -- PHP Version: 7.4.5
 
@@ -31,12 +31,12 @@ CREATE TABLE `bookings` (
   `booking_id` int UNSIGNED NOT NULL,
   `user_id` int UNSIGNED NOT NULL,
   `show_id` int UNSIGNED NOT NULL,
-  `seat_row` varchar(2) NOT NULL,
+  `seat_row` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
   `seat_number` int NOT NULL,
   `price` float NOT NULL COMMENT 'seat price',
-  `booking_status` enum('confirmed','reserved','cancelled') NOT NULL DEFAULT 'reserved',
+  `booking_status` enum('confirmed','reserved','cancelled') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'reserved',
   `booking_datetime` datetime NOT NULL COMMENT 'the date time on which booking was made'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `bookings`
@@ -174,7 +174,18 @@ INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_nu
 (153, 10, 39, 'H', 2, 800, 'confirmed', '2021-06-06 22:43:22'),
 (154, 10, 39, 'H', 4, 800, 'confirmed', '2021-06-06 22:43:24'),
 (155, 10, 39, 'H', 5, 800, 'confirmed', '2021-06-06 22:43:25'),
-(156, 10, 39, 'H', 6, 800, 'confirmed', '2021-06-06 22:43:27');
+(156, 10, 39, 'H', 6, 800, 'confirmed', '2021-06-06 22:43:27'),
+(157, 10, 30, 'G', 6, 800, 'reserved', '2021-06-10 04:10:13'),
+(158, 10, 30, 'G', 7, 800, 'reserved', '2021-06-10 04:10:15'),
+(159, 10, 30, 'G', 8, 800, 'reserved', '2021-06-10 04:10:17'),
+(160, 10, 30, 'L', 7, 800, 'reserved', '2021-06-10 04:10:18'),
+(161, 10, 30, 'L', 6, 800, 'reserved', '2021-06-10 04:10:20'),
+(164, 2, 41, 'E', 1, 800, 'confirmed', '2021-06-10 19:00:43'),
+(165, 2, 41, 'F', 1, 800, 'confirmed', '2021-06-10 19:00:45'),
+(166, 2, 41, 'G', 1, 800, 'confirmed', '2021-06-10 19:00:47'),
+(167, 2, 41, 'J', 6, 800, 'confirmed', '2021-06-10 19:00:49'),
+(168, 2, 41, 'J', 5, 800, 'confirmed', '2021-06-10 19:00:50'),
+(169, 2, 41, 'J', 4, 800, 'confirmed', '2021-06-10 19:00:52');
 
 -- --------------------------------------------------------
 
@@ -184,8 +195,8 @@ INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_nu
 
 CREATE TABLE `genres` (
   `genre_id` int UNSIGNED NOT NULL,
-  `genre` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `genre` varchar(50) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `genres`
@@ -211,24 +222,24 @@ INSERT INTO `genres` (`genre_id`, `genre`) VALUES
 
 CREATE TABLE `movies` (
   `movie_id` int UNSIGNED NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `summary` text NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `summary` text COLLATE utf8_unicode_ci NOT NULL,
   `year` year NOT NULL,
   `rating` decimal(2,1) UNSIGNED DEFAULT NULL,
-  `trailer_url` text NOT NULL,
-  `poster_url` text NOT NULL,
-  `movie_type` enum('coming_soon','now_showing','removed') NOT NULL DEFAULT 'coming_soon'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `trailer_url` text COLLATE utf8_unicode_ci NOT NULL,
+  `poster_url` text COLLATE utf8_unicode_ci NOT NULL,
+  `movie_type` enum('coming_soon','now_showing','removed') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'coming_soon'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `movies`
 --
 
 INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer_url`, `poster_url`, `movie_type`) VALUES
-(4, 'GODZILLA VS KONG', 'Legends collide as Godzilla and Kong, the two most powerful forces of nature, clash on the big screen in a spectacular battle for the ages. As a squadron embarks on a perilous mission into fantastic uncharted terrain, unearthing clues to the Titans\' very origins and mankind\'s survival, a conspiracy threatens to wipe the creatures, both good and bad, from the face of the earth forever.', 2021, '6.5', 'https://imdb-video.media-imdb.com/vi576962841/1434659607842-pgv4ql-1611507916693.mp4?Expires=1622934419&Signature=gI6oYRAUfYCpoukN92fqgThiN2XIaY9LLeFPdS6vZIebD~AzklFZqCEu4CGL5jOwVlSRDmTde2B5CUsj-k1xxSwxzHhxYdxzvK8jcGDO9lVZD7DQW4wp9Io33OsemuCGUwzLoaYsHFvH8RBOAR9p4MskYeLWpuC0rHJn4GiyBxafnIx6XXcmdV2GBrTOkBT6S5PrSmLsRpWmcLjVfzSVNTUhXyed-wb58cnuZVssD5wtngSn7Ab081lWcQhTYNlPANCTGAaMVBsVokQdv~qIGIpcxSKhBFTZfxR47FYNPsBVyaOdMLfPrKBfmtpqWQdm1Rl97vxnxiqaeh2wSMuobA__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA', 'https://images.squarespace-cdn.com/content/v1/51b3dc8ee4b051b96ceb10de/1615997337403-G2AT6OCZ0LD8VLQ1IHGC/ke17ZwdGBToddI8pDm48kJYq1aWJR-Opw9YCGEJvNoV7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0k5fwC0WRNFJBIXiBeNI5fL5tAx0_Wm6zQGcCxuXSnc3-CppMx_loiHYdjEK2HksYg/EwnOBogWEAEiakT.jpeg?format=1500w', 'now_showing'),
-(34, 'JOKER', 'Arthur Fleck, a party clown, leads an impoverished life with his ailing mother. However, when society shuns him and brands him as a freak, he decides to embrace the life of crime and chaos.', 2019, '8.4', 'https://imdb-video.media-imdb.com/vi1723318041/1434659607842-pgv4ql-1567008550851.mp4?Expires=1622933908&Signature=D6vVVodNUpLzb~j6uzUAtHau-CYMdB4UfxSoRBkjtPJ7XXuVLZJywygwVGwDU7T4NwabQKdFnlgwLrAg~jNvXkHQXX4bmQzKX6iZgKnspeQOlruPKci0uNAcjBZ5oTmNa-hf14zE-mozN4QP8ma0U2DAR~kYYerBB5IK4UAZN4YJ8Zw2N9Ogo63-uptSx49SyWryhE2tqaU4v~~cCq3cCP52bbhcaddZWRQW8TiCrNnLys17OdJnOE3D3Y40GcH7YvHW8ietB1ejXsMXib-fSbdjUed0ZJmKDhgIWft7SxNHat8if2Gun~AyhFEWrOUxkfh-8ZMxPRiHfwGdaifTFA__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA', 'https://pbs.twimg.com/media/EA4LLfsW4AErVjR.jpg', 'now_showing'),
-(35, 'THE SUICIDE SQUAD', 'The government sends the most dangerous supervillains in the world -- Bloodsport, Peacemaker, King Shark, Harley Quinn and others -- to the remote, enemy-infused island of Corto Maltese. Armed with high-tech weapons, they trek through the dangerous jungle on a search-and-destroy mission, with only Col. Rick Flag on the ground to make them behave.', 2021, NULL, 'https://imdb-video.media-imdb.com/vi4102340633/1434659607842-pgv4ql-1617311135151.mp4?Expires=1622933745&Signature=XQs~emx8z7RolbrMHQI3x5xFkPG~-BVf6nmE6XpSExEgCvJiLELFEKnY1bNEX~OoElJpaBIdFe6Bs7xcXmUfnbtuRMX0aQV05dFX5F9lPyit2aD24OXF5fVVJ2RnLzMId6LEbEFjhWuAoOAm-GVzgDT53Vyp-PWcoFNqaz2J9DtHCjUo-OtPTLRtnMCyxYx8O578vY061ig9XXeN9mPPiiXxfE8Ob7fUMJPgzjO5X2g~YTYpGUQ657sDpVgcocQtHTeKW3j~bsbKdpQs7bPgvf6klQfViA2rHmAGn1RKSugQVPoCFQ-VD-298s615bR4tay3JHEmMiR-aAzQKdl-mg__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA', 'https://wallpapercave.com/wp/wp5112223.jpg', 'coming_soon'),
-(36, 'THE BATMAN', 'The Riddler plays a deadly game of cat and mouse with Batman and Commissioner Gordon in Gotham City.', 2022, NULL, 'https://imdb-video.media-imdb.com/vi3074735641/1434659607842-pgv4ql-1598144675262.mp4?Expires=1622933474&Signature=sm4q1gJ3g9tNMmzxEjMIjJxGk-3tIbrIZ4fo~d1vHCUjUkC9ket6x-VOMqfzDW1Akq7c2xQvFwuRwUaceSXR0eAA9XYVQ6HnT~n3DzLhiVBKbUjJ2AwfJZYXL3pOZMiCCRBYmkRn9yJbpvcOf~aVn9sDZ-Ri8Ob0gVIpwlaTNCZIGXyKZpEaaSa5TGbWrOq29ql7HhwCQj9mmU9VNJJsTZNz1bkB4axWsF~u1ljTrRsZ-JCQ-c~M~v5qDsTkS-XU2HBzRmxVskQmq46hPwF8PQ~OO-WLMtleD2zMj8sJjL7wZFs88YGOeDAEV4jvCN35B7rpPSF4PtkbBR6nQCBB6g__&Key-Pair-Id=APKAIFLZBVQZ24NQH3KA', 'https://fsa.zobj.net/crop.php?r=Udcz-VJDgssFWFxGTfum2m3sHo2pPcQWQApWvy05TvO2IMb1WhA2lHaNdXqPDqZs8bR0yyhamKWDCXiZ4FzOYjxD4OQ17wl96YWYMHvfj4pwTrt3i_lxHK0Iu86ssRqFeZUvLRVuhM1ax_g7', 'coming_soon');
+(4, 'GODZILLA VS KONG', 'Legends collide as Godzilla and Kong, the two most powerful forces of nature, clash on the big screen in a spectacular battle for the ages. As a squadron embarks on a perilous mission into fantastic uncharted terrain, unearthing clues to the Titans\' very origins and mankind\'s survival, a conspiracy threatens to wipe the creatures, both good and bad, from the face of the earth forever.', 2021, '6.5', 'https://media.publit.io/file/h_720/godzilla_vs_kong.mp4', 'https://images.squarespace-cdn.com/content/v1/51b3dc8ee4b051b96ceb10de/1615997337403-G2AT6OCZ0LD8VLQ1IHGC/ke17ZwdGBToddI8pDm48kJYq1aWJR-Opw9YCGEJvNoV7gQa3H78H3Y0txjaiv_0fDoOvxcdMmMKkDsyUqMSsMWxHk725yiiHCCLfrh8O1z4YTzHvnKhyp6Da-NYroOW3ZGjoBKy3azqku80C789l0k5fwC0WRNFJBIXiBeNI5fL5tAx0_Wm6zQGcCxuXSnc3-CppMx_loiHYdjEK2HksYg/EwnOBogWEAEiakT.jpeg?format=1500w', 'now_showing'),
+(34, 'JOKER', 'Arthur Fleck, a party clown, leads an impoverished life with his ailing mother. However, when society shuns him and brands him as a freak, he decides to embrace the life of crime and chaos.', 2019, '8.4', 'https://media.publit.io/file/h_720/joker-x.mp4', 'https://pbs.twimg.com/media/EA4LLfsW4AErVjR.jpg', 'now_showing'),
+(35, 'SUICIDE SQUAD 2', 'The government sends the most dangerous supervillains in the world -- Bloodsport, Peacemaker, King Shark, Harley Quinn and others -- to the remote, enemy-infused island of Corto Maltese. Armed with high-tech weapons, they trek through the dangerous jungle on a search-and-destroy mission, with only Col. Rick Flag on the ground to make them behave.', 2021, NULL, 'https://media.publit.io/file/h_720/suicide_squad.mp4', 'https://www.inspirationde.com/media/2019/08/cristiano-siqueira-on-behance-1565929796gk84n.png', 'coming_soon'),
+(36, 'THE BATMAN', 'The Riddler plays a deadly game of cat and mouse with Batman and Commissioner Gordon in Gotham City.', 2022, NULL, 'https://media.publit.io/file/h_720/batman.mp4', 'https://www.inspirationde.com/media/2020/08/the-batman-poster-by-mizuriofficial-on-deviantart-15987584958gkn4.jpg', 'coming_soon');
 
 -- --------------------------------------------------------
 
@@ -239,7 +250,7 @@ INSERT INTO `movies` (`movie_id`, `title`, `summary`, `year`, `rating`, `trailer
 CREATE TABLE `movie_genres` (
   `movie_id` int UNSIGNED NOT NULL,
   `genre_id` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `movie_genres`
@@ -268,8 +279,8 @@ INSERT INTO `movie_genres` (`movie_id`, `genre_id`) VALUES
 CREATE TABLE `movie_roles` (
   `movie_id` int UNSIGNED NOT NULL,
   `role_id` int UNSIGNED NOT NULL,
-  `role_type` enum('director','producer','cast') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `role_type` enum('director','producer','cast') COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `movie_roles`
@@ -304,10 +315,10 @@ CREATE TABLE `payments` (
   `payment_id` int UNSIGNED NOT NULL,
   `amount` int NOT NULL,
   `payment_datetime` datetime NOT NULL,
-  `payment_method` enum('cash','card','cod') NOT NULL,
+  `payment_method` enum('cash','card','cod') COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int UNSIGNED NOT NULL,
   `show_id` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `payments`
@@ -318,7 +329,8 @@ INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_met
 (28, 16800, '2021-06-06 03:36:43', 'card', 10, 35),
 (29, 13600, '2021-06-06 03:42:26', 'card', 10, 54),
 (30, 2400, '2021-06-06 21:24:38', 'card', 10, 29),
-(31, 4800, '2021-06-06 22:43:28', 'card', 10, 39);
+(31, 4800, '2021-06-06 22:43:28', 'card', 10, 39),
+(32, 4800, '2021-06-10 19:00:53', 'card', 2, 41);
 
 -- --------------------------------------------------------
 
@@ -328,10 +340,10 @@ INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_met
 
 CREATE TABLE `roles` (
   `role_id` int UNSIGNED NOT NULL,
-  `full_name` varchar(50) NOT NULL,
+  `full_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `age` tinyint UNSIGNED NOT NULL,
-  `picture_url` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `picture_url` text COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `roles`
@@ -369,9 +381,9 @@ CREATE TABLE `shows` (
   `date` date NOT NULL,
   `movie_id` int UNSIGNED NOT NULL,
   `theater_id` int UNSIGNED NOT NULL,
-  `show_status` enum('free','almost_full','full') NOT NULL DEFAULT 'free',
-  `show_type` enum('3D','2D') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `show_status` enum('free','almost_full','full') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'free',
+  `show_type` enum('3D','2D') COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `shows`
@@ -424,11 +436,11 @@ INSERT INTO `shows` (`show_id`, `start_time`, `end_time`, `date`, `movie_id`, `t
 
 CREATE TABLE `theaters` (
   `theater_id` int UNSIGNED NOT NULL,
-  `theater_name` char(1) NOT NULL COMMENT 'one letter name',
+  `theater_name` char(1) COLLATE utf8_unicode_ci NOT NULL COMMENT 'one letter name',
   `num_of_rows` smallint UNSIGNED NOT NULL,
   `seats_per_row` smallint UNSIGNED NOT NULL,
-  `theater_type` enum('normal','royal') NOT NULL DEFAULT 'normal'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `theater_type` enum('normal','royal') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'normal'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `theaters`
@@ -448,11 +460,11 @@ INSERT INTO `theaters` (`theater_id`, `theater_name`, `num_of_rows`, `seats_per_
 --
 
 CREATE TABLE `theater_seats` (
-  `seat_row` varchar(2) NOT NULL,
+  `seat_row` varchar(2) COLLATE utf8_unicode_ci NOT NULL,
   `seat_number` smallint UNSIGNED NOT NULL,
   `theater_id` int UNSIGNED NOT NULL,
-  `seat_type` enum('missing','blocked') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `seat_type` enum('missing','blocked') COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `theater_seats`
@@ -566,13 +578,13 @@ INSERT INTO `theater_seats` (`seat_row`, `seat_number`, `theater_id`, `seat_type
 
 CREATE TABLE `users` (
   `user_id` int UNSIGNED NOT NULL,
-  `full_name` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `password` text NOT NULL,
-  `address` varchar(100) NOT NULL,
-  `contact` varchar(50) NOT NULL,
-  `role` enum('api_user','admin','super_user') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `full_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `password` text COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `contact` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `role` enum('api_user','admin','super_user') COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -676,7 +688,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `booking_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
 
 --
 -- AUTO_INCREMENT for table `genres`
@@ -694,7 +706,7 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `payment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `roles`
