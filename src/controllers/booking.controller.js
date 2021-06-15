@@ -59,9 +59,10 @@ class BookingController {
         let bookingList = {};
 
         for (let booking of bookingDuplicates) {
-            const {title, poster_url, show_id, ...bookingDetails} = booking;
+            const {title, poster_url, show_id, start_time, date, show_type, ...bookingDetails} = booking;
             if (!bookingList[show_id]) {
-                bookingList[show_id] = {show_id, title, poster_url};
+                bookingList[show_id] = {title, poster_url};
+                bookingList[show_id].show_time = {show_id, show_type, start_time, date };
                 bookingList[show_id].bookings = [];
             }
             bookingList[show_id].bookings.push(bookingDetails);
