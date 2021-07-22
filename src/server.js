@@ -23,17 +23,17 @@ app.use(cors());
 app.options("*", cors());
 
 const port = Number(process.env.PORT || 3331);
-
-app.use(`/api/v1/auth`, authRouter);
-app.use(`/api/v1/users`, userRouter);
-app.use(`/api/v1/movies`, movieRouter);
-app.use(`/api/v1/roles`, roleRouter);
-app.use(`/api/v1/theaters`, theaterRouter);
-app.use(`/api/v1/shows`, showRouter);
-app.use(`/api/v1/bookings`, bookingRouter);
-app.use(`/api/v1/payments`, paymentRouter);
-app.use(`/api/v1/genres`, genreRouter);
-app.use(`/api/v1/health`, healthCheckRouter);
+const version = "v1";
+app.use(`/api/${version}/auth`, authRouter);
+app.use(`/api/${version}/users`, userRouter);
+app.use(`/api/${version}/movies`, movieRouter);
+app.use(`/api/${version}/roles`, roleRouter);
+app.use(`/api/${version}/theaters`, theaterRouter);
+app.use(`/api/${version}/shows`, showRouter);
+app.use(`/api/${version}/bookings`, bookingRouter);
+app.use(`/api/${version}/payments`, paymentRouter);
+app.use(`/api/${version}/genres`, genreRouter);
+app.use(`/api/${version}/health`, healthCheckRouter);
 
 // 404 error
 app.all('*', (req, res, next) => {
