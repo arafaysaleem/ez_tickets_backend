@@ -68,12 +68,12 @@ vscode .env
 
 # Create different .env.{NODE_ENV} file for each environment and override only your
 # required variables. The missing ones will be loaded from .env by default.
-# For example if you want dev and prod environments:
+# For example if you want dev and production environments:
 cp .env .env.dev
-cp .env.dev .env.prod
+cp .env.dev .env.production
 
 # When the NODE_ENV variable is set while running, the correct .env loads automatically.
-# e.g. Setting NODE_ENV=prod is going to load the .env.prod file
+# e.g. Setting NODE_ENV=production is going to load the .env.production file
 
 # Add a gitignore to ignore node_modules and your .env file
 echo -e 'node_modules \n configs \n' >> .gitignore
@@ -95,8 +95,8 @@ npm start
 # Run the server in dev mode with nodemon with .env.dev file
 npm run dev
 
-# While deploying to production with .env.prod file
-npm run prod
+# While deploying to production with .env.production file
+npm run production
 ```
 
 #### (Optional) Setup Postman API

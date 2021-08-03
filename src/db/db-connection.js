@@ -4,14 +4,15 @@ const {
     ForeignKeyViolationException
 } = require('../utils/exceptions/database.exception');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
+const { Config } = require('../../configs/config');
 
 class DBConnection{
     constructor (){
         this.db = mysql2.createPool({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE,
+            host: Config.DB_HOST,
+            user: Config.DB_USER,
+            password: Config.DB_PASS,
+            database: Config.DB_DATABASE,
             dateStrings: ['DATE', 'DATETIME']
         });
         this.checkConnection();

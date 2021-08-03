@@ -1,3 +1,4 @@
+const { Config } = require('../../configs/config');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 const { TokenVerificationException, TokenExpiredException } = require('../utils/exceptions/auth.exception');
 
@@ -9,7 +10,7 @@ function errorMiddleware (err, req, res, next) {
 
     let { message, code, error, status, data, stack } = err;
 
-    if (process.env.NODE_ENV === "dev"){
+    if (Config.NODE_ENV === "dev"){
         console.log(`[Exception] ${error}, [Code] ${code}`);
         console.log(`[Error] ${message}`);
         console.log(`[Stack] ${stack}`);

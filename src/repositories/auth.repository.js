@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
 const otpGenerator = require('otp-generator');
+const { Config } = require('../../configs/config');
 
 const UserModel = require('../models/user.model');
 const OTPModel = require('../models/otp.model');
@@ -51,7 +52,7 @@ class AuthRepository {
         }
 
         // user matched!
-        const secretKey = process.env.SECRET_JWT || "";
+        const secretKey = Config.SECRET_JWT;
         const token = jwt.sign({ user_id: user.user_id.toString() }, secretKey, {
             expiresIn: '24h'
         });
@@ -84,7 +85,7 @@ class AuthRepository {
         }
 
         // user matched!
-        const secretKey = process.env.SECRET_JWT || "";
+        const secretKey = Config.SECRET_JWT;
         const { user_id } = jwt.decode(oldToken);
         
         if (user.user_id.toString() !== user_id){

@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const {InvalidEndpointException} = require('./utils/exceptions/api.exception');
 const errorMiddleware = require('./middleware/error.middleware');
+const { Config } = require('../configs/config');
 
 /* Routes */
 const authRouter = require('./routes/auth.routes');
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use(cors());
 app.options("*", cors());
 
-const port = Number(process.env.PORT || 3331);
+const port = Number(Config.PORT);
 const version = "v1";
 app.use(`/api/${version}/auth`, authRouter);
 app.use(`/api/${version}/users`, userRouter);

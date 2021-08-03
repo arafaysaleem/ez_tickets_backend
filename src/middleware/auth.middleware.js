@@ -5,6 +5,7 @@ const {
 } = require('../utils/exceptions/auth.exception');
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
+const { Config } = require('../../configs/config');
 
 const auth = (...roles) => {
     return async function (req, res, next) {
@@ -17,7 +18,7 @@ const auth = (...roles) => {
             }
 
             const token = authHeader.replace(bearer, '');
-            const secretKey = process.env.SECRET_JWT || "";
+            const secretKey = Config.SECRET_JWT;
 
             // Verify Token
             const decoded = jwt.verify(token, secretKey);
