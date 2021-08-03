@@ -1,6 +1,6 @@
 const {checkValidation} = require('../middleware/validation.middleware');
 
-const RoleRepository = require('../models/role.model');
+const RoleRepository = require('../repositories/role.repository');
 
 class RoleController {
 

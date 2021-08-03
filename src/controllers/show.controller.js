@@ -1,6 +1,6 @@
 const {checkValidation} = require('../middleware/validation.middleware');
 
-const ShowRepository = require('../models/show.repository');
+const ShowRepository = require('../repositories/show.repository');
 
 class ShowController {
 
