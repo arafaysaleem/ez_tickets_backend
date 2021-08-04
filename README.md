@@ -21,7 +21,9 @@ The documentation was generated using Postman and is divided into collections at
 - The database for this API is hosted using AWS RDS
 - The Production API is deployed using Heroku
 
-The URLs for both of these deployments is kept private due to security reasons. You can use any services out there for your own hosting requirements.
+The URLs for both of these deployments is kept private due to security reasons. You can use any services out there for your own hosting requirements. 
+
+The release branch contains workflow to deploy to my own Heroku Service and won't work on your fork. If you want to use heroku as well, see their instructions and update your github secrets with your own credentials to make the release branch CI work for you as well.
 
 ### :wrench: Tech
 
@@ -105,6 +107,15 @@ If you want to quickly setup the endpoints for testing:
 
 * Go to Postman to import backup
 * Upload the schema_backup or unzip postman_collections_backup.zip and upload the folder
+
+### :notepad: Important Notes
+
+- There are two types of users possible (admin, api_user)
+- Most of the POST/PATCH/DELETE endpoints are forbidden to the `api_user` and only `admin` can use them. So make sure you use the `token` from an **admin account login** for `admin` access.
+- Only some POST/PATCH endpoints are open to the `api_user` like updating his profile or creating a booking/payment.
+- The `healthcheck` endpoint is to ensure the status of the API from the CI so we can be sure we are deploying a working API only.
+- You need to make an account on Twillio and integrate Sendgrid to get your own `SENDGRID_API_KEY` and `SENDER_EMAIL`
+- If you add/remove/change the names of any folders/file extensions make sure to update the [labeler.yml](.github/labeler.yml)
 
 **Enjoy :)**
 
