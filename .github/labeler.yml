@@ -1,6 +1,12 @@
 controllers:
 - any: ['src/controllers/**/*.controller.js']
 
+repositories:
+- any: ['src/repositories/**/*.repository.js']
+
+loaders:
+- any: ['src/loaders/**/*.loader.js']
+
 database:
 - any: ['src/db/**/*']
 
@@ -26,7 +32,7 @@ exceptions:
 - any: ['src/utils/exceptions/**/*']
 
 config:
-- any: ['src/server.js']
+- any: ['src/server.js', 'configs/**/*']
 
 scripts:
 - any: ['package.json']

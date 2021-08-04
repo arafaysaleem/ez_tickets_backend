@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -8,13 +8,13 @@ class TheaterSeatModel {
         let sql = `SELECT * FROM ${tables.TheaterSeats}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
@@ -23,7 +23,7 @@ class TheaterSeatModel {
         const sql = `SELECT * FROM ${tables.TheaterSeats}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -33,7 +33,7 @@ class TheaterSeatModel {
         ( theater_id, seat_row, seat_number, seat_type ) 
         VALUES (?,?,?,?)`;
 
-        const result = await query(sql, [theater_id, seat_row, seat_number, seat_type]);
+        const result = await DBService.query(sql, [theater_id, seat_row, seat_number, seat_type]);
 
         return result;
     }
@@ -43,7 +43,7 @@ class TheaterSeatModel {
 
         const sql = `UPDATE ${tables.TheaterSeats} SET ${columnSet} WHERE theater_id = ? `;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
 
         return result;
     }
@@ -51,7 +51,7 @@ class TheaterSeatModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.TheaterSeats}
         WHERE theater_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

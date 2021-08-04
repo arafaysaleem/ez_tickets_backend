@@ -1,83 +1,32 @@
 const { checkValidation } = require('../middleware/validation.middleware');
-const { structureResponse, hashPassword } = require('../utils/common.utils');
 
-
-const UserModel = require('../models/user.model');
-const {
-    NotFoundException,
-    CreateFailedException,
-    UpdateFailedException,
-    UnexpectedException
-} = require('../utils/exceptions/database.exception');
+const UserRepository = require('../repositories/user.repository');
 
 class UserController {
     getAllUsers = async (req, res, next) => {
-        let userList = await UserModel.findAll();
-        if (!userList.length) {
-            throw new NotFoundException('Users not found');
-        }
-
-        userList = userList.map(user => {
-            const { password, ...userWithoutPassword } = user;
-            return userWithoutPassword;
-        });
-
-        const response = structureResponse(userList, 1, "Success");
+        const response = await UserRepository.findAll();
         res.send(response);
     };
 
     getUserById = async (req, res, next) => {
-        const user = await UserModel.findOne({ user_id: req.params.id });
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
-
-        const { password, ...userWithoutPassword } = user;
-
-        const response = structureResponse(userWithoutPassword, 1, "Success");
+        const response = await UserRepository.findOne({ user_id: req.params.id });
         res.send(response);
     };
 
     createUser = async (req, res, next) => {
         checkValidation(req);
-
-        await hashPassword(req);
-
-        const result = await UserModel.create(req.body);
-
-        if (!result) {
-            throw new CreateFailedException('User failed to be created');
-        }
-
-        const response = structureResponse(result, 1, 'User was created!');
+        const response = await UserRepository.create(req.body);
         res.status(201).send(response);
     };
 
     updateUser = async (req, res, next) => {
         checkValidation(req);
-
-        const result = await UserModel.update(req.body, {user_id: req.params.id});
-
-        if (!result) {
-            throw new UnexpectedException('Something went wrong');
-        }
-
-        const { affectedRows, changedRows, info } = result;
-
-        if (!affectedRows) throw new NotFoundException('User not found');
-        else if (affectedRows && !changedRows) throw new UpdateFailedException('User update failed');
-        
-        const response = structureResponse(info, 1, 'User updated successfully');
+        const response = await UserRepository.update(req.body, {user_id: req.params.id});
         res.send(response);
     };
 
     deleteUser = async (req, res, next) => {
-        const result = await UserModel.delete(req.params.id);
-        if (!result) {
-            throw new NotFoundException('User not found');
-        }
-
-        const response = structureResponse({}, 1, 'User has been deleted');
+        const response = await UserRepository.delete(req.params.id);
         res.send(response);
     };
 }

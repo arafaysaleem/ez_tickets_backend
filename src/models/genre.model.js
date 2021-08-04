@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 class GenreModel {
@@ -7,13 +7,13 @@ class GenreModel {
         let sql = `SELECT * FROM ${tables.Genres}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findAllMoviesByGenre = async (params) => {
@@ -24,7 +24,7 @@ class GenreModel {
         NATURAL JOIN ${tables.Movies}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result;
     }
@@ -35,7 +35,7 @@ class GenreModel {
         const sql = `SELECT * FROM ${tables.Genres}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -45,7 +45,7 @@ class GenreModel {
         (genre) 
         VALUES (?)`;
 
-        const result = await query(sql, [genre]);
+        const result = await DBService.query(sql, [genre]);
         const created_genre = !result ? 0 : {
             genre_id: result.insertId,
             affected_rows: result.affectedRows
@@ -59,7 +59,7 @@ class GenreModel {
 
         const sql = `UPDATE ${tables.Genres} SET ${columnSet} WHERE genre_id = ?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
 
         return result;
     }
@@ -67,7 +67,7 @@ class GenreModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Genres}
         WHERE genre_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

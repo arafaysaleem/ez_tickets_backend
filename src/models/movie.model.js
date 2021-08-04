@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -10,13 +10,13 @@ class MovieModel {
         NATURAL JOIN ${tables.Genres}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
@@ -27,7 +27,7 @@ class MovieModel {
         NATURAL JOIN ${tables.Genres}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result;
     }
@@ -39,7 +39,7 @@ class MovieModel {
         NATURAL JOIN ${tables.Roles}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result;
     }
@@ -49,7 +49,7 @@ class MovieModel {
         (title, year, summary, rating, trailer_url, poster_url, movie_type) 
         VALUES (?,?,?,?,?,?,?)`;
 
-        const result = await query(sql, [title, year, summary, rating, trailer_url, poster_url, movie_type]);
+        const result = await DBService.query(sql, [title, year, summary, rating, trailer_url, poster_url, movie_type]);
 
         const created_movie = !result ? 0 : {
             movie_id: result.insertId,
@@ -64,7 +64,7 @@ class MovieModel {
 
         const sql = `UPDATE ${tables.Movies} SET ${columnSet} WHERE movie_id = ?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
         
         return result;
     }
@@ -72,7 +72,7 @@ class MovieModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Movies}
         WHERE movie_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

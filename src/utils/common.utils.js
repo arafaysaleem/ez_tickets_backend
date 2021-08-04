@@ -46,9 +46,9 @@ exports.structureResponse = (body, success, message) => {
     };
 };
 
-exports.hashPassword = async (req) => {
-    if (req.body.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 8);
+exports.hashPassword = async (body) => {
+    if (body.password) {
+        body.password = await bcrypt.hash(body.password, 8);
     }
 };
 

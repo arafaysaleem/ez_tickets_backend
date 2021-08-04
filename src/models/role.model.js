@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 class RoleModel {
@@ -7,13 +7,13 @@ class RoleModel {
         let sql = `SELECT * FROM ${tables.Roles}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
@@ -22,7 +22,7 @@ class RoleModel {
         const sql = `SELECT * FROM ${tables.Roles}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -35,7 +35,7 @@ class RoleModel {
         NATURAL JOIN ${tables.Movies}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result;
     }
@@ -45,7 +45,7 @@ class RoleModel {
         (full_name, age, picture_url) 
         VALUES (?,?,?)`;
 
-        const result = await query(sql, [full_name, age, picture_url]);
+        const result = await DBService.query(sql, [full_name, age, picture_url]);
         const created_role = !result ? 0 : {
             role_id: result.insertId,
             affected_rows: result.affectedRows
@@ -59,7 +59,7 @@ class RoleModel {
 
         const sql = `UPDATE ${tables.Roles} SET ${columnSet} WHERE role_id = ?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
 
         return result;
     }
@@ -67,7 +67,7 @@ class RoleModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Roles}
         WHERE role_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

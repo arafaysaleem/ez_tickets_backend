@@ -4,9 +4,9 @@ const { HealthCheckFailedException } = require('../utils/exceptions/api.exceptio
 class HealthCheckController {
     getHealthStatus = async (req, res, next) => {
         const healthCheck = {
-            uptime: process.uptime(),
+            uptime: process.uptime().toFixed(2),
             health: 'OK',
-            timestamp: Date.now()
+            timestamp: new Date(Date.now()).toJSON()
         };
         
         try {

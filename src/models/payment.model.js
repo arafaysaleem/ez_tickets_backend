@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -8,13 +8,13 @@ class PaymentModel {
         let sql = `SELECT * FROM ${tables.Payments}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findAllByUser = async (id, params = {}) => {
@@ -25,13 +25,13 @@ class PaymentModel {
         WHERE user_id = ?`;
 
         if (!Object.keys(params).length) {
-            return await query(sql, [id]);
+            return await DBService.query(sql, [id]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` AND ${filterSet}`;
 
-        return await query(sql, [id, ...filterValues]);
+        return await DBService.query(sql, [id, ...filterValues]);
     }
 
     findOne = async (params) => {
@@ -40,7 +40,7 @@ class PaymentModel {
         const sql = `SELECT * FROM ${tables.Payments}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -50,7 +50,7 @@ class PaymentModel {
         ( amount, payment_datetime, payment_method, user_id, show_id ) 
         VALUES (?,?,?,?,?)`;
 
-        const result = await query(sql, [amount, payment_datetime, payment_method, user_id, show_id]);
+        const result = await DBService.query(sql, [amount, payment_datetime, payment_method, user_id, show_id]);
 
         const created_payment = !result ? 0 : {
             payment_id: result.insertId,
@@ -65,7 +65,7 @@ class PaymentModel {
 
         const sql = `UPDATE ${tables.Payments} SET ${columnSet} WHERE payment_id=?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
         
         return result;
     }
@@ -74,7 +74,7 @@ class PaymentModel {
         const sql = `DELETE FROM ${tables.Payments}
         WHERE payment_id=?`;
 
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

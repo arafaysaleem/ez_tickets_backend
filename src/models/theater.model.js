@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -9,13 +9,13 @@ class TheaterModel {
         NATURAL JOIN ${tables.TheaterSeats}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
@@ -25,7 +25,7 @@ class TheaterModel {
         NATURAL JOIN ${tables.TheaterSeats}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result;
     }
@@ -34,7 +34,7 @@ class TheaterModel {
         const sql = `INSERT INTO ${tables.Theaters}
         ( theater_name, num_of_rows, seats_per_row, theater_type ) VALUES (?,?,?,?)`;
 
-        const result = await query(sql, [theater_name, num_of_rows, seats_per_row, theater_type]);
+        const result = await DBService.query(sql, [theater_name, num_of_rows, seats_per_row, theater_type]);
         const created_theater = !result ? 0 : {
             theater_id: result.insertId,
             affected_rows: result.affectedRows
@@ -48,7 +48,7 @@ class TheaterModel {
 
         const sql = `UPDATE ${tables.Theaters} SET ${columnSet} WHERE theater_id = ? `;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
 
         return result;
     }
@@ -56,7 +56,7 @@ class TheaterModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Theaters}
         WHERE theater_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

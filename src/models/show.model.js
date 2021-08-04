@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -8,13 +8,13 @@ class ShowModel {
         let sql = `SELECT * FROM ${tables.Shows}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findTimeConflicts = async ({start_time, end_time, date, theater_id}) => {
@@ -24,7 +24,7 @@ class ShowModel {
         OR ? BETWEEN start_time AND end_time
         OR (start_time AND end_time) BETWEEN ? AND ?)`;
 
-        const result = await query(sql, [theater_id, date, start_time, end_time, start_time, end_time]);
+        const result = await DBService.query(sql, [theater_id, date, start_time, end_time, start_time, end_time]);
 
         return result[0]['COUNT(*)'];
     }
@@ -35,7 +35,7 @@ class ShowModel {
         const sql = `SELECT * FROM ${tables.Shows}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -45,7 +45,7 @@ class ShowModel {
         (start_time, end_time, date, movie_id, theater_id, show_status, show_type) 
         VALUES (?,?,?,?,?,?,?)`;
 
-        const result = await query(sql, [start_time, end_time, date, movie_id, theater_id, show_status, show_type]);
+        const result = await DBService.query(sql, [start_time, end_time, date, movie_id, theater_id, show_status, show_type]);
 
         const created_show = !result ? 0 : {
             show_id: result.insertId,
@@ -60,7 +60,7 @@ class ShowModel {
 
         const sql = `UPDATE ${tables.Shows} SET ${columnSet} WHERE show_id = ?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
         
         return result;
     }
@@ -68,7 +68,7 @@ class ShowModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Shows}
         WHERE show_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

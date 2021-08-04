@@ -1,10 +1,11 @@
 const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 const { ErrorCodes } = require("../errorCodes.utils");
+const { Config } = require("../../../configs/config");
 
 class DatabaseException extends Error {
     constructor (code, message, data, isOperational = false, status = 404) {
         super(message);
-        if (process.env.NODE_ENV === "dev") this.message = "Database Error: " + message;
+        if (Config.NODE_ENV === "dev") this.message = "Database Error: " + message;
         else this.message = message;
         this.name = "Database Error";
         this.code = code;

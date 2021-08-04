@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const { tables } = require('../utils/tableNames.utils');
 
@@ -8,12 +8,12 @@ class BookingModel {
         let sql = `SELECT * FROM ${tables.Bookings}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findAllByUser = async (id, params = {}) => {
@@ -25,13 +25,13 @@ class BookingModel {
         WHERE user_id = ?`;
 
         if (!Object.keys(params).length) {
-            return await query(sql, [id]);
+            return await DBService.query(sql, [id]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` AND ${filterSet}`;
 
-        return await query(sql, [id, ...filterValues]);
+        return await DBService.query(sql, [id, ...filterValues]);
     }
 
     findAllByShow = async (id, params = {}) => {
@@ -40,13 +40,13 @@ class BookingModel {
         WHERE show_id = ?`;
 
         if (!Object.keys(params).length) {
-            return await query(sql, [id]);
+            return await DBService.query(sql, [id]);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` AND ${filterSet}`;
 
-        return await query(sql, [id, ...filterValues]);
+        return await DBService.query(sql, [id, ...filterValues]);
     }
 
     findOne = async (params) => {
@@ -55,7 +55,7 @@ class BookingModel {
         const sql = `SELECT * FROM ${tables.Bookings}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         return result[0];
     }
@@ -65,7 +65,7 @@ class BookingModel {
         ( user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime ) 
         VALUES (?,?,?,?,?,?,?)`;
 
-        const result = await query(sql, [user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime]);
+        const result = await DBService.query(sql, [user_id, show_id, seat_row, seat_number, price, booking_status, booking_datetime]);
 
         const created_booking = !result ? 0 : {
             booking_id: result.insertId,
@@ -80,7 +80,7 @@ class BookingModel {
 
         const sql = `UPDATE ${tables.Bookings} SET ${columnSet} WHERE booking_id=?`;
 
-        const result = await query(sql, [...values, id]);
+        const result = await DBService.query(sql, [...values, id]);
         
         return result;
     }
@@ -89,7 +89,7 @@ class BookingModel {
         const sql = `DELETE FROM ${tables.Bookings}
         WHERE booking_id=?`;
 
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

@@ -5,20 +5,19 @@ const {
 } = require('../utils/exceptions/database.exception');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 
-class DBConnection{
-    constructor (){
-        this.db = mysql2.createPool({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE,
-            dateStrings: ['DATE', 'DATETIME']
+class DBService {
+    init ({ host, user, password, database, dateStrings }) {
+        this.dbInstance = mysql2.createPool({
+            host: host,
+            user: user,
+            password: password,
+            database: database,
+            dateStrings: dateStrings
         });
-        this.checkConnection();
     }
 
-    checkConnection (){
-        this.db.getConnection((err, connection) => {
+    checkConnection () {
+        this.dbInstance.getConnection((err, connection) => {
             if (err){
                 if (err.code === 'PROTOCOL_CONNECTION_LOST') {
                     console.error('Database connection was closed.');
@@ -31,13 +30,13 @@ class DBConnection{
                 }
             }
             if (connection){
-                this.connection = connection;
+                this.dbConnection = connection;
                 connection.release();
             }
             return;
         });
     }
-
+    
     query = async (sql, values) => {
         return new Promise((resolve, reject) => {
             const callback = (error, result) => {
@@ -47,7 +46,7 @@ class DBConnection{
                 }
                 resolve(result);
             };
-            this.db.execute(sql, values, callback); // execute will internally call prepare and query
+            this.dbInstance.execute(sql, values, callback); // execute will internally call prepare and query
         }).catch((err) => {
             const mysqlErrorList = Object.keys(HttpStatusCodes);
             if (mysqlErrorList.includes(err.code)) {
@@ -72,7 +71,7 @@ class DBConnection{
                 }
                 resolve(result);
             };
-            this.connection.beginTransaction(callback);
+            this.dbConnection.beginTransaction(callback);
         });
     }
 
@@ -85,7 +84,7 @@ class DBConnection{
                 }
                 resolve(result);
             };
-            this.connection.rollback(callback);
+            this.dbConnection.rollback(callback);
         });
     }
 
@@ -99,10 +98,9 @@ class DBConnection{
                 }
                 resolve(result);
             };
-            this.connection.commit(callback);
+            this.dbConnection.commit(callback);
         });
     }
-
 }
 
 // ENUM of mysql errors mapped to http status codes
@@ -112,11 +110,4 @@ const HttpStatusCodes = Object.freeze({
     ER_NO_REFERENCED_ROW_2: 512
 });
 
-const dbConnection = new DBConnection();
-
-exports.query = dbConnection.query;
-exports.dbTransaction = {
-    beginTransaction: dbConnection.beginTransaction,
-    rollback: dbConnection.rollback,
-    commit: dbConnection.commit
-};
+module.exports.DBService = new DBService();
