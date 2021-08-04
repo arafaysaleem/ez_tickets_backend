@@ -31,9 +31,11 @@ jobs:
     - name: Load config vars into .env
       env:
         CONFIG_VARS: ${{ secrets.CONFIG_VARS }}
+      # Load env variable from config to a .env file and also load them in the CI environment
+      # These can be accessed from the CI environment using $ENV_VAR_NAME
       run: |
         echo $CONFIG_VARS > .env
-        source .env
+        source .env 
     - name: Running tests
       run: npm test
       env:
