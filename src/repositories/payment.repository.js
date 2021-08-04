@@ -1,5 +1,5 @@
 const { structureResponse } = require('../utils/common.utils');
-const { dbTransaction } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 
 const BookingModel = require('../models/booking.model');
 const PaymentModel = require('../models/payment.model');
@@ -49,12 +49,12 @@ class PaymentRepository {
     create = async (body) => {
         const { bookings, ...reqBody } = body;
 
-        await dbTransaction.beginTransaction();
+        await DBService.beginTransaction();
         
         const result = await PaymentModel.create(reqBody);
 
         if (!result) {
-            await dbTransaction.rollback();
+            await DBService.rollback();
             throw new CreateFailedException('Payment failed to be created');
         }
 
@@ -62,22 +62,22 @@ class PaymentRepository {
             const success = await BookingModel.update({ booking_status: "confirmed" }, booking_id);
             
             if (!success) {
-                await dbTransaction.rollback();
+                await DBService.rollback();
                 throw new UpdateFailedException('One of the bookings failed to be confirmed');
             }
 
             const { affectedRows, changedRows} = success;
 
             if (!affectedRows) {
-                await dbTransaction.rollback();
+                await DBService.rollback();
                 throw new NotFoundException(`Booking ID: ${booking_id} not found`);
             } else if (affectedRows && !changedRows) {
-                await dbTransaction.rollback();
+                await DBService.rollback();
                 throw new UpdateFailedException('One of the bookings failed to be confirmed');
             }
         }
 
-        await dbTransaction.commit();
+        await DBService.commit();
 
         return structureResponse(result, 1, 'Payment was created! Booking confirmed!');
     };

@@ -1,5 +1,5 @@
 const { structureResponse } = require('../utils/common.utils');
-const { dbTransaction } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 
 const TheaterModel = require('../models/theater.model');
 const TheaterSeatModel = require('../models/theaterSeat.model');
@@ -69,12 +69,12 @@ class TheaterRepository {
     create = async (body) => {
         const {missing, blocked, ...theaterBody} = body;
 
-        await dbTransaction.beginTransaction();
+        await DBService.beginTransaction();
 
         const result = await TheaterModel.create(theaterBody);
 
         if (!result) {
-            await dbTransaction.rollback();
+            await DBService.rollback();
             throw new CreateFailedException('Theater failed to be created');
         }
 
@@ -89,7 +89,7 @@ class TheaterRepository {
                 };
                 const success = await TheaterSeatModel.create(theaterSeat);
                 if (!success) {
-                    await dbTransaction.rollback();
+                    await DBService.rollback();
                     throw new CreateFailedException('Theater missing seat failed to be created');
                 }
             }
@@ -105,13 +105,13 @@ class TheaterRepository {
                 };
                 const success = await TheaterSeatModel.create(theaterSeat);
                 if (!success) {
-                    await dbTransaction.rollback();
+                    await DBService.rollback();
                     throw new CreateFailedException('Theater blocked seat failed to be created');
                 }
             }
         }
 
-        await dbTransaction.commit();
+        await DBService.commit();
 
         return structureResponse(result, 1, 'Theater was created!');
     };

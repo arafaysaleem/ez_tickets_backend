@@ -1,4 +1,4 @@
-const { query } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 const { multipleColumnSet, multipleFilterSet } = require('../utils/common.utils');
 const UserRole = require('../utils/enums/userRoles.utils');
 const { tables } = require('../utils/tableNames.utils');
@@ -9,13 +9,13 @@ class UserModel {
         let sql = `SELECT * FROM ${tables.Users}`;
 
         if (!Object.keys(params).length) {
-            return await query(sql);
+            return await DBService.query(sql);
         }
 
         const { filterSet, filterValues } = multipleFilterSet(params);
         sql += ` WHERE ${filterSet}`;
 
-        return await query(sql, [...filterValues]);
+        return await DBService.query(sql, [...filterValues]);
     }
 
     findOne = async (params) => {
@@ -24,7 +24,7 @@ class UserModel {
         const sql = `SELECT * FROM ${tables.Users}
         WHERE ${filterSet}`;
 
-        const result = await query(sql, [...filterValues]);
+        const result = await DBService.query(sql, [...filterValues]);
 
         // return back the first row (user)
         return result[0];
@@ -34,7 +34,7 @@ class UserModel {
         const sql = `INSERT INTO ${tables.Users}
         (full_name, email, password, role, contact, address) VALUES (?,?,?,?,?,?)`;
 
-        const result = await query(sql, [full_name, email, password, role, contact, address]);
+        const result = await DBService.query(sql, [full_name, email, password, role, contact, address]);
         const created_user = !result ? 0 : {
             user_id: result.insertId,
             affected_rows: result.affectedRows
@@ -49,7 +49,7 @@ class UserModel {
 
         const sql = `UPDATE ${tables.Users} SET ${columnSet} WHERE ${filterSet}`;
 
-        const result = await query(sql, [...values, ...filterValues]);
+        const result = await DBService.query(sql, [...values, ...filterValues]);
 
         return result;
     }
@@ -57,7 +57,7 @@ class UserModel {
     delete = async (id) => {
         const sql = `DELETE FROM ${tables.Users}
         WHERE user_id = ?`;
-        const result = await query(sql, [id]);
+        const result = await DBService.query(sql, [id]);
         const affectedRows = result ? result.affectedRows : 0;
 
         return affectedRows;

@@ -1,5 +1,5 @@
 const { structureResponse } = require('../utils/common.utils');
-const { dbTransaction } = require('../db/db-connection');
+const { DBService } = require('../db/db-service');
 
 const MovieModel = require('../models/movie.model');
 const MovieRoleModel = require('../models/movieRole.model');
@@ -89,12 +89,12 @@ class MovieController {
     create = async (body) => {
         const {roles, genres, ...movieBody} = body;
 
-        await dbTransaction.beginTransaction();
+        await DBService.beginTransaction();
 
         const result = await MovieModel.create(movieBody);
 
         if (!result) {
-            await dbTransaction.rollback();
+            await DBService.rollback();
             throw new CreateFailedException('Movie failed to be created');
         }
 
@@ -109,11 +109,11 @@ class MovieController {
             try {
                 const success = await MovieRoleModel.create(movieRole);
                 if (!success) {
-                    await dbTransaction.rollback();
+                    await DBService.rollback();
                     throw new CreateFailedException(`Movie role(id: ${role.role_id}, role_type: ${role.role_type}) failed to be created`);
                 }
             } catch (ex) {
-                await dbTransaction.rollback();
+                await DBService.rollback();
                 if (ex instanceof ForeignKeyViolationException){
                     throw new CreateFailedException(`Movie role(id: ${role.role_id}, role_type: ${role.role_type}) failed to be created`);
                 }
@@ -125,18 +125,18 @@ class MovieController {
             try {
                 const success = await MovieGenreModel.create(movieGenre);
                 if (!success) {
-                    await dbTransaction.rollback();
+                    await DBService.rollback();
                     throw new CreateFailedException(`Movie genre(id: ${genre_id}) failed to be created`);
                 }
             } catch (ex) {
-                await dbTransaction.rollback();
+                await DBService.rollback();
                 if (ex instanceof ForeignKeyViolationException){
                     throw new CreateFailedException(`Movie genre(id: ${genre_id}) failed to be created`);
                 }
             }
         }
 
-        await dbTransaction.commit();
+        await DBService.commit();
 
         return structureResponse(result, 1, 'Movie was created!');
     };
