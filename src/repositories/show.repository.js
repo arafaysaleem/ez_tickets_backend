@@ -40,7 +40,7 @@ class ShowRepository {
             throw new NotFoundException('Show not found');
         }
 
-        return structureResponse(result, 1, "Success"); 
+        return structureResponse(result, 1, "Success");
     };
 
     findAllFiltered = async (query) => {
