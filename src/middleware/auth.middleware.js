@@ -5,7 +5,7 @@ const {
 } = require('../utils/exceptions/auth.exception');
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
-const { Config } = require('../../configs/config');
+const { Config } = require('../configs/config');
 
 const auth = (...roles) => {
     return async function (req, res, next) {

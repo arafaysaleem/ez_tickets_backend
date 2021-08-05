@@ -1,4 +1,4 @@
-const { Config } = require('../../configs/config');
+const { Config } = require('../configs/config');
 const { InternalServerException } = require('../utils/exceptions/api.exception');
 const { TokenVerificationException, TokenExpiredException } = require('../utils/exceptions/auth.exception');
 

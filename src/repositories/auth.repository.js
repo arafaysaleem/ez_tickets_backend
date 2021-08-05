@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../utils/sendgrid.utils');
 const otpGenerator = require('otp-generator');
-const { Config } = require('../../configs/config');
+const { Config } = require('../configs/config');
 
 const UserModel = require('../models/user.model');
 const OTPModel = require('../models/otp.model');

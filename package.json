@@ -5,9 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
-    "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=configs",
+    "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
-    "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=configs nodemon -r dotenv-flow/config",
+    "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
     "test": "mocha ./test/* --exit",
     "lint": "eslint src/"
   },

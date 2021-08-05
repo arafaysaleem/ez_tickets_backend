@@ -1,6 +1,6 @@
 const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 const { ErrorCodes } = require("../errorCodes.utils");
-const { Config } = require("../../../configs/config");
+const { Config } = require("../../configs/config");
 
 class AuthException extends Error {
     constructor (code, message, data, status = 401) {

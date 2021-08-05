@@ -1,4 +1,4 @@
-const { Config } = require("../../../configs/config");
+const { Config } = require("../../configs/config");
 const { ErrorCodes } = require("../errorCodes.utils");
 class ValidationException extends Error {
     constructor (code, message, data) {

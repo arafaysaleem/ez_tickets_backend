@@ -1,4 +1,4 @@
-const { Config } = require("../../configs/config");
+const { Config } = require("../configs/config");
 const { DBService } = require("../db/db-service");
 
 class DatabaseLoader {

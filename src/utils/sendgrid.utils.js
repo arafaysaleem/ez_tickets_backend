@@ -1,5 +1,5 @@
 const sgMail = require('@sendgrid/mail');
-const { Config } = require('../../configs/config');
+const { Config } = require('../configs/config');
 const { OTPGenerationException } = require('../utils/exceptions/auth.exception');
 
 sgMail.setApiKey(Config.SENDGRID_API_KEY);

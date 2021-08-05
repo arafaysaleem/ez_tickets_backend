@@ -58,11 +58,11 @@ cd ez_tickets_backend
 # Make it your own
 rm -rf .git && git init
 
-# Copy example.env and create your own .env file in configs folder
-cp .env.example configs/.env
+# Copy example.env and create your own .env file in envs folder
+cp .env.example envs/.env
 
-# Move into the configs dir
-cd configs
+# Move into the envs dir
+cd envs
 
 # Edit .env file and add your mysql username, password and db name, host,
 # port, jwt_secret, sendgrid api key and sender email
@@ -78,7 +78,7 @@ cp .env.dev .env.production
 # e.g. Setting NODE_ENV=production is going to load the .env.production file
 
 # Add a gitignore to ignore node_modules and your .env file
-echo -e 'node_modules \n configs \n' >> .gitignore
+echo -e 'node_modules \n envs \n' >> .gitignore
 ```
 
 #### 2. Setup MySQL database

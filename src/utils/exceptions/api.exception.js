@@ -1,4 +1,4 @@
-const { Config } = require("../../../configs/config");
+const { Config } = require("../../configs/config");
 const { ErrorCodes } = require("../errorCodes.utils");
 const { ErrorStatusCodes } = require("../errorStatusCodes.utils");
 
