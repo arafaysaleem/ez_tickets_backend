@@ -101,6 +101,22 @@ npm run dev
 npm run production
 ```
 
+#### Setup CI (Github Actions)
+
+If you want to run the github testing and PR labelling workflows in the CI then:
+
+Create the following repository secrets:
+  * CONFIG_VARS: value should be the following .env file variables
+   ```
+   DB_HOST= db_localhost
+   DB_USER= db_username
+   DB_PASS= db_password
+   DB_DATABASE= db_name
+   ```
+  * SENDGRID_API_KEY: value should be your .env file variable => sendgrid_api_key
+  * SENDGRID_SENDER: value should be all your .env file variable => from_email
+  * SECRET_JWT: value should be all your .env file variables => your_secret
+
 #### (Optional) Setup Postman API
 
 If you want to quickly setup the endpoints for testing:
