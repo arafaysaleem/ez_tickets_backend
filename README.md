@@ -124,7 +124,7 @@ If you want to quickly setup the endpoints for testing:
 * Go to Postman to import backup
 * Upload the schema_backup or unzip postman_collections_backup.zip and upload the folder
 
-### :notepad: Important Notes
+### :closed_book: Important Notes
 
 - There are two types of users possible (admin, api_user)
 - Most of the POST/PATCH/DELETE endpoints are forbidden to the `api_user` and only `admin` can use them. So make sure you use the `token` from an **admin account login** for `admin` access.
