@@ -9,7 +9,7 @@ const { updateUserSchema } = require('../middleware/validators/userValidator.mid
 
 router.get('/', auth(), awaitHandlerFactory(userController.getAllUsers)); // localhost:3000/api/v1/users
 router.get('/id/:id', auth(), awaitHandlerFactory(userController.getUserById)); // localhost:3000/api/v1/users/id/1
-router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updateUserSchema, awaitHandlerFactory(userController.updateUser)); // localhost:3000/api/v1/users/id/1
-router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(userController.deleteUser)); // localhost:3000/api/v1/users/id/1
+router.patch('/id/:id', auth(UserRole.Admin), updateUserSchema, awaitHandlerFactory(userController.updateUser)); // localhost:3000/api/v1/users/id/1
+router.delete('/id/:id', auth(UserRole.Admin), awaitHandlerFactory(userController.deleteUser)); // localhost:3000/api/v1/users/id/1
 
 module.exports = router;

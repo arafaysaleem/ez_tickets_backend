@@ -9,8 +9,8 @@ const { createTheaterSchema, updateTheaterSchema } = require('../middleware/vali
 
 router.get('/', auth(), awaitHandlerFactory(theaterController.getAllTheaters)); // localhost:3000/api/v1/theaters
 router.get('/id/:id', auth(), awaitHandlerFactory(theaterController.getTheaterById)); // localhost:3000/api/v1/theaters/id/1
-router.post('/', auth(UserRole.Admin, UserRole.SuperUser), createTheaterSchema, awaitHandlerFactory(theaterController.createTheater)); // localhost:3000/api/v1/theaters
-router.patch('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), updateTheaterSchema, awaitHandlerFactory(theaterController.updateTheater)); // localhost:3000/api/v1/theaters/id/1 , using patch for partial update
-router.delete('/id/:id', auth(UserRole.Admin, UserRole.SuperUser), awaitHandlerFactory(theaterController.deleteTheater)); // localhost:3000/api/v1/theaters/id/1
+router.post('/', auth(UserRole.Admin), createTheaterSchema, awaitHandlerFactory(theaterController.createTheater)); // localhost:3000/api/v1/theaters
+router.patch('/id/:id', auth(UserRole.Admin), updateTheaterSchema, awaitHandlerFactory(theaterController.updateTheater)); // localhost:3000/api/v1/theaters/id/1 , using patch for partial update
+router.delete('/id/:id', auth(UserRole.Admin), awaitHandlerFactory(theaterController.deleteTheater)); // localhost:3000/api/v1/theaters/id/1
 
 module.exports = router;
