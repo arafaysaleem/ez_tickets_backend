@@ -101,7 +101,7 @@ npm run dev
 npm run production
 ```
 
-#### Setup CI (Github Actions)
+### :arrows_counterclockwise: Setup CI (Github Actions)
 
 If you want to run the github testing and PR labelling workflows in the CI then:
 
@@ -117,7 +117,7 @@ Create the following repository secrets:
   * SENDGRID_SENDER: value should be all your .env file variable => from_email
   * SECRET_JWT: value should be all your .env file variables => your_secret
 
-#### (Optional) Setup Postman API
+### :man_astronaut: (Optional) Setup Postman API
 
 If you want to quickly setup the endpoints for testing:
 
