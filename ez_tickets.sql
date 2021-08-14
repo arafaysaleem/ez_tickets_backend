@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysqldb.coowsb1lwe26.ap-south-1.rds.amazonaws.com:3306
--- Generation Time: Jun 15, 2021 at 06:13 PM
--- Server version: 8.0.20
+-- Generation Time: Aug 14, 2021 at 02:22 AM
+-- Server version: 8.0.23
 -- PHP Version: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
