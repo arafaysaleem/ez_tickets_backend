@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `ez_tickets`
 --
+CREATE DATABASE IF NOT EXISTS `ez_tickets` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `ez_tickets`;
 
 -- --------------------------------------------------------
 
@@ -185,7 +187,18 @@ INSERT INTO `bookings` (`booking_id`, `user_id`, `show_id`, `seat_row`, `seat_nu
 (166, 2, 41, 'G', 1, 800, 'confirmed', '2021-06-10 19:00:47'),
 (167, 2, 41, 'J', 6, 800, 'confirmed', '2021-06-10 19:00:49'),
 (168, 2, 41, 'J', 5, 800, 'confirmed', '2021-06-10 19:00:50'),
-(169, 2, 41, 'J', 4, 800, 'confirmed', '2021-06-10 19:00:52');
+(169, 2, 41, 'J', 4, 800, 'confirmed', '2021-06-10 19:00:52'),
+(170, 10, 43, 'A', 5, 800, 'confirmed', '2021-06-28 17:59:59'),
+(171, 10, 43, 'E', 1, 800, 'confirmed', '2021-06-28 18:00:01'),
+(172, 10, 43, 'F', 1, 800, 'confirmed', '2021-06-28 18:00:03'),
+(173, 10, 43, 'H', 1, 800, 'confirmed', '2021-06-28 18:00:04'),
+(174, 10, 30, 'G', 3, 800, 'confirmed', '2021-07-16 00:44:45'),
+(175, 10, 30, 'H', 2, 800, 'confirmed', '2021-07-16 00:44:47'),
+(176, 10, 30, 'G', 2, 800, 'confirmed', '2021-07-16 00:44:49'),
+(177, 10, 30, 'G', 4, 800, 'confirmed', '2021-07-16 00:44:51'),
+(178, 10, 30, 'H', 4, 800, 'confirmed', '2021-07-16 00:44:52'),
+(179, 10, 30, 'H', 3, 800, 'confirmed', '2021-07-16 00:44:53'),
+(180, 10, 30, 'I', 5, 800, 'confirmed', '2021-08-08 03:35:41');
 
 -- --------------------------------------------------------
 
@@ -308,6 +321,19 @@ INSERT INTO `movie_roles` (`movie_id`, `role_id`, `role_type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `otp_codes`
+--
+
+CREATE TABLE `otp_codes` (
+  `user_id` int UNSIGNED NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `OTP` text NOT NULL,
+  `expiration_datetime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payments`
 --
 
@@ -330,7 +356,10 @@ INSERT INTO `payments` (`payment_id`, `amount`, `payment_datetime`, `payment_met
 (29, 13600, '2021-06-06 03:42:26', 'card', 10, 54),
 (30, 2400, '2021-06-06 21:24:38', 'card', 10, 29),
 (31, 4800, '2021-06-06 22:43:28', 'card', 10, 39),
-(32, 4800, '2021-06-10 19:00:53', 'card', 2, 41);
+(32, 4800, '2021-06-10 19:00:53', 'card', 2, 41),
+(33, 3200, '2021-06-28 18:00:06', 'card', 10, 43),
+(34, 4800, '2021-07-16 00:44:55', 'card', 10, 30),
+(35, 800, '2021-08-08 03:35:43', 'card', 10, 30);
 
 -- --------------------------------------------------------
 
@@ -593,7 +622,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `full_name`, `email`, `password`, `address`, `contact`, `role`) VALUES
 (1, 'Test Admin', 'admin@gmail.com', '$2a$08$y4hYovfviz31AZhru3t4FObYrLFrhdBNETXikx6WFD9VYGbUZucYO', 'Karachi', '+923009999999', 'admin'),
 (2, 'Test User', 'user@gmail.com', '$2a$08$V5FWrXIoHeJPGe0WDgQcJ.eJEX.rz6tCtevaNSKBH6deaoVDKMosS', 'Karachi', '+923009999999', 'api_user'),
-(10, 'Email Test User', 'arafaysaleem@gmail.com', '$2a$08$YcMueJpi26hS9jqLII7n4ep/pPYwNhiS/OfISftVg9M0tfIzYzUvO', 'Karachi', '+923009999999', 'api_user'),
+(10, 'Email Test User', 'arafaysaleem@gmail.com', '$2a$08$G64jviZNUA74J2MgoooXeuYcc5OXuri7Ev7HaIbcgfpeKkY3fDOEe', 'Karachi', '+923009999999', 'api_user'),
 (11, 'Test User', 'user2@gmail.com', '$2a$08$dP89ppGNiMczZM0JToQwF.WtiR53NL0j.r55wBNJP03sjDh/VpcrC', 'Karachi', '+923009999999', 'api_user'),
 (14, 'Test User 3', 'user3@gmail.com', '$2a$08$hyIqip2MuwqbmkKIoiWG9eihI0HkAF0aB.3aWVUBO0YiBPIBawEDK', 'Karachi', '+923009999999', 'api_user'),
 (15, 'Delete Me', 'deleteme@eztickets.com', '$2a$08$lWgRO3U/XnZ3Etw0HQE4cOgCXsb/UDu3tYcRx.NzoIb6y96Cwa0ea', 'Re', '+923009268622', 'api_user');
@@ -636,6 +665,13 @@ ALTER TABLE `movie_genres`
 ALTER TABLE `movie_roles`
   ADD PRIMARY KEY (`movie_id`,`role_id`) USING BTREE,
   ADD KEY `fk_mroles_role_id` (`role_id`);
+
+--
+-- Indexes for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Indexes for table `payments`
@@ -688,7 +724,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
+  MODIFY `booking_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `genres`
@@ -706,7 +742,7 @@ ALTER TABLE `movies`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `payment_id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -756,6 +792,12 @@ ALTER TABLE `movie_genres`
 ALTER TABLE `movie_roles`
   ADD CONSTRAINT `fk_mroles_movie_id` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`movie_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_mroles_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`);
+
+--
+-- Constraints for table `otp_codes`
+--
+ALTER TABLE `otp_codes`
+  ADD CONSTRAINT `fk_otp_codes_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `payments`
