@@ -18,32 +18,12 @@ The documentation was generated using Postman and is divided into collections at
 
 ### :rocket: Deployement
 
-- The database for this API is hosted using AWS RDS
+- The database for this API is hosted using AWS RDS (Make sure to update the .env.prod file with your own Database Hosting Url, otherwise the production environment will be running on the local database as well)
 - The Production API is deployed using Heroku
 
-The URLs for both of these deployments is kept private due to security reasons. You can use any services out there for your own hosting requirements. 
+**IMPORTANT:** The URLs for both of these deployments is kept private due to security reasons. You can use any services out there for your own hosting requirements. 
 
 The release branch contains workflow to deploy to my own Heroku Service and won't work on your fork. If you want to use heroku as well, see their instructions and update your github secrets with your own credentials to make the release branch CI work for you as well.
-
-### :wrench: Tech
-
-This example uses a number of open source projects to work properly:
-
-* [node.js]
-* [Express]
-* [@sendgrid/mail]
-* [bcryptjs]
-* [cors]
-* [cross-env]
-* [deep-email-validator]
-* [dotenv-flow]
-* [express-validator]
-* [jsonwebtoken]
-* [mysql2]
-* [otp-generator]
-* [babel-eslint]
-* [mocha]
-* [eslint-config-strongloop]
 
 ### :dvd: Installation
 #### 1. Getting Started
@@ -57,7 +37,10 @@ cd ez_tickets_backend
 
 # Make it your own
 rm -rf .git && git init
+```
 
+### 2. Setting Up ENV Variables
+```sh
 # Copy example.env and create your own .env file in envs folder
 cp .env.example envs/.env
 
@@ -81,11 +64,11 @@ cp .env.dev .env.production
 echo -e 'node_modules \n envs \n' >> .gitignore
 ```
 
-#### 2. Setup MySQL database
+#### 3. Setup MySQL database
 
 Import the ez_ticket.sql using your sql workbench to create the database.
 
-#### 3. Setting up node js
+#### 4. Setting up node js
 
 ``` sh
 # Install dependencies
@@ -134,6 +117,26 @@ If you want to quickly setup the endpoints for testing:
 - If you add/remove/change the names of any folders/file extensions make sure to update the [labeler.yml](.github/labeler.yml)
 
 **Enjoy :)**
+
+### :wrench: Tech
+
+This example uses a number of open source projects to work properly:
+
+* [node.js]
+* [Express]
+* [@sendgrid/mail]
+* [bcryptjs]
+* [cors]
+* [cross-env]
+* [deep-email-validator]
+* [dotenv-flow]
+* [express-validator]
+* [jsonwebtoken]
+* [mysql2]
+* [otp-generator]
+* [babel-eslint]
+* [mocha]
+* [eslint-config-strongloop]
 
 ### :bookmark_tabs: License
 EZ Tickets Backend © 2021 by Abdur Rafay Saleem is licensed under CC BY 4.0 

@@ -31,7 +31,7 @@
     "otp-generator": "^2.0.0"
   },
   "devDependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.25.0",
     "eslint-config-strongloop": "^2.1.0",
