@@ -461,7 +461,7 @@ CREATE TABLE `otp_codes` (
   `email` varchar(100) NOT NULL,
   `OTP` text NOT NULL,
   `expiration_datetime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `otp_codes`
