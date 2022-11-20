@@ -4,7 +4,6 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "start": "node -r dotenv-flow/config src/server.js -- --dotenv-flow-path=envs",
     "production": "cross-env NODE_ENV=production npm start",
     "dev": "cross-env NODE_ENV=dev DOTENV_FLOW_PATH=envs nodemon -r dotenv-flow/config",
@@ -14,15 +13,12 @@
   "keywords": [],
   "author": "Abdur Rafay Saleem",
   "license": "ISC",
-  "resolutions": {
-    "axios": "^0.21.1"
-  },
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
-    "deep-email-validator": "^0.1.18",
+    "deep-email-validator": "^0.1.21",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.10.1",
@@ -31,7 +27,7 @@
     "otp-generator": "^3.0.0"
   },
   "devDependencies": {
-    "axios": "^0.21.2",
+    "axios": "^0.21.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.25.0",
     "eslint-config-strongloop": "^2.1.0",
